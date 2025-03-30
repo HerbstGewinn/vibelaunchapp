@@ -40,3 +40,35 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Custom styles for glowing effects */
+.glow-cyan {
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+/* Gradient animations */
+.gradient-shift {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition: all 0.3s ease;
+}
