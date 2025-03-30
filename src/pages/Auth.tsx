@@ -1,11 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, Circle, ExternalLink, PlayCircle } from "lucide-react";
+import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useToast } from "@/hooks/use-toast";
 
 const Auth = () => {
+  const { toast } = useToast();
+  
   const todoItems = [
     { text: "Setup Supabase project", completed: false },
     { text: "Enable Auth providers (Email, Google, etc.)", completed: false },
@@ -15,6 +18,17 @@ const Auth = () => {
     { text: "Add auth guards to protected routes", completed: false },
     { text: "Test auth flow end to end", completed: false },
   ];
+
+  const copyPrompt = () => {
+    const promptText = document.getElementById('auth-prompt-text')?.textContent;
+    if (promptText) {
+      navigator.clipboard.writeText(promptText);
+      toast({
+        title: "Copied to clipboard",
+        description: "The prompt has been copied to your clipboard",
+      });
+    }
+  };
   
   return (
     <div className="p-6 space-y-6">
@@ -24,17 +38,20 @@ const Auth = () => {
       </p>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800">
+        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
-            <CardTitle className="text-white">Todo Checklist</CardTitle>
+            <CardTitle className="text-white flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-launch-cyan" />
+              Todo Checklist
+            </CardTitle>
             <CardDescription>Track your progress with authentication setup</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {todoItems.map((item, index) => (
-              <div key={index} className="flex items-start space-x-2">
+              <div key={index} className="flex items-start space-x-2 p-2 rounded-md hover:bg-launch-dark/50 transition-colors">
                 <div className="mt-1">
                   {item.completed ? (
-                    <CheckCircle className="h-5 w-5 text-launch-cyan" />
+                    <CheckCircle className="h-5 w-5 text-green-500" />
                   ) : (
                     <Circle className="h-5 w-5 text-gray-500" />
                   )}
@@ -44,69 +61,71 @@ const Auth = () => {
             ))}
           </CardContent>
           <CardFooter>
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-2 hover:bg-launch-cyan hover:text-black transition-colors">
               Save Progress <CheckCircle className="h-4 w-4" />
             </Button>
           </CardFooter>
         </Card>
         
-        <Card className="bg-launch-card-bg border-gray-800">
+        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
-            <CardTitle className="text-white">Tutorial Video</CardTitle>
+            <CardTitle className="text-white flex items-center gap-2">
+              <PlayCircle className="h-5 w-5 text-launch-cyan" />
+              Tutorial Video
+            </CardTitle>
             <CardDescription>Learn how to implement Supabase Auth</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="aspect-video bg-black/30 rounded-md flex items-center justify-center border border-gray-800">
-              <PlayCircle className="h-16 w-16 text-launch-cyan/50" />
-            </div>
+            <AspectRatio ratio={16 / 9}>
+              <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md flex items-center justify-center border border-gray-800 h-full group cursor-pointer">
+                <PlayCircle className="h-16 w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
+              </div>
+            </AspectRatio>
           </CardContent>
         </Card>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800">
+        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
-            <CardTitle className="text-white">Documentation</CardTitle>
+            <CardTitle className="text-white flex items-center gap-2">
+              <ExternalLink className="h-5 w-5 text-launch-cyan" />
+              Documentation
+            </CardTitle>
             <CardDescription>Official Supabase Auth resources</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <a 
-              href="https://supabase.com/docs/guides/auth" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors"
-            >
-              <span className="text-white">Supabase Auth Documentation</span>
-              <ExternalLink className="h-4 w-4 text-launch-cyan" />
-            </a>
-            <a 
-              href="https://supabase.com/docs/guides/auth/social-login" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors"
-            >
-              <span className="text-white">Social Login Setup</span>
-              <ExternalLink className="h-4 w-4 text-launch-cyan" />
-            </a>
-            <a 
-              href="https://supabase.com/docs/reference/javascript/auth-signin" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors"
-            >
-              <span className="text-white">Auth API Reference</span>
-              <ExternalLink className="h-4 w-4 text-launch-cyan" />
-            </a>
+            {[
+              { title: "Supabase Auth Documentation", url: "https://supabase.com/docs/guides/auth" },
+              { title: "Social Login Setup", url: "https://supabase.com/docs/guides/auth/social-login" },
+              { title: "Auth API Reference", url: "https://supabase.com/docs/reference/javascript/auth-signin" }
+            ].map((item, index) => (
+              <a 
+                key={index}
+                href={item.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-launch-cyan/0 via-launch-cyan/5 to-launch-cyan/0 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700"></div>
+                <span className="text-white z-10">{item.title}</span>
+                <ExternalLink className="h-4 w-4 text-launch-cyan z-10 group-hover:translate-x-1 transition-transform" />
+              </a>
+            ))}
           </CardContent>
         </Card>
         
-        <Card className="bg-launch-card-bg border-gray-800">
+        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-launch-cyan/20 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
           <CardHeader>
-            <CardTitle className="text-white">LLM Prompt Example</CardTitle>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Copy className="h-5 w-5 text-launch-cyan" />
+              LLM Prompt Example
+            </CardTitle>
             <CardDescription>Copy and customize for your project</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-launch-dark p-4 rounded-md border border-gray-800 text-sm text-gray-300 font-mono">
+            <div id="auth-prompt-text" className="bg-launch-dark/80 p-4 rounded-md border border-gray-800 text-sm text-gray-300 font-mono relative shadow-inner">
               <p>Create a secure authentication system using Supabase Auth with the following features:</p>
               <br />
               <p>1. Email/password sign up with email verification</p>
@@ -117,8 +136,13 @@ const Auth = () => {
               <p>6. Session persistence between page reloads</p>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button variant="outline" className="flex items-center gap-2">
+          <CardFooter className="flex justify-end">
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2 bg-gradient-to-r from-launch-cyan/10 to-transparent hover:from-launch-cyan/20 hover:to-transparent border-launch-cyan/50"
+              onClick={copyPrompt}
+            >
+              <Copy className="h-4 w-4" />
               Copy Prompt
             </Button>
           </CardFooter>
