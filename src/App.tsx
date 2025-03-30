@@ -11,6 +11,17 @@ import Dashboard from "./pages/Dashboard";
 import DashboardLayout from "./layouts/DashboardLayout";
 import NotFound from "./pages/NotFound";
 
+// Import the new pages
+import Auth from "./pages/Auth";
+import Payment from "./pages/Payment";
+import Deployment from "./pages/Deployment";
+import Security from "./pages/Security";
+import SEO from "./pages/SEO";
+import Launch from "./pages/Launch";
+import CustomerService from "./pages/CustomerService";
+import Growth from "./pages/Growth";
+import Settings from "./pages/Settings";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -26,16 +37,16 @@ const App = () => (
             <Route path="/signup" element={<SignUp />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<Dashboard />} />
-              {/* New dashboard routes */}
-              <Route path="auth" element={<NotFound />} /> 
-              <Route path="payment" element={<NotFound />} />
-              <Route path="deployment" element={<NotFound />} />
-              <Route path="security" element={<NotFound />} />
-              <Route path="seo" element={<NotFound />} />
-              <Route path="launch" element={<NotFound />} />
-              <Route path="customer-service" element={<NotFound />} />
-              <Route path="growth" element={<NotFound />} />
-              <Route path="settings" element={<NotFound />} />
+              {/* Dashboard routes */}
+              <Route path="auth" element={<Auth />} />
+              <Route path="payment" element={<Payment />} />
+              <Route path="deployment" element={<Deployment />} />
+              <Route path="security" element={<Security />} />
+              <Route path="seo" element={<SEO />} />
+              <Route path="launch" element={<Launch />} />
+              <Route path="customer-service" element={<CustomerService />} />
+              <Route path="growth" element={<Growth />} />
+              <Route path="settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="*" element={<NotFound />} />
