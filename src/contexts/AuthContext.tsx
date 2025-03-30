@@ -1,19 +1,25 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Session, User } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
-interface User {
+interface UserProfile {
   id: string;
-  email: string;
   name?: string;
+  email?: string;
+  avatar_url?: string;
 }
 
 interface AuthContextType {
   user: User | null;
+  profile: UserProfile | null;
+  session: Session | null;
   loading: boolean;
   signin: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
-  signout: () => void;
+  signInWithGoogle: () => Promise<void>;
+  signout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,42 +34,75 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
-  // Check if user is already logged in
   useEffect(() => {
-    const storedUser = localStorage.getItem('vibelaunch_user');
-    
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error('Error parsing stored user data:', e);
-        localStorage.removeItem('vibelaunch_user');
+    // Set up auth state listener first
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, currentSession) => {
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+
+        if (currentSession?.user) {
+          // Use setTimeout to avoid deadlock when fetching profile
+          setTimeout(() => {
+            fetchUserProfile(currentSession.user.id);
+          }, 0);
+        } else {
+          setProfile(null);
+        }
       }
-    }
-    
-    setLoading(false);
+    );
+
+    // Then check for existing session
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+      
+      if (currentSession?.user) {
+        fetchUserProfile(currentSession.user.id);
+      }
+      
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  // For demo purposes, we're using localStorage
-  // In production, you would use a proper authentication service
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+        
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return;
+      }
+      
+      if (data) {
+        setProfile(data);
+      }
+    } catch (error) {
+      console.error('Error in fetchUserProfile:', error);
+    }
+  };
+
   const signin = async (email: string, password: string) => {
     setLoading(true);
     
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       
-      // In a real app, this would validate against an API
-      if (password.length < 6) {
-        throw new Error('Invalid credentials');
-      }
+      if (error) throw error;
       
-      const user = { id: `user_${Date.now()}`, email };
-      localStorage.setItem('vibelaunch_user', JSON.stringify(user));
-      setUser(user);
       navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error);
@@ -77,16 +116,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { error } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          data: {
+            name
+          }
+        }
+      });
       
-      if (password.length < 6) {
-        throw new Error('Password must be at least 6 characters');
-      }
+      if (error) throw error;
       
-      const user = { id: `user_${Date.now()}`, email, name };
-      localStorage.setItem('vibelaunch_user', JSON.stringify(user));
-      setUser(user);
       navigate('/dashboard');
     } catch (error) {
       console.error('Signup failed:', error);
@@ -96,17 +137,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
   
-  const signout = () => {
-    localStorage.removeItem('vibelaunch_user');
-    setUser(null);
-    navigate('/signin');
+  const signInWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) throw error;
+    } catch (error) {
+      console.error('Google sign in failed:', error);
+      throw error;
+    }
+  };
+  
+  const signout = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate('/signin');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
   
   const value = {
     user,
+    profile,
+    session,
     loading,
     signin,
     signup,
+    signInWithGoogle,
     signout
   };
   

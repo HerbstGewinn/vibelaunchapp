@@ -6,13 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { FcGoogle } from 'react-icons/fc';
+import { Separator } from '@/components/ui/separator';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { signin } = useAuth();
+  const { signin, signInWithGoogle } = useAuth();
   const { toast } = useToast();
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -36,6 +38,18 @@ const SignIn = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      toast({
+        title: "Google login failed",
+        description: "There was an issue signing in with Google",
+        variant: "destructive",
+      });
+    }
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -49,6 +63,23 @@ const SignIn = () => {
             <span className="text-launch-cyan">Launch</span>
           </h1>
           <p className="text-launch-text-muted">Sign in to track your launch progress</p>
+        </div>
+        
+        <Button 
+          type="button"
+          onClick={handleGoogleSignIn}
+          variant="outline" 
+          className="w-full mb-6 bg-gray-900 text-white border-gray-800 hover:bg-gray-800 flex items-center justify-center gap-2"
+        >
+          <FcGoogle className="h-5 w-5" />
+          Sign in with Google
+        </Button>
+        
+        <div className="relative mb-6">
+          <Separator className="bg-gray-800" />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-launch-dark-blue px-2 text-xs text-gray-400">
+            OR
+          </div>
         </div>
         
         <form onSubmit={handleSignIn} className="space-y-6">
