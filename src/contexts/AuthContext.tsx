@@ -116,7 +116,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     
     try {
-      const { error } = await supabase.auth.signUp({ 
+      // This is the critical part - we need to use signUp to create an auth record
+      const { data, error } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
@@ -128,7 +129,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error) throw error;
       
-      navigate('/dashboard');
+      // Check if user was created
+      if (!data.user) {
+        throw new Error('User creation failed. Please try again.');
+      }
+      
+      // We don't need to manually create a profile since the database trigger will handle that
+      
     } catch (error) {
       console.error('Signup failed:', error);
       throw error;

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,21 +15,25 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { signup } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
+      // Make sure to properly register the user with auth
       await signup(email, password, name);
       toast({
         title: "Account created",
         description: "Welcome to VibeLaunch!",
       });
-    } catch (error) {
+      navigate('/dashboard');
+    } catch (error: any) {
+      console.error("Signup error:", error);
       toast({
         title: "Signup failed",
-        description: "Please check your information and try again",
+        description: error.message || "Please check your information and try again",
         variant: "destructive",
       });
     } finally {
