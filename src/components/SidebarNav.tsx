@@ -8,12 +8,13 @@ import {
   Search, 
   Users, 
   MessageSquare, 
-  BarChart3, 
-  Facebook, 
-  Twitter, 
-  Instagram, 
-  Linkedin, 
-  Youtube, 
+  BarChart3,
+  ShieldCheck, 
+  CreditCard,
+  Rocket,
+  Lock,
+  GanttChart,
+  Mail,
   Settings,
   LogOut
 } from 'lucide-react';
@@ -23,23 +24,16 @@ const navItems = [
   {
     title: 'Launch Steps',
     items: [
-      { name: 'Domain & Deployment', icon: Globe, href: '/dashboard/domain' },
-      { name: 'Google Indexing', icon: Search, href: '/dashboard/indexing' },
-      { name: 'Acquisition Strategy', icon: Users, href: '/dashboard/acquisition' },
-      { name: 'Feedback Collection', icon: MessageSquare, href: '/dashboard/feedback' },
-      { name: 'Growth & Analytics', icon: BarChart3, href: '/dashboard/analytics' },
+      { name: 'Auth', icon: ShieldCheck, href: '/dashboard/auth' },
+      { name: 'Payment', icon: CreditCard, href: '/dashboard/payment' },
+      { name: 'Deployment', icon: Globe, href: '/dashboard/deployment' },
+      { name: 'Security', icon: Lock, href: '/dashboard/security' },
+      { name: 'SEO', icon: Search, href: '/dashboard/seo' },
+      { name: 'Launch', icon: Rocket, href: '/dashboard/launch' },
+      { name: 'Customer Service', icon: Mail, href: '/dashboard/customer-service' },
+      { name: 'User Growth', icon: Users, href: '/dashboard/growth' },
     ],
-  },
-  {
-    title: 'Social Media',
-    items: [
-      { name: 'Facebook', icon: Facebook, href: '/dashboard/facebook' },
-      { name: 'Twitter', icon: Twitter, href: '/dashboard/twitter' },
-      { name: 'Instagram', icon: Instagram, href: '/dashboard/instagram' },
-      { name: 'LinkedIn', icon: Linkedin, href: '/dashboard/linkedin' },
-      { name: 'YouTube', icon: Youtube, href: '/dashboard/youtube' },
-    ],
-  },
+  }
 ];
 
 const SidebarNav = () => {

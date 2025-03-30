@@ -26,7 +26,16 @@ const App = () => (
             <Route path="/signup" element={<SignUp />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<Dashboard />} />
-              {/* Add more dashboard routes here as needed */}
+              {/* New dashboard routes */}
+              <Route path="auth" element={<NotFound />} /> 
+              <Route path="payment" element={<NotFound />} />
+              <Route path="deployment" element={<NotFound />} />
+              <Route path="security" element={<NotFound />} />
+              <Route path="seo" element={<NotFound />} />
+              <Route path="launch" element={<NotFound />} />
+              <Route path="customer-service" element={<NotFound />} />
+              <Route path="growth" element={<NotFound />} />
+              <Route path="settings" element={<NotFound />} />
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="*" element={<NotFound />} />
