@@ -45,22 +45,22 @@ const Auth = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-launch-cyan">Authentication</h1>
-      <p className="text-launch-text-muted max-w-3xl">
+    <div className="p-3 md:p-6 space-y-4 md:space-y-6">
+      <h1 className="text-2xl md:text-3xl font-bold text-launch-cyan">Authentication</h1>
+      <p className="text-sm md:text-base text-launch-text-muted max-w-3xl">
         Set up authentication for your application using Supabase Auth. Follow the checklist and resources below to get started.
       </p>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 md:gap-6">
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-xl text-white flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-launch-cyan" />
+          <CardHeader className="p-4 md:p-6">
+            <CardTitle className="text-lg md:text-xl text-white flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-launch-cyan" />
               Todo Checklist
             </CardTitle>
-            <CardDescription>Track your progress with authentication setup</CardDescription>
+            <CardDescription className="text-xs md:text-sm">Track your progress with authentication setup</CardDescription>
           </CardHeader>
-          <CardContent className="pt-0 space-y-3">
+          <CardContent className="pt-0 px-4 md:px-6 pb-4 md:pb-6 space-y-2 md:space-y-3">
             {todoItems.map((item, index) => (
               <div 
                 key={index} 
@@ -68,58 +68,58 @@ const Auth = () => {
               >
                 <div className="mt-1 shrink-0">
                   {item.completed ? (
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500" />
                   ) : (
-                    <Circle className="h-5 w-5 text-gray-500" />
+                    <Circle className="h-4 w-4 md:h-5 md:w-5 text-gray-500" />
                   )}
                 </div>
-                <span className="text-white">{item.text}</span>
+                <span className="text-xs md:text-sm text-white leading-tight">{item.text}</span>
               </div>
             ))}
           </CardContent>
-          <CardFooter>
+          <CardFooter className="px-4 md:px-6 pb-4 md:pb-6 pt-0">
             <Button 
               variant="outline" 
-              className="w-full sm:w-auto flex items-center gap-2 hover:bg-launch-cyan hover:text-black transition-colors"
+              className="w-full text-xs md:text-sm h-8 md:h-10 flex items-center gap-2 hover:bg-launch-cyan hover:text-black transition-colors"
             >
               Save Progress 
-              <CheckCircle className="h-4 w-4" />
+              <CheckCircle className="h-3 w-3 md:h-4 md:w-4" />
             </Button>
           </CardFooter>
         </Card>
         
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-xl text-white flex items-center gap-2">
-              <PlayCircle className="h-5 w-5 text-launch-cyan" />
+          <CardHeader className="p-4 md:p-6">
+            <CardTitle className="text-lg md:text-xl text-white flex items-center gap-2">
+              <PlayCircle className="h-4 w-4 md:h-5 md:w-5 text-launch-cyan" />
               Tutorial Video
             </CardTitle>
-            <CardDescription>Learn how to implement Supabase Auth</CardDescription>
+            <CardDescription className="text-xs md:text-sm">Learn how to implement Supabase Auth</CardDescription>
           </CardHeader>
-          <CardContent className="pt-0">
+          <CardContent className="pt-0 px-4 md:px-6 pb-4 md:pb-6">
             <AspectRatio ratio={16 / 9}>
               <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md flex items-center justify-center border border-gray-800 h-full group cursor-pointer">
-                <PlayCircle className="h-16 w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
+                <PlayCircle className="h-10 w-10 md:h-16 md:w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
               </div>
             </AspectRatio>
           </CardContent>
         </Card>
       </div>
 
-      <div className="my-8">
+      <div className="my-4 md:my-8">
         <TweetCarousel />
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 md:gap-6">
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-xl text-white flex items-center gap-2">
-              <ExternalLink className="h-5 w-5 text-launch-cyan" />
+          <CardHeader className="p-4 md:p-6">
+            <CardTitle className="text-lg md:text-xl text-white flex items-center gap-2">
+              <ExternalLink className="h-4 w-4 md:h-5 md:w-5 text-launch-cyan" />
               Documentation
             </CardTitle>
-            <CardDescription>Official Supabase Auth resources</CardDescription>
+            <CardDescription className="text-xs md:text-sm">Official Supabase Auth resources</CardDescription>
           </CardHeader>
-          <CardContent className="pt-0 space-y-3">
+          <CardContent className="pt-0 px-4 md:px-6 pb-4 md:pb-6 space-y-2 md:space-y-3">
             {[
               {
                 title: "Supabase Auth Documentation",
@@ -139,27 +139,27 @@ const Auth = () => {
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative"
+                className="flex items-center justify-between p-2 md:p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-launch-cyan/0 via-launch-cyan/5 to-launch-cyan/0 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700"></div>
-                <span className="text-white z-10">{item.title}</span>
-                <ExternalLink className="h-4 w-4 text-launch-cyan z-10 group-hover:translate-x-1 transition-transform" />
+                <span className="text-xs md:text-sm text-white z-10">{item.title}</span>
+                <ExternalLink className="h-3 w-3 md:h-4 md:w-4 text-launch-cyan z-10 group-hover:translate-x-1 transition-transform" />
               </a>
             ))}
           </CardContent>
         </Card>
         
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-launch-cyan/20 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
-          <CardHeader>
-            <CardTitle className="text-xl text-white flex items-center gap-2">
-              <Copy className="h-5 w-5 text-launch-cyan" />
+          <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-launch-cyan/20 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
+          <CardHeader className="p-4 md:p-6">
+            <CardTitle className="text-lg md:text-xl text-white flex items-center gap-2">
+              <Copy className="h-4 w-4 md:h-5 md:w-5 text-launch-cyan" />
               LLM Prompt Example
             </CardTitle>
-            <CardDescription>Copy and customize for your project</CardDescription>
+            <CardDescription className="text-xs md:text-sm">Copy and customize for your project</CardDescription>
           </CardHeader>
-          <CardContent className="pt-0">
-            <div id="auth-prompt-text" className="bg-launch-dark/80 p-4 rounded-md border border-gray-800 text-sm text-gray-300 font-mono relative shadow-inner space-y-3">
+          <CardContent className="pt-0 px-4 md:px-6 pb-4 md:pb-6">
+            <div id="auth-prompt-text" className="bg-launch-dark/80 p-3 md:p-4 rounded-md border border-gray-800 text-xs md:text-sm text-gray-300 font-mono relative shadow-inner space-y-2 md:space-y-3 overflow-auto max-h-48 md:max-h-none">
               <p>Create a secure authentication system using Supabase Auth with the following features:</p>
               <br />
               <p>1. Email/password sign up with email verification</p>
@@ -170,13 +170,13 @@ const Auth = () => {
               <p>6. Session persistence between page reloads</p>
             </div>
           </CardContent>
-          <CardFooter className="flex justify-end">
+          <CardFooter className="flex justify-end px-4 md:px-6 pb-4 md:pb-6 pt-0">
             <Button 
               variant="outline" 
-              className="flex items-center gap-2 bg-gradient-to-r from-launch-cyan/10 to-transparent hover:from-launch-cyan/20 hover:to-transparent border-launch-cyan/50"
+              className="text-xs md:text-sm h-8 md:h-10 flex items-center gap-2 bg-gradient-to-r from-launch-cyan/10 to-transparent hover:from-launch-cyan/20 hover:to-transparent border-launch-cyan/50"
               onClick={copyPrompt}
             >
-              <Copy className="h-4 w-4" />
+              <Copy className="h-3 w-3 md:h-4 md:w-4" />
               Copy Prompt
             </Button>
           </CardFooter>
