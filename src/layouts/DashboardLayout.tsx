@@ -30,7 +30,7 @@ const DashboardLayout = () => {
               variant="ghost"
               size="icon"
               onClick={toggleSidebar}
-              className="fixed top-4 left-4 z-50 text-gray-400 hover:text-white"
+              className="fixed top-4 left-4 z-50 bg-launch-sidebar-bg/95 shadow-lg border border-gray-800 backdrop-blur-sm rounded-lg hover:bg-launch-dark hover:text-launch-cyan"
             >
               <Menu className="h-6 w-6" />
             </Button>
