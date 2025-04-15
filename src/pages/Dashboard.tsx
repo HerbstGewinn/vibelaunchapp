@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import StatCard from '../components/dashboard/StatCard';
@@ -5,33 +6,34 @@ import ProgressSection from '../components/dashboard/ProgressSection';
 import ProgressOverview from '../components/dashboard/ProgressOverview';
 import ProjectUrlCard from '../components/dashboard/ProjectUrlCard';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Check, Clock } from 'lucide-react';
 import { useTaskProgress } from '@/hooks/useTaskProgress';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("launch-steps");
   const { tasks, progress, loading, toggleTaskComplete } = useTaskProgress();
 
-  // Sample launch steps data
-  const launchSteps = [
-    {
-      id: 1,
-      title: "Get a Domain, Deploy your project",
-      description: "Secure your online identity and make your project accessible to the world.",
-      status: "completed",
-      progress: 100
-    },
-    {
-      id: 2,
-      title: "Get indexed by Google",
-      description: "Set up sitemap.xml, Google Search Console, and Google Analytics.",
-      status: "in-progress",
-      progress: 75
-    }
-  ];
+  // Mapping of task_ids to their descriptions
+  const taskDescriptions: Record<string, string> = {
+    setup_auth: "Set up authentication and user management",
+    setup_payment: "Configure payment processing system",
+    setup_deployment: "Set up deployment and hosting",
+    setup_security: "Implement security measures",
+    setup_seo: "Configure SEO and analytics",
+    setup_launch: "Prepare for product launch",
+    setup_customer_service: "Set up customer support system",
+    setup_growth: "Plan user growth strategies"
+  };
+
+  // Function to handle task click
+  const handleTaskClick = (taskId: string, currentlyCompleted: boolean) => {
+    toggleTaskComplete(taskId, !currentlyCompleted);
+  };
 
   // Sample action items data
   const actionItems = [
@@ -84,7 +86,11 @@ const Dashboard = () => {
           value={`${Math.round(progress)}%`} 
           change={tasks.filter(t => t.completed).length} 
         />
-        <StatCard title="Steps Completed" value={`${tasks.filter(t => t.completed).length}/7`} change={1} />
+        <StatCard 
+          title="Steps Completed" 
+          value={`${tasks.filter(t => t.completed).length}/7`} 
+          change={1} 
+        />
         <StatCard title="Time to Launch" value="7 days" change={-2} />
       </div>
 
@@ -119,13 +125,14 @@ const Dashboard = () => {
           <TabsContent value="launch-steps" className="p-4">
             <div className="space-y-4">
               {!loading && tasks.map(task => (
-                <div 
-                  key={task.id} 
-                  className="bg-launch-dark border border-gray-800 rounded-lg p-4 transition-all hover:border-gray-700"
+                <Button
+                  key={task.id}
+                  variant="ghost"
+                  className="w-full bg-launch-dark border border-gray-800 rounded-lg p-4 transition-all hover:border-gray-700"
+                  onClick={() => handleTaskClick(task.id, task.completed)}
                 >
-                  <div className="flex items-start gap-4">
-                    <button
-                      onClick={() => toggleTaskComplete(task.id, !task.completed)}
+                  <div className="flex items-start gap-4 w-full">
+                    <div
                       className={`rounded-full p-2 transition-colors ${
                         task.completed ? 'bg-green-500/20' : 'bg-yellow-500/20'
                       }`}
@@ -135,10 +142,10 @@ const Dashboard = () => {
                       ) : (
                         <Clock className="h-6 w-6 text-yellow-500" />
                       )}
-                    </button>
+                    </div>
                     <div className="flex-1">
                       <div className="flex justify-between">
-                        <h3 className="font-medium text-white capitalize">
+                        <h3 className="font-medium text-white capitalize text-left">
                           {task.task_id.replace(/_/g, ' ')}
                         </h3>
                         <span className={`px-2 py-1 rounded text-xs capitalize ${
@@ -147,9 +154,12 @@ const Dashboard = () => {
                           {task.completed ? 'Completed' : 'In Progress'}
                         </span>
                       </div>
+                      <p className="text-sm text-gray-400 mt-1 text-left">
+                        {taskDescriptions[task.task_id]}
+                      </p>
                     </div>
                   </div>
-                </div>
+                </Button>
               ))}
             </div>
           </TabsContent>

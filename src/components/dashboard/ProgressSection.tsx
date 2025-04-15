@@ -1,9 +1,12 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProgressChart from './ProgressChart';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ProgressSection = () => {
+  const navigate = useNavigate();
+
   return (
     <Card className="bg-launch-card-bg border-gray-800">
       <CardHeader className="pb-2">
@@ -15,7 +18,10 @@ const ProgressSection = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div 
+          className="h-[300px] cursor-pointer" 
+          onClick={() => navigate('/')}
+        >
           <ProgressChart />
         </div>
       </CardContent>
