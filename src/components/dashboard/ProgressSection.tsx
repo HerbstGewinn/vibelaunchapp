@@ -15,10 +15,7 @@ const ProgressSection = () => {
   };
 
   return (
-    <Card 
-      className="bg-launch-card-bg border-gray-800 cursor-pointer hover:border-gray-700 transition-colors"
-      onClick={goToHomepage}
-    >
+    <Card className="bg-launch-card-bg border-gray-800">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl font-semibold">
           Launch Progress
@@ -28,7 +25,7 @@ const ProgressSection = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mb-4">
+        <div className="mb-4 cursor-pointer" onClick={goToHomepage}>
           <div className="flex justify-between mb-1">
             <span className="text-sm text-gray-400">Current progress:</span>
             <span className="text-sm font-medium">{Math.round(progress)}%</span>
@@ -37,6 +34,7 @@ const ProgressSection = () => {
             value={progress} 
             className="h-2 bg-gray-800"
           />
+          <p className="text-xs text-gray-500 mt-1">Click the progress bar to go to homepage</p>
         </div>
         <div className="h-[250px]">
           <ProgressChart />
