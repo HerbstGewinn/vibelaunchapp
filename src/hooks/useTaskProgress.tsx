@@ -29,7 +29,7 @@ export function useTaskProgress() {
   const fetchTasks = async () => {
     try {
       const { data: tasksData, error: tasksError } = await supabase
-        .from<'user_tasks', Task>('user_tasks')
+        .from('user_tasks')
         .select('*')
         .eq('user_id', user?.id)
         .order('created_at', { ascending: true });
@@ -37,10 +37,12 @@ export function useTaskProgress() {
       if (tasksError) throw tasksError;
       
       if (tasksData) {
-        setTasks(tasksData);
+        // Type assertion to handle the TS error
+        const typedTasksData = tasksData as Task[];
+        setTasks(typedTasksData);
         
-        const completedTasks = tasksData.filter(task => task.completed).length;
-        const totalTasks = tasksData.length;
+        const completedTasks = typedTasksData.filter(task => task.completed).length;
+        const totalTasks = typedTasksData.length;
         const calculatedProgress = 
           totalTasks > 0 
             ? 5 + (completedTasks / totalTasks) * 95 
@@ -80,7 +82,7 @@ export function useTaskProgress() {
   const toggleTaskComplete = async (taskId: string, completed: boolean) => {
     try {
       const { error } = await supabase
-        .from<'user_tasks', Task>('user_tasks')
+        .from('user_tasks')
         .update({ 
           completed,
           completed_at: completed ? new Date().toISOString() : null
