@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -31,6 +30,7 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const navItems = [
   {
@@ -52,6 +52,7 @@ const SidebarNav = () => {
   const location = useLocation();
   const { signout } = useAuth();
   const { state, toggleSidebar } = useSidebar();
+  const isMobile = useIsMobile();
 
   return (
     <Sidebar className="h-screen border-r border-gray-800 bg-launch-sidebar-bg">
@@ -60,14 +61,16 @@ const SidebarNav = () => {
           <span className="text-xl font-bold text-white">
             Vibe<span className="text-launch-cyan">Launch</span>
           </span>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className="text-gray-400 hover:text-white"
-          >
-            {state === "expanded" ? <ChevronLeft /> : <ChevronRight />}
-          </Button>
+          {isMobile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="text-gray-400 hover:text-white md:hidden"
+            >
+              {state === "expanded" ? <ChevronLeft /> : <ChevronRight />}
+            </Button>
+          )}
         </div>
         
         <div className="mt-4">
@@ -97,12 +100,12 @@ const SidebarNav = () => {
                     <SidebarMenuButton
                       asChild
                       isActive={isActive}
-                      tooltip={state === "collapsed" ? item.name : undefined}
+                      tooltip={state === "collapsed" && isMobile ? item.name : undefined}
                     >
                       <Link
                         to={item.href}
                         className={cn(
-                          "flex items-center gap-3 rounded-md text-sm transition-colors",
+                          "flex items-center gap-3 rounded-md text-sm transition-colors px-4 py-2",
                           isActive 
                             ? "text-launch-cyan" 
                             : "text-launch-text-muted hover:text-white"
@@ -126,12 +129,12 @@ const SidebarNav = () => {
             <SidebarMenuButton
               asChild
               isActive={location.pathname === '/dashboard/settings'}
-              tooltip={state === "collapsed" ? "Settings" : undefined}
+              tooltip={state === "collapsed" && isMobile ? "Settings" : undefined}
             >
               <Link 
                 to="/dashboard/settings" 
                 className={cn(
-                  "flex items-center gap-3 rounded-md text-sm transition-colors",
+                  "flex items-center gap-3 rounded-md text-sm transition-colors px-4 py-2",
                   location.pathname === '/dashboard/settings'
                     ? "text-launch-cyan"
                     : "text-launch-text-muted hover:text-white"
@@ -145,7 +148,8 @@ const SidebarNav = () => {
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={signout}
-              tooltip={state === "collapsed" ? "Sign out" : undefined}
+              tooltip={state === "collapsed" && isMobile ? "Sign out" : undefined}
+              className="flex items-center gap-3 rounded-md text-sm transition-colors px-4 py-2 w-full text-launch-text-muted hover:text-white"
             >
               <LogOut className="h-4 w-4" />
               <span>Sign out</span>
