@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import SidebarNav from '@/components/SidebarNav';
 import { RequireAuth } from '@/contexts/AuthContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,23 +11,30 @@ import { Button } from '@/components/ui/button';
 
 const DashboardLayout = () => {
   const isMobile = useIsMobile();
-  const [isOpen, setIsOpen] = React.useState(!isMobile);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const location = useLocation();
   
   const toggleSidebar = () => setIsOpen(prev => !prev);
+
+  // Scroll to top when route changes
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   
   return (
     <RequireAuth>
       <SidebarProvider defaultOpen={!isMobile}>
         <div className="flex min-h-screen bg-launch-dark text-white w-full relative">
-          {/* Mobile Menu Button - Only visible on mobile */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className="fixed top-4 left-4 z-50 md:hidden text-gray-400 hover:text-white"
-          >
-            <Menu className="h-6 w-6" />
-          </Button>
+          {isMobile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="fixed top-4 left-4 z-50 text-gray-400 hover:text-white"
+            >
+              <Menu className="h-6 w-6" />
+            </Button>
+          )}
 
           <SidebarNav isOpen={isOpen} onToggle={toggleSidebar} />
           <div className="flex-1 flex flex-col overflow-hidden">

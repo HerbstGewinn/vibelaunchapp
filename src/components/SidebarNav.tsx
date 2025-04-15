@@ -56,8 +56,7 @@ const SidebarNav = ({
     signout
   } = useAuth();
   const {
-    state,
-    toggleSidebar
+    state
   } = useSidebar();
   const isMobile = useIsMobile();
 
@@ -131,8 +130,11 @@ const SidebarNav = ({
         </SheetContent>
       </Sheet>;
   }
+
+  // On desktop, always show the sidebar
   return <Sidebar className="h-screen border-r border-gray-800 bg-launch-sidebar-bg">
       <SidebarContentComponent />
     </Sidebar>;
 };
+
 export default SidebarNav;
