@@ -9,7 +9,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 const DashboardLayout = () => {
   return (
     <RequireAuth>
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={true}>
         <div className="flex h-screen bg-launch-dark text-white w-full">
           <SidebarNav />
           <div className="flex-1 flex flex-col overflow-hidden">
