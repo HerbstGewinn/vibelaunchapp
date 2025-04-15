@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTaskProgress } from '@/hooks/useTaskProgress';
@@ -48,6 +48,7 @@ interface SidebarNavProps {
   isOpen: boolean;
   onToggle: () => void;
 }
+
 const SidebarNav = ({
   isOpen,
   onToggle
@@ -57,6 +58,11 @@ const SidebarNav = ({
   const { state } = useSidebar();
   const isMobile = useIsMobile();
   const { progress } = useTaskProgress();
+  const navigate = useNavigate();
+
+  const goToHomepage = () => {
+    navigate('/');
+  };
 
   // Create the sidebar content as a separate component
   const SidebarContentComponent = () => (
@@ -69,7 +75,10 @@ const SidebarNav = ({
       </div>
       
       <div className="mt-2 px-4">
-        <div className="bg-launch-card-bg rounded-lg p-3">
+        <div 
+          className="bg-launch-card-bg rounded-lg p-3 cursor-pointer hover:bg-launch-card-hover transition-colors" 
+          onClick={goToHomepage}
+        >
           <div className="text-sm text-gray-400">Launch Progress:</div>
           <div className="flex items-center gap-2">
             <div className="flex-1 bg-gray-800 h-2 rounded-full">
@@ -82,6 +91,7 @@ const SidebarNav = ({
             </div>
             <span className="text-white text-sm">{Math.round(progress)}%</span>
           </div>
+          <p className="text-xs text-gray-500 mt-1">Click to go to homepage</p>
         </div>
       </div>
 
