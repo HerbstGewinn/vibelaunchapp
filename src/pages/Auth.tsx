@@ -31,13 +31,13 @@ const Auth = () => {
   };
   
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-launch-cyan">Authentication Setup</h1>
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+      <h1 className="text-2xl md:text-3xl font-bold text-launch-cyan">Authentication Setup</h1>
       <p className="text-launch-text-muted max-w-3xl">
         Set up authentication for your application using Supabase Auth. Follow the checklist and resources below to get started.
       </p>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
@@ -49,7 +49,7 @@ const Auth = () => {
           <CardContent className="space-y-4">
             {todoItems.map((item, index) => (
               <div key={index} className="flex items-start space-x-2 p-2 rounded-md hover:bg-launch-dark/50 transition-colors">
-                <div className="mt-1">
+                <div className="mt-1 shrink-0">
                   {item.completed ? (
                     <CheckCircle className="h-5 w-5 text-green-500" />
                   ) : (
@@ -61,7 +61,7 @@ const Auth = () => {
             ))}
           </CardContent>
           <CardFooter>
-            <Button variant="outline" className="flex items-center gap-2 hover:bg-launch-cyan hover:text-black transition-colors">
+            <Button variant="outline" className="w-full sm:w-auto flex items-center gap-2 hover:bg-launch-cyan hover:text-black transition-colors">
               Save Progress <CheckCircle className="h-4 w-4" />
             </Button>
           </CardFooter>
@@ -78,18 +78,18 @@ const Auth = () => {
           <CardContent>
             <AspectRatio ratio={16 / 9}>
               <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md flex items-center justify-center border border-gray-800 h-full group cursor-pointer">
-                <PlayCircle className="h-16 w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
+                <PlayCircle className="h-12 w-12 md:h-16 md:w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
               </div>
             </AspectRatio>
           </CardContent>
         </Card>
       </div>
 
-      <div className="my-8">
+      <div className="my-4 md:my-8">
         <TweetCarousel />
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">

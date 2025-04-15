@@ -49,7 +49,7 @@ const SidebarNav = () => {
       </div>
       
       <div className="px-4 py-2">
-        <div className="bg-launch-card-bg rounded-lg p-3 mb-4">
+        <div className="bg-launch-card-bg rounded-lg p-3">
           <div className="text-sm text-gray-400">Launch Progress:</div>
           <div className="flex items-center gap-2">
             <div className="flex-1 bg-gray-800 h-2 rounded-full">
@@ -60,9 +60,9 @@ const SidebarNav = () => {
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto px-2 py-2">
+      <div className="flex-1 overflow-y-auto px-2 py-2 scrollbar-none">
         {navItems.map((section, i) => (
-          <div key={i} className="mb-6">
+          <div key={i} className="mb-4">
             <h3 className="text-launch-text-muted font-medium text-xs uppercase tracking-wider px-4 mb-2">
               {section.title}
             </h3>
