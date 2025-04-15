@@ -31,6 +31,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 
 const navItems = [
   {
@@ -48,45 +49,48 @@ const navItems = [
   }
 ];
 
-const SidebarNav = () => {
+interface SidebarNavProps {
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+const SidebarNav = ({ isOpen, onToggle }: SidebarNavProps) => {
   const location = useLocation();
   const { signout } = useAuth();
   const { state, toggleSidebar } = useSidebar();
   const isMobile = useIsMobile();
 
-  return (
-    <Sidebar className="h-screen border-r border-gray-800 bg-launch-sidebar-bg">
-      <SidebarHeader className="p-4">
-        <div className="flex items-center justify-between">
-          <span className="text-xl font-bold text-white">
-            Vibe<span className="text-launch-cyan">Launch</span>
-          </span>
-          {isMobile && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleSidebar}
-              className="text-gray-400 hover:text-white md:hidden"
-            >
-              {state === "expanded" ? <ChevronLeft /> : <ChevronRight />}
-            </Button>
-          )}
-        </div>
-        
-        <div className="mt-4">
-          <div className="bg-launch-card-bg rounded-lg p-3">
-            <div className="text-sm text-gray-400">Launch Progress:</div>
-            <div className="flex items-center gap-2">
-              <div className="flex-1 bg-gray-800 h-2 rounded-full">
-                <div className="bg-launch-cyan h-full rounded-full" style={{ width: '65%' }}></div>
-              </div>
-              <span className="text-white text-sm">65%</span>
+  const SidebarContent = () => (
+    <div className="flex h-full flex-col">
+      <div className="flex items-center justify-between p-4">
+        <span className="text-xl font-bold text-white">
+          Vibe<span className="text-launch-cyan">Launch</span>
+        </span>
+        {isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onToggle}
+            className="text-gray-400 hover:text-white"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+      
+      <div className="mt-2 px-4">
+        <div className="bg-launch-card-bg rounded-lg p-3">
+          <div className="text-sm text-gray-400">Launch Progress:</div>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 bg-gray-800 h-2 rounded-full">
+              <div className="bg-launch-cyan h-full rounded-full" style={{ width: '65%' }}></div>
             </div>
+            <span className="text-white text-sm">65%</span>
           </div>
         </div>
-      </SidebarHeader>
+      </div>
 
-      <SidebarContent>
+      <SidebarContent className="px-2">
         {navItems.map((section, i) => (
           <div key={i} className="py-2">
             <h3 className="text-launch-text-muted font-medium text-xs uppercase tracking-wider px-4 mb-2">
@@ -157,6 +161,25 @@ const SidebarNav = () => {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <Sheet open={isOpen} onOpenChange={onToggle}>
+        <SheetContent 
+          side="left" 
+          className="w-[280px] p-0 border-r border-gray-800 bg-launch-sidebar-bg"
+        >
+          <SidebarContent />
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return (
+    <Sidebar className="h-screen border-r border-gray-800 bg-launch-sidebar-bg">
+      <SidebarContent />
     </Sidebar>
   );
 };

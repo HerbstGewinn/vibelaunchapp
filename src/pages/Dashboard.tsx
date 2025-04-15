@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import StatCard from '../components/dashboard/StatCard';
@@ -52,39 +51,38 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex-1 p-6 overflow-y-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-1">
-            Launch <span className="text-launch-cyan">Dashboard</span>
-          </h1>
-          <p className="text-gray-400">
-            Track and manage your project's journey from vibe to 1000 users
-          </p>
-        </div>
-        <div className="w-[250px]">
-          <Select defaultValue="example.com">
-            <SelectTrigger className="bg-launch-dark border-gray-800 focus:ring-launch-cyan">
-              <SelectValue placeholder="Select project" />
-            </SelectTrigger>
-            <SelectContent className="bg-launch-dark border-gray-800">
-              <SelectItem value="example.com">example.com</SelectItem>
-              <SelectItem value="myapp.io">myapp.io</SelectItem>
-              <SelectItem value="myproject.dev">myproject.dev</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+    <div className="flex-1 space-y-6">
+      <div className="space-y-2">
+        <h1 className="text-2xl md:text-3xl font-bold">
+          Launch <span className="text-launch-cyan">Dashboard</span>
+        </h1>
+        <p className="text-gray-400 text-sm md:text-base">
+          Track and manage your project's journey from vibe to 1000 users
+        </p>
       </div>
 
-      <ProjectUrlCard url="example.com" className="mb-6" />
+      <div className="w-full md:w-[250px]">
+        <Select defaultValue="example.com">
+          <SelectTrigger className="bg-launch-dark border-gray-800 focus:ring-launch-cyan">
+            <SelectValue placeholder="Select project" />
+          </SelectTrigger>
+          <SelectContent className="bg-launch-dark border-gray-800">
+            <SelectItem value="example.com">example.com</SelectItem>
+            <SelectItem value="myapp.io">myapp.io</SelectItem>
+            <SelectItem value="myproject.dev">myproject.dev</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <ProjectUrlCard url="example.com" />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <StatCard title="Completed Tasks" value="12/20" change={4} />
         <StatCard title="Steps Completed" value="3/5" change={1} />
         <StatCard title="Time to Launch" value="7 days" change={-2} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="lg:col-span-2">
           <ProgressSection />
         </div>
@@ -93,7 +91,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Launch Steps and Action Items Tabs */}
       <div className="bg-launch-card-bg border border-gray-800 rounded-lg overflow-hidden">
         <Tabs defaultValue="launch-steps" value={activeTab} onValueChange={setActiveTab}>
           <div className="bg-launch-sidebar-bg p-1 rounded-t-lg">

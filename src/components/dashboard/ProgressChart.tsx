@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 const data = [
@@ -16,7 +16,7 @@ const data = [
 
 const ProgressChart = () => {
   return (
-    <div className="h-full w-full">
+    <div className="h-[250px] md:h-[300px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
