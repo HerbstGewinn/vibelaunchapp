@@ -5,34 +5,44 @@ import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useToast } from "@/hooks/use-toast";
 import TweetCarousel from '@/components/auth/TweetCarousel';
-
 const Auth = () => {
-  const { toast } = useToast();
-  
-  const todoItems = [
-    { text: "Setup Supabase project", completed: false },
-    { text: "Enable Auth providers (Email, Google, etc.)", completed: false },
-    { text: "Configure redirect URLs", completed: false },
-    { text: "Implement sign in component", completed: false },
-    { text: "Implement sign up component", completed: false },
-    { text: "Add auth guards to protected routes", completed: false },
-    { text: "Test auth flow end to end", completed: false },
-  ];
-
+  const {
+    toast
+  } = useToast();
+  const todoItems = [{
+    text: "Setup Supabase project",
+    completed: false
+  }, {
+    text: "Enable Auth providers (Email, Google, etc.)",
+    completed: false
+  }, {
+    text: "Configure redirect URLs",
+    completed: false
+  }, {
+    text: "Implement sign in component",
+    completed: false
+  }, {
+    text: "Implement sign up component",
+    completed: false
+  }, {
+    text: "Add auth guards to protected routes",
+    completed: false
+  }, {
+    text: "Test auth flow end to end",
+    completed: false
+  }];
   const copyPrompt = () => {
     const promptText = document.getElementById('auth-prompt-text')?.textContent;
     if (promptText) {
       navigator.clipboard.writeText(promptText);
       toast({
         title: "Copied to clipboard",
-        description: "The prompt has been copied to your clipboard",
+        description: "The prompt has been copied to your clipboard"
       });
     }
   };
-  
-  return (
-    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
-      <h1 className="text-2xl md:text-3xl font-bold text-launch-cyan">Authentication Setup</h1>
+  return <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+      <h1 className="text-2xl md:text-3xl font-bold text-launch-cyan">Authentication</h1>
       <p className="text-launch-text-muted max-w-3xl">
         Set up authentication for your application using Supabase Auth. Follow the checklist and resources below to get started.
       </p>
@@ -47,18 +57,12 @@ const Auth = () => {
             <CardDescription>Track your progress with authentication setup</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {todoItems.map((item, index) => (
-              <div key={index} className="flex items-start space-x-2 p-2 rounded-md hover:bg-launch-dark/50 transition-colors">
+            {todoItems.map((item, index) => <div key={index} className="flex items-start space-x-2 p-2 rounded-md hover:bg-launch-dark/50 transition-colors">
                 <div className="mt-1 shrink-0">
-                  {item.completed ? (
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                  ) : (
-                    <Circle className="h-5 w-5 text-gray-500" />
-                  )}
+                  {item.completed ? <CheckCircle className="h-5 w-5 text-green-500" /> : <Circle className="h-5 w-5 text-gray-500" />}
                 </div>
                 <span className="text-white">{item.text}</span>
-              </div>
-            ))}
+              </div>)}
           </CardContent>
           <CardFooter>
             <Button variant="outline" className="w-full sm:w-auto flex items-center gap-2 hover:bg-launch-cyan hover:text-black transition-colors">
@@ -99,23 +103,20 @@ const Auth = () => {
             <CardDescription>Official Supabase Auth resources</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {[
-              { title: "Supabase Auth Documentation", url: "https://supabase.com/docs/guides/auth" },
-              { title: "Social Login Setup", url: "https://supabase.com/docs/guides/auth/social-login" },
-              { title: "Auth API Reference", url: "https://supabase.com/docs/reference/javascript/auth-signin" }
-            ].map((item, index) => (
-              <a 
-                key={index}
-                href={item.url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative"
-              >
+            {[{
+            title: "Supabase Auth Documentation",
+            url: "https://supabase.com/docs/guides/auth"
+          }, {
+            title: "Social Login Setup",
+            url: "https://supabase.com/docs/guides/auth/social-login"
+          }, {
+            title: "Auth API Reference",
+            url: "https://supabase.com/docs/reference/javascript/auth-signin"
+          }].map((item, index) => <a key={index} href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-launch-cyan/0 via-launch-cyan/5 to-launch-cyan/0 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700"></div>
                 <span className="text-white z-10">{item.title}</span>
                 <ExternalLink className="h-4 w-4 text-launch-cyan z-10 group-hover:translate-x-1 transition-transform" />
-              </a>
-            ))}
+              </a>)}
           </CardContent>
         </Card>
         
@@ -141,19 +142,13 @@ const Auth = () => {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2 bg-gradient-to-r from-launch-cyan/10 to-transparent hover:from-launch-cyan/20 hover:to-transparent border-launch-cyan/50"
-              onClick={copyPrompt}
-            >
+            <Button variant="outline" className="flex items-center gap-2 bg-gradient-to-r from-launch-cyan/10 to-transparent hover:from-launch-cyan/20 hover:to-transparent border-launch-cyan/50" onClick={copyPrompt}>
               <Copy className="h-4 w-4" />
               Copy Prompt
             </Button>
           </CardFooter>
         </Card>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Auth;
