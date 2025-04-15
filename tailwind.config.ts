@@ -68,6 +68,7 @@ export default {
 					dark: '#0B0F19',
 					'dark-blue': '#131A2A',
 					'card-bg': '#151C2C',
+					'card-hover': '#1A2338',
 					'sidebar-bg': '#0F111A',
 					'text-muted': '#8A93A6',
 				}

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -95,26 +96,30 @@ const SidebarNav = ({
         </div>
       </div>
 
-      <SidebarContent>
-        {navItems.map((section, i) => <div key={i} className="py-2">
+      <div className="flex-1 overflow-y-auto no-scrollbar py-2">
+        {navItems.map((section, i) => (
+          <div key={i} className="py-2">
             <h3 className="text-launch-text-muted font-medium text-xs uppercase tracking-wider px-4 mb-2">
               {section.title}
             </h3>
             <SidebarMenu>
               {section.items.map(item => {
-            const isActive = location.pathname === item.href;
-            return <SidebarMenuItem key={item.name}>
+                const isActive = location.pathname === item.href;
+                return (
+                  <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild isActive={isActive} tooltip={state === "collapsed" && isMobile ? item.name : undefined}>
                       <Link to={item.href} className={cn("flex items-center gap-3 rounded-md text-sm transition-colors px-4 py-2", isActive ? "text-launch-cyan" : "text-launch-text-muted hover:text-white")}>
                         <item.icon className="h-4 w-4" />
                         <span>{item.name}</span>
                       </Link>
                     </SidebarMenuButton>
-                  </SidebarMenuItem>;
-          })}
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
-          </div>)}
-      </SidebarContent>
+          </div>
+        ))}
+      </div>
 
       <SidebarFooter className="mt-auto border-t border-gray-800 p-4">
         <SidebarMenu>
@@ -138,17 +143,21 @@ const SidebarNav = ({
   );
 
   if (isMobile) {
-    return <Sheet open={isOpen} onOpenChange={onToggle}>
+    return (
+      <Sheet open={isOpen} onOpenChange={onToggle}>
         <SheetContent side="left" className="w-[280px] p-0 border-r border-gray-800 bg-launch-sidebar-bg">
           <SidebarContentComponent />
         </SheetContent>
-      </Sheet>;
+      </Sheet>
+    );
   }
 
   // On desktop, always show the sidebar
-  return <Sidebar className="h-screen border-r border-gray-800 bg-launch-sidebar-bg">
+  return (
+    <Sidebar className="h-screen border-r border-gray-800 bg-launch-sidebar-bg">
       <SidebarContentComponent />
-    </Sidebar>;
+    </Sidebar>
+  );
 };
 
 export default SidebarNav;
