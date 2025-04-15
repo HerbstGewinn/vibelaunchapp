@@ -8,10 +8,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Check, Clock } from 'lucide-react';
+import { useTaskProgress } from '@/hooks/useTaskProgress';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("launch-steps");
+  const { tasks, progress, loading, toggleTaskComplete } = useTaskProgress();
 
   // Sample launch steps data
   const launchSteps = [
@@ -77,8 +79,12 @@ const Dashboard = () => {
       <ProjectUrlCard url="example.com" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        <StatCard title="Completed Tasks" value="12/20" change={4} />
-        <StatCard title="Steps Completed" value="3/5" change={1} />
+        <StatCard 
+          title="Launch Progress" 
+          value={`${Math.round(progress)}%`} 
+          change={tasks.filter(t => t.completed).length} 
+        />
+        <StatCard title="Steps Completed" value={`${tasks.filter(t => t.completed).length}/7`} change={1} />
         <StatCard title="Time to Launch" value="7 days" change={-2} />
       </div>
 
@@ -112,34 +118,34 @@ const Dashboard = () => {
           
           <TabsContent value="launch-steps" className="p-4">
             <div className="space-y-4">
-              {launchSteps.map(step => (
-                <div key={step.id} className="bg-launch-dark border border-gray-800 rounded-lg p-4">
+              {!loading && tasks.map(task => (
+                <div 
+                  key={task.id} 
+                  className="bg-launch-dark border border-gray-800 rounded-lg p-4 transition-all hover:border-gray-700"
+                >
                   <div className="flex items-start gap-4">
-                    <div className={`rounded-full p-2 ${step.status === 'completed' ? 'bg-green-500/20' : 'bg-yellow-500/20'}`}>
-                      {step.status === 'completed' ? (
+                    <button
+                      onClick={() => toggleTaskComplete(task.id, !task.completed)}
+                      className={`rounded-full p-2 transition-colors ${
+                        task.completed ? 'bg-green-500/20' : 'bg-yellow-500/20'
+                      }`}
+                    >
+                      {task.completed ? (
                         <Check className="h-6 w-6 text-green-500" />
                       ) : (
                         <Clock className="h-6 w-6 text-yellow-500" />
                       )}
-                    </div>
+                    </button>
                     <div className="flex-1">
                       <div className="flex justify-between">
-                        <h3 className="font-medium text-white">{step.title}</h3>
+                        <h3 className="font-medium text-white capitalize">
+                          {task.task_id.replace(/_/g, ' ')}
+                        </h3>
                         <span className={`px-2 py-1 rounded text-xs capitalize ${
-                          step.status === 'completed' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'
+                          task.completed ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'
                         }`}>
-                          {step.status === 'completed' ? 'Completed' : 'In Progress'}
+                          {task.completed ? 'Completed' : 'In Progress'}
                         </span>
-                      </div>
-                      <p className="text-gray-400 text-sm mt-1">{step.description}</p>
-                      <div className="mt-4 w-full bg-gray-800 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full ${step.status === 'completed' ? 'bg-green-500' : 'bg-launch-cyan'}`}
-                          style={{ width: `${step.progress}%` }}
-                        ></div>
-                      </div>
-                      <div className="mt-1 text-right">
-                        <span className="text-xs text-gray-400">{step.progress}%</span>
                       </div>
                     </div>
                   </div>

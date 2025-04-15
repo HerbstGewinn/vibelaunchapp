@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTaskProgress } from '@/hooks/useTaskProgress';
 import { Globe, Search, Users, MessageSquare, BarChart3, ShieldCheck, CreditCard, Rocket, Lock, GanttChart, Mail, Settings, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton, useSidebar } from '@/components/ui/sidebar';
@@ -52,16 +53,14 @@ const SidebarNav = ({
   onToggle
 }: SidebarNavProps) => {
   const location = useLocation();
-  const {
-    signout
-  } = useAuth();
-  const {
-    state
-  } = useSidebar();
+  const { signout } = useAuth();
+  const { state } = useSidebar();
   const isMobile = useIsMobile();
+  const { progress } = useTaskProgress();
 
   // Create the sidebar content as a separate component
-  const SidebarContentComponent = () => <div className="flex h-full flex-col">
+  const SidebarContentComponent = () => (
+    <div className="flex h-full flex-col">
       <div className="flex items-center justify-between p-4">
         <span className="text-xl font-bold text-white">
           Vibe<span className="text-launch-cyan">Launch</span>
@@ -74,11 +73,14 @@ const SidebarNav = ({
           <div className="text-sm text-gray-400">Launch Progress:</div>
           <div className="flex items-center gap-2">
             <div className="flex-1 bg-gray-800 h-2 rounded-full">
-              <div className="bg-launch-cyan h-full rounded-full" style={{
-              width: '65%'
-            }}></div>
+              <div 
+                className="bg-launch-cyan h-full rounded-full transition-all duration-500" 
+                style={{
+                  width: `${Math.min(Math.round(progress), 100)}%`
+                }}
+              />
             </div>
-            <span className="text-white text-sm">65%</span>
+            <span className="text-white text-sm">{Math.round(progress)}%</span>
           </div>
         </div>
       </div>
@@ -122,7 +124,9 @@ const SidebarNav = ({
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
-    </div>;
+    </div>
+  );
+
   if (isMobile) {
     return <Sheet open={isOpen} onOpenChange={onToggle}>
         <SheetContent side="left" className="w-[280px] p-0 border-r border-gray-800 bg-launch-sidebar-bg">
