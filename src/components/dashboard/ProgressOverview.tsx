@@ -7,7 +7,7 @@ const ProgressOverview = () => {
     <Card className="bg-launch-card-bg border-gray-800">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl font-semibold">Overall Progress</CardTitle>
-        <p className="text-sm text-gray-400">Total completion: 65%</p>
+        <p className="text-launch-text-muted">Total completion: 65%</p>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
@@ -26,17 +26,18 @@ const ProgressOverview = () => {
         <div>
           <h4 className="text-sm font-medium mb-2">Recent Activity</h4>
           <div className="space-y-3">
+            {/* Activity items */}
             <div className="flex justify-between text-sm">
               <span>Completed domain setup</span>
-              <span className="text-gray-500">2 days ago</span>
+              <span className="text-launch-text-muted">2 days ago</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Added Google Analytics</span>
-              <span className="text-gray-500">3 days ago</span>
+              <span className="text-launch-text-muted">3 days ago</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Updated meta tags</span>
-              <span className="text-gray-500">5 days ago</span>
+              <span className="text-launch-text-muted">5 days ago</span>
             </div>
           </div>
         </div>

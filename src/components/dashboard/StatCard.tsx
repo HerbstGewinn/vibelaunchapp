@@ -13,13 +13,13 @@ interface StatCardProps {
 const StatCard = ({ title, value, change, className }: StatCardProps) => {
   return (
     <div className={cn("bg-launch-card-bg rounded-lg p-6", className)}>
-      <h3 className="text-gray-400 font-medium mb-2">{title}</h3>
+      <h3 className="text-launch-text-muted font-medium mb-2">{title}</h3>
       <div className="flex items-end justify-between">
-        <div className="text-3xl font-bold">{value}</div>
+        <div className="text-3xl font-bold text-white">{value}</div>
         {typeof change !== 'undefined' && (
           <div className={cn(
             "flex items-center text-sm",
-            change > 0 ? "text-green-400" : change < 0 ? "text-red-400" : "text-gray-400"
+            change > 0 ? "text-launch-success" : change < 0 ? "text-launch-error" : "text-launch-text-muted"
           )}>
             {change > 0 ? (
               <ArrowUp className="h-4 w-4 mr-1" />

@@ -54,13 +54,14 @@ const Dashboard = () => {
     <div className="flex-1 space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl md:text-3xl font-bold">
-          Launch <span className="text-launch-cyan">Dashboard</span>
+          Launch <span className="text-launch-bright-cyan">Dashboard</span>
         </h1>
-        <p className="text-gray-400 text-sm md:text-base">
+        <p className="text-launch-text-muted text-sm md:text-base">
           Track and manage your project's journey from vibe to 1000 users
         </p>
       </div>
 
+      {/* Project selector */}
       <div className="w-full md:w-[250px]">
         <Select defaultValue="example.com">
           <SelectTrigger className="bg-launch-dark border-gray-800 focus:ring-launch-cyan">
@@ -82,6 +83,7 @@ const Dashboard = () => {
         <StatCard title="Time to Launch" value="7 days" change={-2} />
       </div>
 
+      {/* Progress sections */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="lg:col-span-2">
           <ProgressSection />
@@ -91,19 +93,20 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Launch steps and action items */}
       <div className="bg-launch-card-bg border border-gray-800 rounded-lg overflow-hidden">
         <Tabs defaultValue="launch-steps" value={activeTab} onValueChange={setActiveTab}>
           <div className="bg-launch-sidebar-bg p-1 rounded-t-lg">
             <TabsList className="bg-transparent">
               <TabsTrigger 
                 value="launch-steps" 
-                className="data-[state=active]:bg-launch-dark data-[state=active]:text-white text-gray-400"
+                className="data-[state=active]:bg-launch-dark data-[state=active]:text-launch-bright-cyan text-gray-400"
               >
                 Launch Steps
               </TabsTrigger>
               <TabsTrigger 
                 value="action-items" 
-                className="data-[state=active]:bg-launch-dark data-[state=active]:text-white text-gray-400"
+                className="data-[state=active]:bg-launch-dark data-[state=active]:text-launch-bright-cyan text-gray-400"
               >
                 Action Items
               </TabsTrigger>
@@ -115,31 +118,41 @@ const Dashboard = () => {
               {launchSteps.map(step => (
                 <div key={step.id} className="bg-launch-dark border border-gray-800 rounded-lg p-4">
                   <div className="flex items-start gap-4">
-                    <div className={`rounded-full p-2 ${step.status === 'completed' ? 'bg-green-500/20' : 'bg-yellow-500/20'}`}>
+                    <div className={`rounded-full p-2 ${
+                      step.status === 'completed' 
+                        ? 'bg-launch-success/20' 
+                        : 'bg-launch-cyan/20'
+                    }`}>
                       {step.status === 'completed' ? (
-                        <Check className="h-6 w-6 text-green-500" />
+                        <Check className="h-6 w-6 text-launch-success" />
                       ) : (
-                        <Clock className="h-6 w-6 text-yellow-500" />
+                        <Clock className="h-6 w-6 text-launch-cyan" />
                       )}
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between">
                         <h3 className="font-medium text-white">{step.title}</h3>
                         <span className={`px-2 py-1 rounded text-xs capitalize ${
-                          step.status === 'completed' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'
+                          step.status === 'completed' 
+                            ? 'bg-launch-success/20 text-launch-success' 
+                            : 'bg-launch-cyan/20 text-launch-cyan'
                         }`}>
                           {step.status === 'completed' ? 'Completed' : 'In Progress'}
                         </span>
                       </div>
-                      <p className="text-gray-400 text-sm mt-1">{step.description}</p>
+                      <p className="text-launch-text-muted text-sm mt-1">{step.description}</p>
                       <div className="mt-4 w-full bg-gray-800 rounded-full h-2">
                         <div 
-                          className={`h-2 rounded-full ${step.status === 'completed' ? 'bg-green-500' : 'bg-launch-cyan'}`}
+                          className={`h-2 rounded-full ${
+                            step.status === 'completed' 
+                              ? 'bg-launch-success' 
+                              : 'bg-launch-cyan'
+                          }`}
                           style={{ width: `${step.progress}%` }}
-                        ></div>
+                        />
                       </div>
                       <div className="mt-1 text-right">
-                        <span className="text-xs text-gray-400">{step.progress}%</span>
+                        <span className="text-xs text-launch-text-muted">{step.progress}%</span>
                       </div>
                     </div>
                   </div>
@@ -154,7 +167,7 @@ const Dashboard = () => {
                 <div key={item.id} className="bg-launch-dark border border-gray-800 rounded-lg p-4">
                   <div className="flex justify-between items-center">
                     <h3 className="font-medium text-white">{item.title}</h3>
-                    <span className="text-gray-400 text-sm">{item.date}</span>
+                    <span className="text-launch-text-muted text-sm">{item.date}</span>
                   </div>
                 </div>
               ))}

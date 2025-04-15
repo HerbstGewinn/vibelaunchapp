@@ -9,7 +9,7 @@ const ProgressSection = () => {
       <CardHeader className="pb-2">
         <CardTitle className="text-xl font-semibold">
           Launch Progress
-          <p className="text-sm text-gray-400 font-normal mt-1">
+          <p className="text-launch-text-muted text-sm font-normal mt-1">
             Track your project's journey to launch
           </p>
         </CardTitle>
