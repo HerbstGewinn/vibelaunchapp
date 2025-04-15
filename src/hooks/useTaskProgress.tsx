@@ -5,9 +5,12 @@ import { useAuth } from '@/contexts/AuthContext';
 
 interface Task {
   id: string;
+  user_id: string;
   task_id: string;
   completed: boolean;
   completed_at: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export function useTaskProgress() {
@@ -25,21 +28,18 @@ export function useTaskProgress() {
 
   const fetchTasks = async () => {
     try {
-      // Use the generic version of the from method to avoid type errors
       const { data: tasksData, error: tasksError } = await supabase
-        .from('user_tasks')
+        .from<'user_tasks', Task>('user_tasks')
         .select('*')
         .eq('user_id', user?.id)
         .order('created_at', { ascending: true });
 
       if (tasksError) throw tasksError;
       
-      // Safely cast the data to our Task type
-      setTasks((tasksData as unknown as Task[]) || []);
-
-      // Instead of using the view, calculate progress directly
       if (tasksData) {
-        const completedTasks = tasksData.filter((task: any) => task.completed).length;
+        setTasks(tasksData);
+        
+        const completedTasks = tasksData.filter(task => task.completed).length;
         const totalTasks = tasksData.length;
         const calculatedProgress = 
           totalTasks > 0 
@@ -80,7 +80,7 @@ export function useTaskProgress() {
   const toggleTaskComplete = async (taskId: string, completed: boolean) => {
     try {
       const { error } = await supabase
-        .from('user_tasks')
+        .from<'user_tasks', Task>('user_tasks')
         .update({ 
           completed,
           completed_at: completed ? new Date().toISOString() : null
