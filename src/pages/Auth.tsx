@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useToast } from "@/hooks/use-toast";
+import TweetCarousel from '@/components/auth/TweetCarousel';
 
 const Auth = () => {
   const { toast } = useToast();
@@ -83,6 +83,10 @@ const Auth = () => {
             </AspectRatio>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="my-8">
+        <TweetCarousel />
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
