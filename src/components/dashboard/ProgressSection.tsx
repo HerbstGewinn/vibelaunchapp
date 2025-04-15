@@ -3,9 +3,16 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProgressChart from './ProgressChart';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { useTaskProgress } from '@/hooks/useTaskProgress';
 
 const ProgressSection = () => {
   const navigate = useNavigate();
+  const { progress } = useTaskProgress();
+
+  const goToHomepage = () => {
+    navigate('/');
+  };
 
   return (
     <Card className="bg-launch-card-bg border-gray-800">
@@ -18,10 +25,18 @@ const ProgressSection = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div 
-          className="h-[300px] cursor-pointer" 
-          onClick={() => navigate('/')}
-        >
+        <div className="mb-4 cursor-pointer" onClick={goToHomepage}>
+          <div className="flex justify-between mb-1">
+            <span className="text-sm text-gray-400">Current progress:</span>
+            <span className="text-sm font-medium">{Math.round(progress)}%</span>
+          </div>
+          <Progress 
+            value={progress} 
+            className="h-2 bg-gray-800"
+          />
+          <p className="text-xs text-gray-500 mt-1">Click the progress bar to go to homepage</p>
+        </div>
+        <div className="h-[250px]">
           <ProgressChart />
         </div>
       </CardContent>

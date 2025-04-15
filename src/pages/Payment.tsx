@@ -1,25 +1,53 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useToast } from "@/hooks/use-toast";
+import { useTaskProgress } from '@/hooks/useTaskProgress';
+import { v4 as uuidv4 } from 'uuid';
 
 const Payment = () => {
   const { toast } = useToast();
-  
-  const todoItems = [
-    { text: "Create Stripe account", completed: false },
-    { text: "Set up Stripe product and price", completed: false },
-    { text: "Store Stripe API keys in Supabase secrets", completed: false },
-    { text: "Create checkout edge function", completed: false },
-    { text: "Create subscription verification edge function", completed: false },
-    { text: "Set up Stripe webhook edge function", completed: false },
-    { text: "Implement payment UI components", completed: false },
-    { text: "Test payment flow end to end", completed: false },
-  ];
+  const { toggleTaskComplete } = useTaskProgress();
+  const [todoItems, setTodoItems] = useState([
+    { id: uuidv4(), text: "Create Stripe account", completed: false, task_id: "setup_payment" },
+    { id: uuidv4(), text: "Set up Stripe product and price", completed: false, task_id: "setup_payment" },
+    { id: uuidv4(), text: "Store Stripe API keys in Supabase secrets", completed: false, task_id: "setup_payment" },
+    { id: uuidv4(), text: "Create checkout edge function", completed: false, task_id: "setup_payment" },
+    { id: uuidv4(), text: "Create subscription verification edge function", completed: false, task_id: "setup_payment" },
+    { id: uuidv4(), text: "Set up Stripe webhook edge function", completed: false, task_id: "setup_payment" },
+    { id: uuidv4(), text: "Implement payment UI components", completed: false, task_id: "setup_payment" },
+    { id: uuidv4(), text: "Test payment flow end to end", completed: false, task_id: "setup_payment" },
+  ]);
 
+  const toggleTodo = async (index: number) => {
+    // Update local state first for immediate UI feedback
+    const newTodoItems = [...todoItems];
+    newTodoItems[index].completed = !newTodoItems[index].completed;
+    setTodoItems(newTodoItems);
+    
+    // Update the database
+    try {
+      await toggleTaskComplete(newTodoItems[index].id, newTodoItems[index].completed);
+      toast({
+        title: newTodoItems[index].completed ? "Task completed!" : "Task marked as incomplete",
+        description: newTodoItems[index].text,
+      });
+    } catch (error) {
+      // Revert on error
+      console.error("Error updating task:", error);
+      newTodoItems[index].completed = !newTodoItems[index].completed;
+      setTodoItems(newTodoItems);
+      toast({
+        title: "Failed to update task",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
+  
   const copyPrompt = () => {
     const promptText = document.getElementById('payment-prompt-text')?.textContent;
     if (promptText) {
@@ -49,7 +77,11 @@ const Payment = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             {todoItems.map((item, index) => (
-              <div key={index} className="flex items-start space-x-2 p-2 rounded-md hover:bg-launch-dark/50 transition-colors">
+              <div 
+                key={index} 
+                className="flex items-start space-x-2 p-2 rounded-md hover:bg-launch-dark/50 transition-colors cursor-pointer"
+                onClick={() => toggleTodo(index)}
+              >
                 <div className="mt-1">
                   {item.completed ? (
                     <CheckCircle className="h-5 w-5 text-green-500" />
@@ -57,7 +89,9 @@ const Payment = () => {
                     <Circle className="h-5 w-5 text-gray-500" />
                   )}
                 </div>
-                <span className="text-white">{item.text}</span>
+                <span className={`${item.completed ? "text-gray-400 line-through" : "text-white"}`}>
+                  {item.text}
+                </span>
               </div>
             ))}
           </CardContent>

@@ -23,7 +23,11 @@ export function useTaskProgress() {
     if (!user) return;
     
     fetchTasks();
-    subscribeToTaskUpdates();
+    const unsubscribe = subscribeToTaskUpdates();
+    
+    return () => {
+      unsubscribe();
+    };
   }, [user]);
 
   const fetchTasks = async () => {
@@ -31,13 +35,11 @@ export function useTaskProgress() {
       const { data: tasksData, error: tasksError } = await supabase
         .from('user_tasks')
         .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: true });
+        .eq('user_id', user?.id);
 
       if (tasksError) throw tasksError;
       
       if (tasksData) {
-        // Type assertion to handle the TS error
         const typedTasksData = tasksData as Task[];
         setTasks(typedTasksData);
         
@@ -81,18 +83,43 @@ export function useTaskProgress() {
 
   const toggleTaskComplete = async (taskId: string, completed: boolean) => {
     try {
-      const { error } = await supabase
+      // Check if task exists first
+      const { data: existingTask } = await supabase
         .from('user_tasks')
-        .update({ 
-          completed,
-          completed_at: completed ? new Date().toISOString() : null
-        })
-        .eq('id', taskId);
-
-      if (error) throw error;
+        .select('*')
+        .eq('id', taskId)
+        .single();
+      
+      if (existingTask) {
+        // Update existing task
+        const { error } = await supabase
+          .from('user_tasks')
+          .update({ 
+            completed,
+            completed_at: completed ? new Date().toISOString() : null
+          })
+          .eq('id', taskId);
+  
+        if (error) throw error;
+      } else {
+        // Create new task
+        const { error } = await supabase
+          .from('user_tasks')
+          .insert({ 
+            id: taskId,
+            user_id: user?.id,
+            task_id: 'setup_payment', // Default task_id for new tasks
+            completed,
+            completed_at: completed ? new Date().toISOString() : null
+          });
+  
+        if (error) throw error;
+      }
+      
       await fetchTasks();
     } catch (error) {
       console.error('Error updating task:', error);
+      throw error; // Re-throw to handle in UI
     }
   };
 
