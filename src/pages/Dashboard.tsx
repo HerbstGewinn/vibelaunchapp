@@ -122,13 +122,13 @@ const Dashboard = () => {
             </TabsList>
           </div>
           
-          <TabsContent value="launch-steps" className="p-4">
-            <div className="space-y-4">
+          <TabsContent value="launch-steps" className="p-4 md:p-6">
+            <div className="grid gap-4">
               {!loading && tasks.map(task => (
                 <Button
                   key={task.id}
                   variant="ghost"
-                  className="w-full bg-launch-dark border border-gray-800 rounded-lg p-4 transition-all hover:border-gray-700"
+                  className="w-full bg-launch-dark border border-gray-800 rounded-lg p-4 transition-all hover:border-gray-700 text-left"
                   onClick={() => handleTaskClick(task.id, task.completed)}
                 >
                   <div className="flex items-start gap-4 w-full">
@@ -144,8 +144,8 @@ const Dashboard = () => {
                       )}
                     </div>
                     <div className="flex-1">
-                      <div className="flex justify-between">
-                        <h3 className="font-medium text-white capitalize text-left">
+                      <div className="flex justify-between items-center flex-wrap gap-2">
+                        <h3 className="font-medium text-white capitalize">
                           {task.task_id.replace(/_/g, ' ')}
                         </h3>
                         <span className={`px-2 py-1 rounded text-xs capitalize ${
@@ -154,7 +154,7 @@ const Dashboard = () => {
                           {task.completed ? 'Completed' : 'In Progress'}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-400 mt-1 text-left">
+                      <p className="text-sm text-gray-400 mt-1">
                         {taskDescriptions[task.task_id]}
                       </p>
                     </div>
@@ -164,8 +164,8 @@ const Dashboard = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="action-items" className="p-4">
-            <div className="space-y-2">
+          <TabsContent value="action-items" className="p-4 md:p-6">
+            <div className="grid gap-4">
               {actionItems.map(item => (
                 <div key={item.id} className="bg-launch-dark border border-gray-800 rounded-lg p-4">
                   <div className="flex justify-between items-center">
