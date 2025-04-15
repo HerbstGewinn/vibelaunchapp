@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy, CreditCard } from "lucide-react";
@@ -7,10 +6,12 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useToast } from "@/hooks/use-toast";
 import { useTaskProgress } from '@/hooks/useTaskProgress';
 import { v4 as uuidv4 } from 'uuid';
+import { useConfetti } from '@/hooks/useConfetti';
 
 const Payment = () => {
   const { toast } = useToast();
   const { toggleTaskComplete } = useTaskProgress();
+  const { triggerConfetti } = useConfetti();
   const [todoItems, setTodoItems] = useState([
     { id: uuidv4(), text: "Create Stripe account", completed: false, task_id: "setup_payment" },
     { id: uuidv4(), text: "Set up Stripe product and price", completed: false, task_id: "setup_payment" },
@@ -23,20 +24,23 @@ const Payment = () => {
   ]);
 
   const toggleTodo = async (index: number) => {
-    // Update local state first for immediate UI feedback
     const newTodoItems = [...todoItems];
-    newTodoItems[index].completed = !newTodoItems[index].completed;
+    const isCompleting = !newTodoItems[index].completed;
+    newTodoItems[index].completed = isCompleting;
     setTodoItems(newTodoItems);
     
-    // Update the database
     try {
       await toggleTaskComplete(newTodoItems[index].id, newTodoItems[index].completed);
+      
+      if (isCompleting) {
+        triggerConfetti();
+      }
+      
       toast({
         title: newTodoItems[index].completed ? "Task completed!" : "Task marked as incomplete",
         description: newTodoItems[index].text,
       });
     } catch (error) {
-      // Revert on error
       console.error("Error updating task:", error);
       newTodoItems[index].completed = !newTodoItems[index].completed;
       setTodoItems(newTodoItems);
