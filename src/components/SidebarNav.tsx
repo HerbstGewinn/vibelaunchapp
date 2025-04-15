@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -60,7 +61,8 @@ const SidebarNav = ({ isOpen, onToggle }: SidebarNavProps) => {
   const { state, toggleSidebar } = useSidebar();
   const isMobile = useIsMobile();
 
-  const SidebarContent = () => (
+  // Create the sidebar content as a separate component
+  const SidebarContentComponent = () => (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between p-4">
         <span className="text-xl font-bold text-white">
@@ -90,7 +92,7 @@ const SidebarNav = ({ isOpen, onToggle }: SidebarNavProps) => {
         </div>
       </div>
 
-      <SidebarContent className="px-2">
+      <SidebarContent>
         {navItems.map((section, i) => (
           <div key={i} className="py-2">
             <h3 className="text-launch-text-muted font-medium text-xs uppercase tracking-wider px-4 mb-2">
@@ -171,7 +173,7 @@ const SidebarNav = ({ isOpen, onToggle }: SidebarNavProps) => {
           side="left" 
           className="w-[280px] p-0 border-r border-gray-800 bg-launch-sidebar-bg"
         >
-          <SidebarContent />
+          <SidebarContentComponent />
         </SheetContent>
       </Sheet>
     );
@@ -179,7 +181,7 @@ const SidebarNav = ({ isOpen, onToggle }: SidebarNavProps) => {
 
   return (
     <Sidebar className="h-screen border-r border-gray-800 bg-launch-sidebar-bg">
-      <SidebarContent />
+      <SidebarContentComponent />
     </Sidebar>
   );
 };
