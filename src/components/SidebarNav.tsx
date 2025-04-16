@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -12,6 +11,10 @@ import { Sheet, SheetContent } from '@/components/ui/sheet';
 const navItems = [{
   title: 'Launch Steps',
   items: [{
+    name: 'Designs',
+    icon: GanttChart,
+    href: '/dashboard/designs'
+  }, {
     name: 'Auth',
     icon: ShieldCheck,
     href: '/dashboard/auth'
