@@ -230,15 +230,22 @@ const Designs = () => {
               <div className="mt-4">
                 <h4 className={cn(
                   "text-sm font-medium mb-2", 
-                  template.style === 'brutalism' ? "text-black" : "text-white"
+                  template.style === 'brutalism' ? "text-black" : "text-white",
+                  "flex items-center" // Added flex to align icon and text
                 )}>
-                  <Code className="w-4 h-4 inline mr-1" /> LLM Prompt
+                  <Code className="w-4 h-4 inline mr-2" /> LLM Prompt
                 </h4>
                 <div className={cn(
                   "text-xs rounded p-3 relative max-h-24 overflow-y-auto",
                   template.style === 'brutalism' 
                     ? "bg-gray-200 text-black" 
-                    : "bg-gray-900 text-gray-300 border border-gray-700"
+                    : "bg-gray-900 text-gray-300 border border-gray-700",
+                  // Enhanced visibility for non-brutalism styles
+                  template.style === 'glassmorphism' && "bg-white/20 text-white backdrop-blur-md",
+                  template.style === 'cyberpunk' && "bg-gray-800 text-cyan-300 border-cyan-600",
+                  template.style === 'synthwave' && "bg-purple-900/70 text-pink-200 border-pink-500",
+                  template.style === 'immersive3d' && "bg-purple-900/50 text-blue-200",
+                  template.style === 'collage' && "bg-amber-100 text-gray-800"
                 )}>
                   {template.prompt}
                 </div>
@@ -275,3 +282,4 @@ const Designs = () => {
 };
 
 export default Designs;
+
