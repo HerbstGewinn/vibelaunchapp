@@ -1,19 +1,16 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { PlayCircle, Copy, Check, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
-const designTemplates = [
-  {
-    id: 1,
-    title: "Minimalistic Glassmorphism",
-    description: "Translucent elements, soft gradients, blur effects, subtle shadows",
-    demoUrl: "#",
-    style: "glassmorphism",
-    prompt: `Design a highly interactive landing page using Minimalistic Glassmorphism. The layout features translucent cards with vibrant pastel gradients, subtle background blur effects, and delicate shadows.
+const designTemplates = [{
+  id: 1,
+  title: "Minimalistic Glassmorphism",
+  description: "Translucent elements, soft gradients, blur effects, subtle shadows",
+  demoUrl: "#",
+  style: "glassmorphism",
+  prompt: `Design a highly interactive landing page using Minimalistic Glassmorphism. The layout features translucent cards with vibrant pastel gradients, subtle background blur effects, and delicate shadows.
 
 Components (use Vite.JS, MagicUI, or similar):
 - Interactive Glass Cards: Translucent, glass-effect information cards with gradient glow and animated micro-interactions—hovering over cards subtly shifts their tilt (consider MagicUI's tilt effect).
@@ -22,14 +19,13 @@ Components (use Vite.JS, MagicUI, or similar):
 Suggested Libraries:
 - MagicUI (for fluid animations and interactions)
 - Vite.JS for fast development and hot-reloading`
-  },
-  {
-    id: 2,
-    title: "Neo-Brutalism",
-    description: "Bold typography, high contrast, raw edges, animated type",
-    demoUrl: "#",
-    style: "brutalism",
-    prompt: `Create an impactful, bold homepage using the Neo-Brutalism aesthetic, showcasing stark contrasts, animated typography, and edgy, raw layouts.
+}, {
+  id: 2,
+  title: "Neo-Brutalism",
+  description: "Bold typography, high contrast, raw edges, animated type",
+  demoUrl: "#",
+  style: "brutalism",
+  prompt: `Create an impactful, bold homepage using the Neo-Brutalism aesthetic, showcasing stark contrasts, animated typography, and edgy, raw layouts.
 
 Components (use Vite.JS, GSAP animations, 21st.dev):
 - Hero Typewriter Banner: Bold, oversized typography animating onto the screen with rhythmic typewriter effect and intentional glitches (use GSAP or anime.js).
@@ -39,14 +35,13 @@ Suggested Libraries:
 - GSAP (for bold typographic animations)
 - 21st.dev (interactive buttons & rich micro-interactions)
 - Vite.JS (development & bundling)`
-  },
-  {
-    id: 3,
-    title: "Immersive 3D Scroll",
-    description: "Scroll-based 3D object animations, immersive narrative UI",
-    demoUrl: "#",
-    style: "immersive3d",
-    prompt: `Develop an immersive product showcase page using 3D Scroll-Triggered Storytelling. Each scroll interaction animates 3D objects, creating a cinematic narrative journey.
+}, {
+  id: 3,
+  title: "Immersive 3D Scroll",
+  description: "Scroll-based 3D object animations, immersive narrative UI",
+  demoUrl: "#",
+  style: "immersive3d",
+  prompt: `Develop an immersive product showcase page using 3D Scroll-Triggered Storytelling. Each scroll interaction animates 3D objects, creating a cinematic narrative journey.
 
 Components (use Three.js, GSAP ScrollTrigger, Vite.JS):
 - 3D Product Journey: Scroll-triggered, realistic 3D object transformations—rotation, scaling, and repositioning—telling a visual product story (implemented with Three.js and GSAP ScrollTrigger).
@@ -56,14 +51,13 @@ Suggested Libraries:
 - Three.js (for detailed 3D rendering)
 - GSAP ScrollTrigger (scroll animations)
 - Vite.JS (rapid setup & hot-reloading)`
-  },
-  {
-    id: 4,
-    title: "Retro-Futuristic Synthwave",
-    description: "Neon colors, grids, glitch animations, VHS aesthetics",
-    demoUrl: "#",
-    style: "synthwave",
-    prompt: `Create an immersive landing page using a nostalgic Retro-Futuristic Synthwave aesthetic, incorporating neon colors, grid patterns, glitch effects, and VHS-style interactions.
+}, {
+  id: 4,
+  title: "Retro-Futuristic Synthwave",
+  description: "Neon colors, grids, glitch animations, VHS aesthetics",
+  demoUrl: "#",
+  style: "synthwave",
+  prompt: `Create an immersive landing page using a nostalgic Retro-Futuristic Synthwave aesthetic, incorporating neon colors, grid patterns, glitch effects, and VHS-style interactions.
 
 Components (Vite.JS, 21st.dev, CSS & GLSL shaders):
 - Neon Glitch Headers: Vibrant neon-glow animated headlines incorporating intermittent glitch animations triggered randomly or upon interaction (CSS or shaders).
@@ -73,14 +67,13 @@ Suggested Libraries:
 - 21st.dev (interactive retro-styled UI components)
 - GSAP (for VHS-style animations)
 - Vite.JS (fast asset bundling)`
-  },
-  {
-    id: 5,
-    title: "Interactive Collage & Scrapbook",
-    description: "Tactile elements, layered textures, interactive collage-style content",
-    demoUrl: "#",
-    style: "collage",
-    prompt: `Design a portfolio site using a creative Interactive Collage & Scrapbook style. The design should evoke tactile interactions, textured backgrounds, and draggable scrapbook elements.
+}, {
+  id: 5,
+  title: "Interactive Collage & Scrapbook",
+  description: "Tactile elements, layered textures, interactive collage-style content",
+  demoUrl: "#",
+  style: "collage",
+  prompt: `Design a portfolio site using a creative Interactive Collage & Scrapbook style. The design should evoke tactile interactions, textured backgrounds, and draggable scrapbook elements.
 
 Components (Vite.JS, MagicUI, Framer Motion):
 - Draggable Image Collage: Interactive draggable image elements that users can move around, stack, and rearrange freely (Framer Motion or MagicUI's draggable component).
@@ -90,14 +83,13 @@ Suggested Libraries:
 - Framer Motion (drag, drop, animation)
 - MagicUI (smooth interactive behaviors)
 - Vite.JS (for rapid iteration)`
-  },
-  {
-    id: 6,
-    title: "Cyberpunk Digital Interface",
-    description: "Dark interface, neon highlights, HUD-style interactivity, futuristic micro-animations",
-    demoUrl: "#",
-    style: "cyberpunk",
-    prompt: `Create an advanced, futuristic dashboard page inspired by Cyberpunk Digital Interface style. Dark themes with neon highlights, sleek HUD-style panels, and futuristic micro-animations.
+}, {
+  id: 6,
+  title: "Cyberpunk Digital Interface",
+  description: "Dark interface, neon highlights, HUD-style interactivity, futuristic micro-animations",
+  demoUrl: "#",
+  style: "cyberpunk",
+  prompt: `Create an advanced, futuristic dashboard page inspired by Cyberpunk Digital Interface style. Dark themes with neon highlights, sleek HUD-style panels, and futuristic micro-animations.
 
 Components (Three.js, Vite.JS, GSAP, custom shaders):
 - Animated Neon HUD Panel: Futuristic dashboard elements rendered in neon-glow with animated micro-interactions—panels dynamically expand or contract based on user clicks (Three.js with custom shader effects).
@@ -108,18 +100,14 @@ Suggested Libraries:
 - GSAP (smooth neon micro-animations)
 - 21st.dev (interactive UI components)
 - Vite.JS (high-performance dev setup)`
-  }
-];
-
+}];
 const Designs = () => {
   const [copiedId, setCopiedId] = useState<number | null>(null);
-
   const copyPrompt = (id: number, prompt: string) => {
     navigator.clipboard.writeText(prompt);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
-
   const getCardClassName = (style: string) => {
     switch (style) {
       case 'glassmorphism':
@@ -138,7 +126,6 @@ const Designs = () => {
         return "bg-launch-dark border-gray-800";
     }
   };
-
   const getTitleClassName = (style: string) => {
     switch (style) {
       case 'glassmorphism':
@@ -157,7 +144,6 @@ const Designs = () => {
         return "text-white";
     }
   };
-
   const getDescriptionClassName = (style: string) => {
     switch (style) {
       case 'glassmorphism':
@@ -176,27 +162,16 @@ const Designs = () => {
         return "";
     }
   };
-
-  return (
-    <div className="flex-1 space-y-6">
+  return <div className="flex-1 space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl md:text-3xl font-bold">
           Design <span className="text-launch-cyan">Templates</span>
         </h1>
-        <p className="text-gray-400 text-sm md:text-base">
-          Explore our collection of design templates with different styling approaches
-        </p>
+        <p className="text-gray-400 text-sm md:text-base">Tired of your App looking too Generic ? Try out our variety of design prompts !</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {designTemplates.map((template) => (
-          <Card 
-            key={template.id} 
-            className={cn(
-              "transition-all duration-300 hover:scale-[1.02]",
-              getCardClassName(template.style)
-            )}
-          >
+        {designTemplates.map(template => <Card key={template.id} className={cn("transition-all duration-300 hover:scale-[1.02]", getCardClassName(template.style))}>
             <CardHeader>
               <CardTitle className={getTitleClassName(template.style)}>{template.title}</CardTitle>
               <CardDescription className={getDescriptionClassName(template.style)}>
@@ -204,74 +179,36 @@ const Designs = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className={cn(
-                "relative rounded-lg overflow-hidden border", 
-                template.style === 'brutalism' ? "border-black" : "border-gray-800"
-              )}>
+              <div className={cn("relative rounded-lg overflow-hidden border", template.style === 'brutalism' ? "border-black" : "border-gray-800")}>
                 <AspectRatio ratio={16 / 9}>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="w-16 h-16 rounded-full hover:scale-105 transition-transform"
-                    >
-                      <PlayCircle className={cn(
-                        "w-16 h-16", 
-                        template.style === 'brutalism' ? "text-black" : "text-launch-cyan"
-                      )} />
+                    <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
+                      <PlayCircle className={cn("w-16 h-16", template.style === 'brutalism' ? "text-black" : "text-launch-cyan")} />
                     </Button>
                   </div>
-                  <div className={cn(
-                    "absolute inset-0", 
-                    template.style !== 'brutalism' && "bg-gradient-to-t from-black/50 to-transparent"
-                  )} />
+                  <div className={cn("absolute inset-0", template.style !== 'brutalism' && "bg-gradient-to-t from-black/50 to-transparent")} />
                 </AspectRatio>
               </div>
               <div className="mt-4">
-                <h4 className={cn(
-                  "text-sm font-medium mb-2", 
-                  template.style === 'brutalism' ? "text-black" : "text-white"
-                )}>
+                <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
                   <Code className="w-4 h-4 inline mr-1" /> LLM Prompt
                 </h4>
-                <div className={cn(
-                  "text-xs rounded p-3 relative max-h-24 overflow-y-auto",
-                  template.style === 'brutalism' 
-                    ? "bg-gray-200 text-black" 
-                    : "bg-gray-900 text-gray-300 border border-gray-700"
-                )}>
+                <div className={cn("text-xs rounded p-3 relative max-h-24 overflow-y-auto", template.style === 'brutalism' ? "bg-gray-200 text-black" : "bg-gray-900 text-gray-300 border border-gray-700")}>
                   {template.prompt}
                 </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={cn(
-                  "w-full text-xs gap-2",
-                  template.style === 'brutalism' 
-                    ? "bg-black text-white hover:bg-gray-800 border-0" 
-                    : "border-gray-700"
-                )}
-                onClick={() => copyPrompt(template.id, template.prompt)}
-              >
-                {copiedId === template.id ? (
-                  <>
+              <Button variant="outline" size="sm" className={cn("w-full text-xs gap-2", template.style === 'brutalism' ? "bg-black text-white hover:bg-gray-800 border-0" : "border-gray-700")} onClick={() => copyPrompt(template.id, template.prompt)}>
+                {copiedId === template.id ? <>
                     <Check className="w-4 h-4" /> Copied!
-                  </>
-                ) : (
-                  <>
+                  </> : <>
                     <Copy className="w-4 h-4" /> Copy Prompt
-                  </>
-                )}
+                  </>}
               </Button>
             </CardFooter>
-          </Card>
-        ))}
+          </Card>)}
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Designs;
