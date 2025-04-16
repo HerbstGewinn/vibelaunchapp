@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { PlayCircle, Copy, Check, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
 const designTemplates = [{
   id: 1,
   title: "Minimalistic Glassmorphism",
@@ -37,22 +39,98 @@ Suggested Libraries:
 - Vite.JS (development & bundling)`
 }, {
   id: 3,
-  title: "Immersive 3D Scroll",
-  description: "Scroll-based 3D object animations, immersive narrative UI",
+  title: "Animated Gradient Minimalism",
+  description: "Smoothly animated gradients, clean typography, elegant interactions",
   demoUrl: "#",
-  style: "immersive3d",
-  prompt: `Develop an immersive product showcase page using 3D Scroll-Triggered Storytelling. Each scroll interaction animates 3D objects, creating a cinematic narrative journey.
+  style: "gradient",
+  prompt: `You're a skilled React frontend developer specializing in sleek, minimalistic interfaces using smooth gradient animations, React, Vite.JS, and Framer Motion.
 
-Components (use Three.js, GSAP ScrollTrigger, Vite.JS):
-- 3D Product Journey: Scroll-triggered, realistic 3D object transformations—rotation, scaling, and repositioning—telling a visual product story (implemented with Three.js and GSAP ScrollTrigger).
-- Interactive 3D Timeline: A timeline bar smoothly animating and highlighting milestones upon scrolling, with embedded 3D elements appearing at each key step.
+Style:
+Animated Gradient Minimalism. Smoothly animated gradients, clean typography, elegant and subtle interactions.
+
+Components (Detailed):
+- **Animated Gradient Hero Section**:
+  A full-screen background gradient that smoothly transitions colors using CSS or SVG animations, paired with minimalist typography that gently fades and slides into view using Framer Motion.
+- **Interactive Gradient Cards**:
+  Beautiful, minimal cards featuring gradient border animations that smoothly shift and glow subtly upon hover, creating an elegant interactive experience using MagicUI or Framer Motion.
 
 Suggested Libraries:
-- Three.js (for detailed 3D rendering)
-- GSAP ScrollTrigger (scroll animations)
-- Vite.JS (rapid setup & hot-reloading)`
+- **Framer Motion** (fluid UI animations)
+- **MagicUI** (interactive gradient animations)
+- **Vite.JS** (fast dev environment)
+
+Generate production-ready, component-based React code with clear comments now.`
 }, {
   id: 4,
+  title: "Retro Arcade Pixel UI",
+  description: "Pixel-art visuals, arcade-inspired animations, vibrant retro palettes",
+  demoUrl: "#",
+  style: "retro-arcade",
+  prompt: `You're an experienced React developer passionate about creating nostalgic retro arcade-style interfaces, utilizing pixel-art aesthetics, React, Vite.JS, and interactive animations.
+
+Style:
+Retro Arcade Pixel UI. Pixel-art visuals, arcade-inspired animations, vibrant retro color palettes.
+
+Components (Detailed):
+- **Pixel-Art Animated Hero Banner**:
+  Animated title using pixel-art fonts and CSS sprite animations, triggered on page load. Implement subtle nostalgic "flicker" and retro color shifts using CSS keyframes or GSAP.
+- **Interactive Arcade Buttons**:
+  Retro-inspired pixel-art buttons featuring hover animations (color flashes, subtle scale effects), complete with authentic arcade button sounds triggered by interactions.
+
+Suggested Libraries:
+- **GSAP** (sprite and retro animations)
+- **21st.dev** (interactive buttons)
+- **Vite.JS** (efficient bundling)
+
+Create modular, clean React/Vite.JS components with clear asset and animation management now.`
+}, {
+  id: 5,
+  title: "Fluid Liquid UI",
+  description: "Organic, flowing visual effects with realistic liquid animations",
+  demoUrl: "#",
+  style: "fluid",
+  prompt: `You're a frontend React developer specialized in fluid, organic UI animations utilizing React, Vite.JS, shaders, Three.js, and Framer Motion.
+
+Style:
+Fluid Liquid UI. Organic, flowing visual effects with realistic liquid animations, interactive fluid interactions, and smooth transitions.
+
+Components (Detailed):
+- **Interactive Liquid Canvas Background**:
+  Full-page WebGL-based liquid/fluid simulation using Three.js shaders, subtly responding to cursor movements for immersive interactions. Ensure smooth, performance-optimized animations.
+- **Liquid Animated Typography**:
+  Visually captivating hero typography animated with liquid fill effects using GLSL shaders or SVG masks, transitioning fluidly and organically upon scroll or load.
+
+Suggested Libraries:
+- **Three.js** (fluid simulation & shaders)
+- **Framer Motion** (interactive typography animation)
+- **Vite.JS** (high performance)
+
+Produce clearly structured, optimized React components with detailed inline explanations now.`
+}, {
+  id: 6,
+  title: "Aurora Borealis Interactive Showcase",
+  description: "Northern Lights-inspired visuals, mesmerizing animations",
+  demoUrl: "#",
+  style: "aurora",
+  prompt: `You're a frontend developer specialized in creating visually stunning interactive experiences using React, Vite.JS, Three.js, and custom GLSL shaders.
+
+Style:
+Aurora Borealis Interactive Showcase. Northern Lights-inspired visuals, soft, mesmerizing animations, and visually immersive interactions.
+
+Components (Detailed):
+- **Aurora WebGL Canvas**:
+  A Three.js/WebGL canvas realistically simulating Aurora Borealis using custom GLSL shaders, with smooth, subtle animations creating a hypnotic visual effect. The animation gently responds to user interactions, like cursor movement.
+- **Interactive Aurora UI Cards**:
+  Beautifully transparent info cards overlaying the Aurora background, smoothly revealing shimmering aurora gradients and gentle glowing text effects on hover using Framer Motion or MagicUI animations.
+
+Suggested Libraries:
+- **Three.js** (GLSL shader-based aurora visuals)
+- **Framer Motion/MagicUI** (smooth interactions)
+- **Vite.JS** (fast dev environment)
+
+Generate detailed, modular React/Vite.JS code, clearly commented for easy implementation`
+}, {
+  id: 7,
   title: "Retro-Futuristic Synthwave",
   description: "Neon colors, grids, glitch animations, VHS aesthetics",
   demoUrl: "#",
@@ -68,7 +146,7 @@ Suggested Libraries:
 - GSAP (for VHS-style animations)
 - Vite.JS (fast asset bundling)`
 }, {
-  id: 5,
+  id: 8,
   title: "Interactive Collage & Scrapbook",
   description: "Tactile elements, layered textures, interactive collage-style content",
   demoUrl: "#",
@@ -84,7 +162,7 @@ Suggested Libraries:
 - MagicUI (smooth interactive behaviors)
 - Vite.JS (for rapid iteration)`
 }, {
-  id: 6,
+  id: 9,
   title: "Cyberpunk Digital Interface",
   description: "Dark interface, neon highlights, HUD-style interactivity, futuristic micro-animations",
   demoUrl: "#",
@@ -101,21 +179,30 @@ Suggested Libraries:
 - 21st.dev (interactive UI components)
 - Vite.JS (high-performance dev setup)`
 }];
+
 const Designs = () => {
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  
   const copyPrompt = (id: number, prompt: string) => {
     navigator.clipboard.writeText(prompt);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
+  
   const getCardClassName = (style: string) => {
     switch (style) {
       case 'glassmorphism':
         return "border border-white/20 bg-white/10 backdrop-blur-md shadow-lg";
       case 'brutalism':
         return "border-4 border-black bg-white text-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]";
-      case 'immersive3d':
-        return "bg-gradient-to-br from-purple-900 to-blue-900 shadow-xl";
+      case 'gradient':
+        return "bg-gradient-to-br from-purple-500/70 to-pink-500/70 border border-white/20 shadow-lg";
+      case 'retro-arcade':
+        return "bg-indigo-900 border-2 border-yellow-400 shadow-[0_0_10px_rgba(234,179,8,0.6)]";
+      case 'fluid':
+        return "bg-gradient-to-r from-cyan-900/80 to-blue-900/80 border border-cyan-400/30 shadow-lg";
+      case 'aurora':
+        return "bg-gradient-to-br from-teal-900/70 to-purple-900/70 border border-teal-400/30 shadow-lg";
       case 'synthwave':
         return "bg-gradient-to-b from-purple-900 via-violet-800 to-indigo-900 border border-pink-500";
       case 'collage':
@@ -126,14 +213,21 @@ const Designs = () => {
         return "bg-launch-dark border-gray-800";
     }
   };
+  
   const getTitleClassName = (style: string) => {
     switch (style) {
       case 'glassmorphism':
         return "text-white font-light tracking-wide";
       case 'brutalism':
         return "text-black font-extrabold text-2xl uppercase";
-      case 'immersive3d':
-        return "text-white font-semibold";
+      case 'gradient':
+        return "text-white font-medium tracking-wide";
+      case 'retro-arcade':
+        return "text-yellow-400 font-bold uppercase tracking-wider";
+      case 'fluid':
+        return "text-cyan-100 font-semibold tracking-wide";
+      case 'aurora':
+        return "text-teal-100 font-medium tracking-wide";
       case 'synthwave':
         return "text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-cyan-400 font-bold";
       case 'collage':
@@ -144,14 +238,21 @@ const Designs = () => {
         return "text-white";
     }
   };
+  
   const getDescriptionClassName = (style: string) => {
     switch (style) {
       case 'glassmorphism':
         return "text-white/70";
       case 'brutalism':
         return "text-black font-bold";
-      case 'immersive3d':
-        return "text-blue-200";
+      case 'gradient':
+        return "text-white/80";
+      case 'retro-arcade':
+        return "text-yellow-200";
+      case 'fluid':
+        return "text-cyan-200/80";
+      case 'aurora':
+        return "text-teal-200/80";
       case 'synthwave':
         return "text-pink-200";
       case 'collage':
@@ -162,16 +263,43 @@ const Designs = () => {
         return "";
     }
   };
+  
+  const getPromptBackgroundClassName = (style: string) => {
+    switch (style) {
+      case 'glassmorphism':
+        return "bg-gray-900/80 backdrop-blur-sm text-gray-300 border border-gray-700";
+      case 'brutalism':
+        return "bg-gray-200 text-black border-2 border-black";
+      case 'gradient':
+        return "bg-gray-900/80 backdrop-blur-sm text-gray-300 border border-white/20";
+      case 'retro-arcade':
+        return "bg-indigo-950 text-yellow-100 border border-yellow-400";
+      case 'fluid':
+        return "bg-gray-900/80 backdrop-blur-sm text-cyan-200 border border-cyan-500/30";
+      case 'aurora':
+        return "bg-gray-900/80 backdrop-blur-sm text-teal-200 border border-teal-500/30";
+      case 'synthwave':
+        return "bg-gray-900/90 backdrop-blur-sm text-pink-200 border border-pink-500/30";
+      case 'collage':
+        return "bg-amber-100 text-gray-800 border border-amber-300";
+      case 'cyberpunk':
+        return "bg-gray-950 text-cyan-300 border border-cyan-500/30 font-mono text-xs";
+      default:
+        return "bg-gray-900 text-gray-300 border border-gray-700";
+    }
+  };
+  
   return <div className="flex-1 space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl md:text-3xl font-bold">
           Design <span className="text-launch-cyan">Templates</span>
         </h1>
-        <p className="text-gray-400 text-sm md:text-base">Tired of your App looking too Generic ? Try out our variety of design prompts !</p>
+        <p className="text-gray-400 text-sm md:text-base">Tired of your App looking too Generic? Try out our variety of design prompts!</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {designTemplates.map(template => <Card key={template.id} className={cn("transition-all duration-300 hover:scale-[1.02]", getCardClassName(template.style))}>
+        {designTemplates.map(template => (
+          <Card key={template.id} className={cn("transition-all duration-300 hover:scale-[1.02]", getCardClassName(template.style))}>
             <CardHeader>
               <CardTitle className={getTitleClassName(template.style)}>{template.title}</CardTitle>
               <CardDescription className={getDescriptionClassName(template.style)}>
@@ -193,22 +321,46 @@ const Designs = () => {
                 <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
                   <Code className="w-4 h-4 inline mr-1" /> LLM Prompt
                 </h4>
-                <div className={cn("text-xs rounded p-3 relative max-h-24 overflow-y-auto", template.style === 'brutalism' ? "bg-gray-200 text-black" : "bg-gray-900 text-gray-300 border border-gray-700")}>
+                <div className={cn("text-xs rounded p-3 relative max-h-24 overflow-y-auto", getPromptBackgroundClassName(template.style))}>
                   {template.prompt}
                 </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" size="sm" className={cn("w-full text-xs gap-2", template.style === 'brutalism' ? "bg-black text-white hover:bg-gray-800 border-0" : "border-gray-700")} onClick={() => copyPrompt(template.id, template.prompt)}>
-                {copiedId === template.id ? <>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className={cn(
+                  "w-full text-xs gap-2", 
+                  template.style === 'brutalism' 
+                    ? "bg-black text-white hover:bg-gray-800 border-0" 
+                    : template.style === 'retro-arcade' 
+                      ? "bg-indigo-800 text-yellow-300 border-yellow-400 hover:bg-indigo-700"
+                      : template.style === 'gradient'
+                        ? "bg-purple-800/50 text-white border-white/30 hover:bg-purple-700/50"
+                        : template.style === 'fluid'
+                          ? "bg-blue-900/50 text-cyan-100 border-cyan-400/30 hover:bg-blue-800/50"
+                        : template.style === 'aurora'
+                          ? "bg-purple-900/50 text-teal-100 border-teal-400/30 hover:bg-purple-800/50"
+                        : "border-gray-700"
+                )} 
+                onClick={() => copyPrompt(template.id, template.prompt)}
+              >
+                {copiedId === template.id ? (
+                  <>
                     <Check className="w-4 h-4" /> Copied!
-                  </> : <>
+                  </>
+                ) : (
+                  <>
                     <Copy className="w-4 h-4" /> Copy Prompt
-                  </>}
+                  </>
+                )}
               </Button>
             </CardFooter>
-          </Card>)}
+          </Card>
+        ))}
       </div>
     </div>;
 };
+
 export default Designs;
