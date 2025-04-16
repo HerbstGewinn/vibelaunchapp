@@ -13,7 +13,15 @@ const designTemplates = [
     description: "Translucent elements, soft gradients, blur effects, subtle shadows",
     demoUrl: "#",
     style: "glassmorphism",
-    prompt: "Create a component using minimalistic glassmorphism design. Use translucent panels with 10-20% opacity, soft white/blue gradients, and subtle blur effects (backdrop-filter: blur(10px)). Add thin borders with low opacity and gentle box-shadows. Text should be high contrast with the background. Implement hover states that slightly increase transparency and glow. The overall aesthetic should be clean, modern, and lightweight."
+    prompt: `Design a highly interactive landing page using Minimalistic Glassmorphism. The layout features translucent cards with vibrant pastel gradients, subtle background blur effects, and delicate shadows.
+
+Components (use Vite.JS, MagicUI, or similar):
+- Interactive Glass Cards: Translucent, glass-effect information cards with gradient glow and animated micro-interactions—hovering over cards subtly shifts their tilt (consider MagicUI's tilt effect).
+- Gradient Glass Navigation: A responsive navbar with blurred translucent glass background, featuring smooth expanding/collapsing menus upon interaction.
+
+Suggested Libraries:
+- MagicUI (for fluid animations and interactions)
+- Vite.JS for fast development and hot-reloading`
   },
   {
     id: 2,
@@ -21,7 +29,16 @@ const designTemplates = [
     description: "Bold typography, high contrast, raw edges, animated type",
     demoUrl: "#",
     style: "brutalism",
-    prompt: "Design a neo-brutalist component with bold, oversized typography (font-weight: 800) and high contrast colors. Use raw, unrefined edges with thick, visible borders (3-5px solid). Incorporate deliberate misalignments or asymmetry in the layout. Text should be in sans-serif fonts like Helvetica or Arial. Add hover animations that are intentionally abrupt rather than smooth. Include bold background colors with no gradients. The aesthetic should feel raw, honest, and deliberately unpolished."
+    prompt: `Create an impactful, bold homepage using the Neo-Brutalism aesthetic, showcasing stark contrasts, animated typography, and edgy, raw layouts.
+
+Components (use Vite.JS, GSAP animations, 21st.dev):
+- Hero Typewriter Banner: Bold, oversized typography animating onto the screen with rhythmic typewriter effect and intentional glitches (use GSAP or anime.js).
+- Interactive Button Set: High-contrast brutalist buttons with exaggerated hover interactions, including shape morphing and dynamic shadow animations (consider 21st.dev for rich UI interactions).
+
+Suggested Libraries:
+- GSAP (for bold typographic animations)
+- 21st.dev (interactive buttons & rich micro-interactions)
+- Vite.JS (development & bundling)`
   },
   {
     id: 3,
@@ -29,7 +46,16 @@ const designTemplates = [
     description: "Scroll-based 3D object animations, immersive narrative UI",
     demoUrl: "#",
     style: "immersive3d",
-    prompt: "Create a component with immersive 3D scroll-triggered animations. Use perspective transformations and CSS 3D transforms for depth. Implement scroll-based animations where elements rotate, scale, or move in 3D space as the user scrolls. Link animation progress directly to scroll position using IntersectionObserver. Create a narrative flow where content reveals sequentially. Consider using libraries like Three.js or vanilla CSS 3D transforms for the 3D effects. The experience should feel cinematic and engage users through scroll interaction."
+    prompt: `Develop an immersive product showcase page using 3D Scroll-Triggered Storytelling. Each scroll interaction animates 3D objects, creating a cinematic narrative journey.
+
+Components (use Three.js, GSAP ScrollTrigger, Vite.JS):
+- 3D Product Journey: Scroll-triggered, realistic 3D object transformations—rotation, scaling, and repositioning—telling a visual product story (implemented with Three.js and GSAP ScrollTrigger).
+- Interactive 3D Timeline: A timeline bar smoothly animating and highlighting milestones upon scrolling, with embedded 3D elements appearing at each key step.
+
+Suggested Libraries:
+- Three.js (for detailed 3D rendering)
+- GSAP ScrollTrigger (scroll animations)
+- Vite.JS (rapid setup & hot-reloading)`
   },
   {
     id: 4,
@@ -37,7 +63,16 @@ const designTemplates = [
     description: "Neon colors, grids, glitch animations, VHS aesthetics",
     demoUrl: "#",
     style: "synthwave",
-    prompt: "Design a retro-futuristic synthwave component with neon colors (hot pink #ff6ec7, electric blue #00d9ff, and purple #b967ff). Use dark backgrounds with bright grid patterns that fade into the horizon. Implement scanline effects (linear repeating gradients) and subtle VHS glitch animations using CSS keyframes. Include elements that glow with text-shadow and box-shadow. Typography should use retrofuturistic fonts like 'Outrun future' or 'Chakra Petch'. Create a nostalgic 80s aesthetic that still feels futuristic."
+    prompt: `Create an immersive landing page using a nostalgic Retro-Futuristic Synthwave aesthetic, incorporating neon colors, grid patterns, glitch effects, and VHS-style interactions.
+
+Components (Vite.JS, 21st.dev, CSS & GLSL shaders):
+- Neon Glitch Headers: Vibrant neon-glow animated headlines incorporating intermittent glitch animations triggered randomly or upon interaction (CSS or shaders).
+- Interactive VHS Buttons: Buttons with dynamic neon borders and glitch distortion upon hover/click, mimicking VHS tape rewind effects (use 21st.dev UI or custom CSS/GSAP).
+
+Suggested Libraries:
+- 21st.dev (interactive retro-styled UI components)
+- GSAP (for VHS-style animations)
+- Vite.JS (fast asset bundling)`
   },
   {
     id: 5,
@@ -45,7 +80,16 @@ const designTemplates = [
     description: "Tactile elements, layered textures, interactive collage-style content",
     demoUrl: "#",
     style: "collage",
-    prompt: "Create an interactive collage/scrapbook component with layered elements at different z-indices. Use paper textures, tape elements, and subtle drop shadows to create depth. Position elements with slight rotations (transform: rotate()) to appear handplaced. Implement hover states that lift elements slightly. Consider subtle parallax effects for depth. Add interactive elements like flip animations or draggable pieces. Typography should include handwritten-style fonts and appear to be pasted onto the background. The aesthetic should feel tactile, personal, and handcrafted."
+    prompt: `Design a portfolio site using a creative Interactive Collage & Scrapbook style. The design should evoke tactile interactions, textured backgrounds, and draggable scrapbook elements.
+
+Components (Vite.JS, MagicUI, Framer Motion):
+- Draggable Image Collage: Interactive draggable image elements that users can move around, stack, and rearrange freely (Framer Motion or MagicUI's draggable component).
+- Animated Scrapbook Testimonials: Hand-drawn styled testimonial cards appearing on scroll or hover, revealing handwritten text animations and subtle parallax movements (Framer Motion/MagicUI).
+
+Suggested Libraries:
+- Framer Motion (drag, drop, animation)
+- MagicUI (smooth interactive behaviors)
+- Vite.JS (for rapid iteration)`
   },
   {
     id: 6,
@@ -53,7 +97,17 @@ const designTemplates = [
     description: "Dark interface, neon highlights, HUD-style interactivity, futuristic micro-animations",
     demoUrl: "#",
     style: "cyberpunk",
-    prompt: "Design a cyberpunk digital interface component with a dark background and neon accent colors (cyan #00ffd5, pink #ff0055). Create HUD-style elements with thin borders and minimal backgrounds. Add scanline effects (linear-gradient) at 10-15% opacity. Implement glitch animations using CSS clip-path and transforms on hover. Use monospace fonts like 'Share Tech Mono' for data displays. Include micro-animations for all state changes. Consider adding animated data flows using repeating gradients. The interface should feel high-tech, slightly dystopian, and inspired by sci-fi interfaces."
+    prompt: `Create an advanced, futuristic dashboard page inspired by Cyberpunk Digital Interface style. Dark themes with neon highlights, sleek HUD-style panels, and futuristic micro-animations.
+
+Components (Three.js, Vite.JS, GSAP, custom shaders):
+- Animated Neon HUD Panel: Futuristic dashboard elements rendered in neon-glow with animated micro-interactions—panels dynamically expand or contract based on user clicks (Three.js with custom shader effects).
+- Interactive Neon Widgets: Widgets visualizing data with animated neon bars, rings, and graphs; interactive behaviors include smooth hover highlighting and detailed pop-ups (use GSAP animations & 21st.dev UI).
+
+Suggested Libraries:
+- Three.js (advanced HUD rendering)
+- GSAP (smooth neon micro-animations)
+- 21st.dev (interactive UI components)
+- Vite.JS (high-performance dev setup)`
   }
 ];
 
