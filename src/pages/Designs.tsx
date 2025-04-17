@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -348,21 +347,21 @@ const Designs = () => {
     }
   };
 
-  const getCopyButtonText = (template: typeof designTemplates[0], activeTab: string) => {
-    if (activeTab === 'about') {
+  const getCopyButtonText = (template: typeof designTemplates[0], isAboutTab: boolean) => {
+    if (isAboutTab) {
       return copiedId === template.id + 100 ? 'Copied!' : 'Copy About Prompt';
     }
     return copiedId === template.id ? 'Copied!' : 'Copy Design Prompt';
   };
 
-  const handleCopyPrompt = (template: typeof designTemplates[0], activeTab: string) => {
-    const prompt = activeTab === 'about' ? template.aboutPrompt : template.prompt;
-    const copyId = activeTab === 'about' ? template.id + 100 : template.id;
+  const handleCopyPrompt = (template: typeof designTemplates[0], isAboutTab: boolean) => {
+    const prompt = isAboutTab ? template.aboutPrompt : template.prompt;
+    const copyId = isAboutTab ? template.id + 100 : template.id;
     
     navigator.clipboard.writeText(prompt);
     setCopiedId(copyId);
     toast({
-      title: `${activeTab === 'about' ? 'About Prompt' : 'Design Prompt'} copied`,
+      title: `${isAboutTab ? 'About Prompt' : 'Design Prompt'} copied`,
       description: "The prompt has been copied to your clipboard.",
       duration: 2000,
     });
@@ -518,7 +517,7 @@ const Designs = () => {
                               ? "bg-purple-900/50 text-teal-100 border-teal-400/30 hover:bg-purple-800/50"
                             : "border-gray-700"
                     )} 
-                    onClick={() => handleCopyPrompt(template, 'design')}
+                    onClick={() => handleCopyPrompt(template, false)}
                   >
                     {copiedId === template.id ? (
                       <>
@@ -526,11 +525,12 @@ const Designs = () => {
                       </>
                     ) : (
                       <>
-                        <Copy className="w-4 h-4" /> {getCopyButtonText(template, 'design')}
+                        <Copy className="w-4 h-4" /> {getCopyButtonText(template, false)}
                       </>
                     )}
                   </Button>
                 </TabsContent>
+                
                 <TabsContent value="about" className="mt-0 p-0 w-full">
                   <Button 
                     variant="outline" 
@@ -549,26 +549,10 @@ const Designs = () => {
                               ? "bg-purple-900/50 text-teal-100 border-teal-400/30 hover:bg-purple-800/50"
                             : "border-gray-700"
                     )} 
-                    onClick={() => handleCopyPrompt(template, 'about')}
+                    onClick={() => handleCopyPrompt(template, true)}
                   >
                     {copiedId === template.id + 100 ? (
                       <>
                         <Check className="w-4 h-4" /> Copied!
                       </>
                     ) : (
-                      <>
-                        <Copy className="w-4 h-4" /> {getCopyButtonText(template, 'about')}
-                      </>
-                    )}
-                  </Button>
-                </TabsContent>
-              </Tabs>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default Designs;
