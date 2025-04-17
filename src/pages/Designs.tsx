@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -553,3 +554,21 @@ const Designs = () => {
                     {copiedId === template.id + 100 ? (
                       <>
                         <Check className="w-4 h-4" /> Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" /> {getCopyButtonText(template, 'about')}
+                      </>
+                    )}
+                  </Button>
+                </TabsContent>
+              </Tabs>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Designs;
