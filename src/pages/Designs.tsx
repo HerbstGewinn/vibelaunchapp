@@ -1,10 +1,11 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { PlayCircle, Copy, Check, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useToast } from '@/hooks/use-toast';
 
 const designTemplates = [{
   id: 1,
@@ -182,11 +183,22 @@ Suggested Libraries:
 
 const Designs = () => {
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [expandedPromptId, setExpandedPromptId] = useState<number | null>(null);
+  const { toast } = useToast();
   
   const copyPrompt = (id: number, prompt: string) => {
     navigator.clipboard.writeText(prompt);
     setCopiedId(id);
+    toast({
+      title: "Prompt copied",
+      description: "The prompt has been copied to your clipboard.",
+      duration: 2000,
+    });
     setTimeout(() => setCopiedId(null), 2000);
+  };
+  
+  const togglePromptExpansion = (id: number) => {
+    setExpandedPromptId(expandedPromptId === id ? null : id);
   };
   
   const getCardClassName = (style: string) => {
@@ -321,9 +333,19 @@ const Designs = () => {
                 <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
                   <Code className="w-4 h-4 inline mr-1" /> LLM Prompt
                 </h4>
-                <div className={cn("text-xs rounded p-3 relative max-h-24 overflow-y-auto", getPromptBackgroundClassName(template.style))}>
-                  {template.prompt}
-                </div>
+                <ScrollArea 
+                  className={cn(
+                    "text-xs rounded relative", 
+                    expandedPromptId === template.id ? "max-h-80" : "max-h-24",
+                    getPromptBackgroundClassName(template.style)
+                  )}
+                  clickable={true}
+                  onContentClick={() => togglePromptExpansion(template.id)}
+                >
+                  <div className="p-3">
+                    {template.prompt}
+                  </div>
+                </ScrollArea>
               </div>
             </CardContent>
             <CardFooter>
