@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -335,14 +336,24 @@ const Designs = () => {
                 </h4>
                 <ScrollArea 
                   className={cn(
-                    "text-xs rounded relative", 
+                    "text-xs rounded relative group", // Added 'group' class for hover effects
                     expandedPromptId === template.id ? "max-h-80" : "max-h-24",
-                    getPromptBackgroundClassName(template.style)
+                    getPromptBackgroundClassName(template.style),
+                    "transition-all duration-300 ease-in-out", // Smooth transition
+                    "hover:ring-2 hover:ring-launch-cyan/50", // Subtle ring on hover
+                    "cursor-pointer", // Explicit cursor indication
+                    "transform hover:scale-[1.01]" // Slight scale on hover
                   )}
                   clickable={true}
                   onContentClick={() => togglePromptExpansion(template.id)}
                 >
-                  <div className="p-3">
+                  <div className={cn(
+                    "p-3 relative",
+                    "after:content-['Click_to_expand'] after:absolute after:bottom-1 after:right-1", // Hint text
+                    "after:text-[0.6rem] after:text-launch-cyan/50 after:opacity-0", // Initially hidden
+                    "group-hover:after:opacity-100", // Show on group hover
+                    "transition-opacity duration-300"
+                  )}>
                     {template.prompt}
                   </div>
                 </ScrollArea>
@@ -386,3 +397,4 @@ const Designs = () => {
 };
 
 export default Designs;
+
