@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { PlayCircle, Copy, Check, Code } from 'lucide-react';
+import { PlayCircle, Copy, Check, Code, LayoutTemplate, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const designTemplates = [{
   id: 1,
@@ -22,7 +23,12 @@ Components (use Vite.JS, MagicUI, or similar):
 
 Suggested Libraries:
 - MagicUI (for fluid animations and interactions)
-- Vite.JS for fast development and hot-reloading`
+- Vite.JS for fast development and hot-reloading`,
+  aboutPrompt: `Design a clean, minimalistic '/About' page using the Glassmorphism style, featuring softly blurred translucent panels and subtle gradient highlights. Include:
+- A short, welcoming company/team introduction card with gentle hover interactions (MagicUI or Framer Motion).
+- Beautiful translucent "team cards," each revealing team member info with smooth fade-in animations on hover.
+- A background featuring subtle pastel gradients smoothly animating slowly over time.
+- Include minimal, elegant typography (sans-serif, thin weights) and ample whitespace to emphasize clarity.`
 }, {
   id: 2,
   title: "Neo-Brutalism",
@@ -38,7 +44,12 @@ Components (use Vite.JS, GSAP animations, 21st.dev):
 Suggested Libraries:
 - GSAP (for bold typographic animations)
 - 21st.dev (interactive buttons & rich micro-interactions)
-- Vite.JS (development & bundling)`
+- Vite.JS (development & bundling)`,
+  aboutPrompt: `Create an '/About' page in bold Neo-Brutalism style, embracing raw aesthetics with strong contrast and animated typography:
+- Start with an oversized typographic header dramatically animating into view using GSAP (slide-in from sides or letter-by-letter animation).
+- Present company/team information in large, bold paragraphs with intentionally irregular alignment and high-contrast backgrounds.
+- Include dynamic hover effects for each "team member block," such as exaggerated shadow shifts, shape distortion, or animated borders (use 21st.dev or GSAP).
+- Typography should be loud and attention-grabbing—think chunky fonts and stark color contrasts like black on white, yellow on black.`
 }, {
   id: 3,
   title: "Animated Gradient Minimalism",
@@ -61,7 +72,12 @@ Suggested Libraries:
 - **MagicUI** (interactive gradient animations)
 - **Vite.JS** (fast dev environment)
 
-Generate production-ready, component-based React code with clear comments now.`
+Generate production-ready, component-based React code with clear comments now.`,
+  aboutPrompt: `Design an immersive, narrative-driven '/About' page leveraging scroll-triggered 3D storytelling techniques:
+- Introduce a scrolling journey: as the user scrolls, smoothly animate 3D scenes (Three.js & GSAP ScrollTrigger) revealing key milestones of the company/team story in an engaging narrative.
+- Showcase a central interactive 3D scene highlighting team members; clicking a member smoothly transitions camera focus, revealing their bio and achievements.
+- Incorporate cinematic lighting and subtle particle effects (Three.js particle systems) that enhance the immersive atmosphere.
+- Typography and text should smoothly fade-in, synchronized precisely with 3D scroll animations.`
 }, {
   id: 4,
   title: "Retro Arcade Pixel UI",
@@ -84,7 +100,12 @@ Suggested Libraries:
 - **21st.dev** (interactive buttons)
 - **Vite.JS** (efficient bundling)
 
-Create modular, clean React/Vite.JS components with clear asset and animation management now.`
+Create modular, clean React/Vite.JS components with clear asset and animation management now.`,
+  aboutPrompt: `Craft an '/About' page in nostalgic, neon-infused Synthwave style, rich with retro aesthetics:
+- Neon-glow animated section titles that appear with subtle glitch animations (CSS/GLSL shaders, GSAP).
+- Profile cards for each team member designed as retro-futuristic "cards" with neon grids behind them, animating with a slight VHS distortion effect on hover (21st.dev, GSAP).
+- Background elements featuring animated neon grids or 80s-style geometric shapes subtly pulsing or moving to evoke the Synthwave era.
+- Use bold, retro-futuristic typography with neon outlines and glow effects consistently throughout the page.`
 }, {
   id: 5,
   title: "Fluid Liquid UI",
@@ -107,7 +128,12 @@ Suggested Libraries:
 - **Framer Motion** (interactive typography animation)
 - **Vite.JS** (high performance)
 
-Produce clearly structured, optimized React components with detailed inline explanations now.`
+Produce clearly structured, optimized React components with detailed inline explanations now.`,
+  aboutPrompt: `Design an engaging, tactile '/About' page in Interactive Collage & Scrapbook style:
+- Team bios presented as interactive, draggable scrapbook notes and Polaroid photos (Framer Motion, MagicUI).
+- Allow users to rearrange and explore notes; each interactive element has tactile hover effects, such as subtle rotation or lift animation upon hover or drag.
+- Background includes realistic textures—torn paper, masking tape, and sketches that animate subtly upon scrolling or hovering.
+- Typography should resemble handwriting or typewriter fonts to reinforce the physical, handcrafted aesthetic.`
 }, {
   id: 6,
   title: "Aurora Borealis Interactive Showcase",
@@ -130,7 +156,12 @@ Suggested Libraries:
 - **Framer Motion/MagicUI** (smooth interactions)
 - **Vite.JS** (fast dev environment)
 
-Generate detailed, modular React/Vite.JS code, clearly commented for easy implementation`
+Generate detailed, modular React/Vite.JS code, clearly commented for easy implementation`,
+  aboutPrompt: `Create a dynamic '/About' page inspired by Cyberpunk Digital Interface style with futuristic HUD elements:
+- Begin with an animated neon HUD-style title header, flickering into existence using Three.js and GSAP.
+- Display interactive team member profiles as HUD-style cards, outlined in neon highlights and glowing dynamically; hovering reveals futuristic animations and detailed data pop-ups (use Three.js with shader effects and GSAP animations).
+- Background of the page should be dark, tech-inspired, animated subtly with moving circuitry lines or futuristic data grids.
+- Typography must be sleek, digital-looking, using neon colors (cyan, magenta, electric blue) for highlights.`
 }, {
   id: 7,
   title: "Retro-Futuristic Synthwave",
@@ -146,7 +177,12 @@ Components (Vite.JS, 21st.dev, CSS & GLSL shaders):
 Suggested Libraries:
 - 21st.dev (interactive retro-styled UI components)
 - GSAP (for VHS-style animations)
-- Vite.JS (fast asset bundling)`
+- Vite.JS (fast asset bundling)`,
+  aboutPrompt: `Craft an '/About' page in nostalgic, neon-infused Synthwave style, rich with retro aesthetics:
+- Neon-glow animated section titles that appear with subtle glitch animations (CSS/GLSL shaders, GSAP).
+- Profile cards for each team member designed as retro-futuristic "cards" with neon grids behind them, animating with a slight VHS distortion effect on hover (21st.dev, GSAP).
+- Background elements featuring animated neon grids or 80s-style geometric shapes subtly pulsing or moving to evoke the Synthwave era.
+- Use bold, retro-futuristic typography with neon outlines and glow effects consistently throughout the page.`
 }, {
   id: 8,
   title: "Interactive Collage & Scrapbook",
@@ -162,7 +198,12 @@ Components (Vite.JS, MagicUI, Framer Motion):
 Suggested Libraries:
 - Framer Motion (drag, drop, animation)
 - MagicUI (smooth interactive behaviors)
-- Vite.JS (for rapid iteration)`
+- Vite.JS (for rapid iteration)`,
+  aboutPrompt: `Design an engaging, tactile '/About' page in Interactive Collage & Scrapbook style:
+- Team bios presented as interactive, draggable scrapbook notes and Polaroid photos (Framer Motion, MagicUI).
+- Allow users to rearrange and explore notes; each interactive element has tactile hover effects, such as subtle rotation or lift animation upon hover or drag.
+- Background includes realistic textures—torn paper, masking tape, and sketches that animate subtly upon scrolling or hovering.
+- Typography should resemble handwriting or typewriter fonts to reinforce the physical, handcrafted aesthetic.`
 }, {
   id: 9,
   title: "Cyberpunk Digital Interface",
@@ -179,7 +220,12 @@ Suggested Libraries:
 - Three.js (advanced HUD rendering)
 - GSAP (smooth neon micro-animations)
 - 21st.dev (interactive UI components)
-- Vite.JS (high-performance dev setup)`
+- Vite.JS (high-performance dev setup)`,
+  aboutPrompt: `Create a dynamic '/About' page inspired by Cyberpunk Digital Interface style with futuristic HUD elements:
+- Begin with an animated neon HUD-style title header, flickering into existence using Three.js and GSAP.
+- Display interactive team member profiles as HUD-style cards, outlined in neon highlights and glowing dynamically; hovering reveals futuristic animations and detailed data pop-ups (use Three.js with shader effects and GSAP animations).
+- Background of the page should be dark, tech-inspired, animated subtly with moving circuitry lines or futuristic data grids.
+- Typography must be sleek, digital-looking, using neon colors (cyan, magenta, electric blue) for highlights.`
 }];
 
 const Designs = () => {
@@ -331,64 +377,170 @@ const Designs = () => {
                 </AspectRatio>
               </div>
               <div className="mt-4">
-                <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
-                  <Code className="w-4 h-4 inline mr-1" /> LLM Prompt
-                </h4>
-                <ScrollArea 
-                  className={cn(
-                    "text-xs rounded relative group", // Added 'group' class for hover effects
-                    expandedPromptId === template.id ? "max-h-80" : "max-h-24",
-                    getPromptBackgroundClassName(template.style),
-                    "transition-all duration-300 ease-in-out", // Smooth transition
-                    "hover:ring-2 hover:ring-launch-cyan/50", // Subtle ring on hover
-                    "cursor-pointer", // Explicit cursor indication
-                    "transform hover:scale-[1.01]" // Slight scale on hover
-                  )}
-                  clickable={true}
-                  onContentClick={() => togglePromptExpansion(template.id)}
-                >
-                  <div className={cn(
-                    "p-3 relative",
-                    "after:content-['Click_to_expand'] after:absolute after:bottom-1 after:right-1", // Hint text
-                    "after:text-[0.6rem] after:text-launch-cyan/50 after:opacity-0", // Initially hidden
-                    "group-hover:after:opacity-100", // Show on group hover
-                    "transition-opacity duration-300"
+                <Tabs defaultValue="design" className="w-full">
+                  <TabsList className={cn(
+                    "w-full grid grid-cols-2 mb-2", 
+                    template.style === 'brutalism' ? "bg-gray-200" : "bg-gray-800/50",
+                    template.style === 'retro-arcade' && "bg-indigo-950",
+                    template.style === 'synthwave' && "bg-purple-950"
                   )}>
-                    {template.prompt}
-                  </div>
-                </ScrollArea>
+                    <TabsTrigger 
+                      value="design" 
+                      className={cn(
+                        "flex items-center gap-1 text-xs",
+                        template.style === 'brutalism' ? "data-[state=active]:bg-black data-[state=active]:text-white" : "",
+                        template.style === 'retro-arcade' ? "data-[state=active]:bg-indigo-800 data-[state=active]:text-yellow-300" : "",
+                        template.style === 'synthwave' ? "data-[state=active]:bg-purple-900 data-[state=active]:text-pink-300" : "",
+                        template.style === 'gradient' ? "data-[state=active]:bg-purple-700/70 data-[state=active]:text-white" : "",
+                        template.style === 'fluid' ? "data-[state=active]:bg-cyan-900/80 data-[state=active]:text-cyan-100" : "",
+                        template.style === 'aurora' ? "data-[state=active]:bg-teal-900/80 data-[state=active]:text-teal-100" : "",
+                        template.style === 'cyberpunk' ? "data-[state=active]:bg-gray-900 data-[state=active]:text-cyan-400" : ""
+                      )}
+                    >
+                      <LayoutTemplate className="w-3.5 h-3.5" /> Design
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="about" 
+                      className={cn(
+                        "flex items-center gap-1 text-xs",
+                        template.style === 'brutalism' ? "data-[state=active]:bg-black data-[state=active]:text-white" : "",
+                        template.style === 'retro-arcade' ? "data-[state=active]:bg-indigo-800 data-[state=active]:text-yellow-300" : "",
+                        template.style === 'synthwave' ? "data-[state=active]:bg-purple-900 data-[state=active]:text-pink-300" : "",
+                        template.style === 'gradient' ? "data-[state=active]:bg-purple-700/70 data-[state=active]:text-white" : "",
+                        template.style === 'fluid' ? "data-[state=active]:bg-cyan-900/80 data-[state=active]:text-cyan-100" : "",
+                        template.style === 'aurora' ? "data-[state=active]:bg-teal-900/80 data-[state=active]:text-teal-100" : "",
+                        template.style === 'cyberpunk' ? "data-[state=active]:bg-gray-900 data-[state=active]:text-cyan-400" : ""
+                      )}
+                    >
+                      <Info className="w-3.5 h-3.5" /> About
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="design" className="mt-0">
+                    <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
+                      <Code className="w-4 h-4 inline mr-1" /> Design Prompt
+                    </h4>
+                    <ScrollArea 
+                      className={cn(
+                        "text-xs rounded relative group",
+                        expandedPromptId === template.id ? "max-h-80" : "max-h-24",
+                        getPromptBackgroundClassName(template.style),
+                        "transition-all duration-300 ease-in-out",
+                        "hover:ring-2 hover:ring-launch-cyan/50",
+                        "cursor-pointer",
+                        "transform hover:scale-[1.01]"
+                      )}
+                      clickable={true}
+                      onContentClick={() => togglePromptExpansion(template.id)}
+                    >
+                      <div className={cn(
+                        "p-3 relative",
+                        "after:content-['Click_to_expand'] after:absolute after:bottom-1 after:right-1",
+                        "after:text-[0.6rem] after:text-launch-cyan/50 after:opacity-0",
+                        "group-hover:after:opacity-100",
+                        "transition-opacity duration-300"
+                      )}>
+                        {template.prompt}
+                      </div>
+                    </ScrollArea>
+                  </TabsContent>
+                  
+                  <TabsContent value="about" className="mt-0">
+                    <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
+                      <Info className="w-4 h-4 inline mr-1" /> About Page Prompt
+                    </h4>
+                    <ScrollArea 
+                      className={cn(
+                        "text-xs rounded relative group",
+                        expandedPromptId === template.id + 100 ? "max-h-80" : "max-h-24", // Use different ID range for about prompts
+                        getPromptBackgroundClassName(template.style),
+                        "transition-all duration-300 ease-in-out",
+                        "hover:ring-2 hover:ring-launch-cyan/50",
+                        "cursor-pointer",
+                        "transform hover:scale-[1.01]"
+                      )}
+                      clickable={true}
+                      onContentClick={() => togglePromptExpansion(template.id + 100)} // Use different ID range for about prompts
+                    >
+                      <div className={cn(
+                        "p-3 relative",
+                        "after:content-['Click_to_expand'] after:absolute after:bottom-1 after:right-1",
+                        "after:text-[0.6rem] after:text-launch-cyan/50 after:opacity-0",
+                        "group-hover:after:opacity-100",
+                        "transition-opacity duration-300"
+                      )}>
+                        {template.aboutPrompt}
+                      </div>
+                    </ScrollArea>
+                  </TabsContent>
+                </Tabs>
               </div>
             </CardContent>
             <CardFooter>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={cn(
-                  "w-full text-xs gap-2", 
-                  template.style === 'brutalism' 
-                    ? "bg-black text-white hover:bg-gray-800 border-0" 
-                    : template.style === 'retro-arcade' 
-                      ? "bg-indigo-800 text-yellow-300 border-yellow-400 hover:bg-indigo-700"
-                      : template.style === 'gradient'
-                        ? "bg-purple-800/50 text-white border-white/30 hover:bg-purple-700/50"
-                        : template.style === 'fluid'
-                          ? "bg-blue-900/50 text-cyan-100 border-cyan-400/30 hover:bg-blue-800/50"
-                        : template.style === 'aurora'
-                          ? "bg-purple-900/50 text-teal-100 border-teal-400/30 hover:bg-purple-800/50"
-                        : "border-gray-700"
-                )} 
-                onClick={() => copyPrompt(template.id, template.prompt)}
-              >
-                {copiedId === template.id ? (
-                  <>
-                    <Check className="w-4 h-4" /> Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" /> Copy Prompt
-                  </>
-                )}
-              </Button>
+              <Tabs defaultValue="design" className="w-full">
+                <TabsContent value="design" className="mt-0 p-0 w-full">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className={cn(
+                      "w-full text-xs gap-2", 
+                      template.style === 'brutalism' 
+                        ? "bg-black text-white hover:bg-gray-800 border-0" 
+                        : template.style === 'retro-arcade' 
+                          ? "bg-indigo-800 text-yellow-300 border-yellow-400 hover:bg-indigo-700"
+                          : template.style === 'gradient'
+                            ? "bg-purple-800/50 text-white border-white/30 hover:bg-purple-700/50"
+                            : template.style === 'fluid'
+                              ? "bg-blue-900/50 text-cyan-100 border-cyan-400/30 hover:bg-blue-800/50"
+                            : template.style === 'aurora'
+                              ? "bg-purple-900/50 text-teal-100 border-teal-400/30 hover:bg-purple-800/50"
+                            : "border-gray-700"
+                    )} 
+                    onClick={() => copyPrompt(template.id, template.prompt)}
+                  >
+                    {copiedId === template.id ? (
+                      <>
+                        <Check className="w-4 h-4" /> Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" /> Copy Design Prompt
+                      </>
+                    )}
+                  </Button>
+                </TabsContent>
+                <TabsContent value="about" className="mt-0 p-0 w-full">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className={cn(
+                      "w-full text-xs gap-2", 
+                      template.style === 'brutalism' 
+                        ? "bg-black text-white hover:bg-gray-800 border-0" 
+                        : template.style === 'retro-arcade' 
+                          ? "bg-indigo-800 text-yellow-300 border-yellow-400 hover:bg-indigo-700"
+                          : template.style === 'gradient'
+                            ? "bg-purple-800/50 text-white border-white/30 hover:bg-purple-700/50"
+                            : template.style === 'fluid'
+                              ? "bg-blue-900/50 text-cyan-100 border-cyan-400/30 hover:bg-blue-800/50"
+                            : template.style === 'aurora'
+                              ? "bg-purple-900/50 text-teal-100 border-teal-400/30 hover:bg-purple-800/50"
+                            : "border-gray-700"
+                    )} 
+                    onClick={() => copyPrompt(template.id + 100, template.aboutPrompt)}
+                  >
+                    {copiedId === template.id + 100 ? (
+                      <>
+                        <Check className="w-4 h-4" /> Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" /> Copy About Prompt
+                      </>
+                    )}
+                  </Button>
+                </TabsContent>
+              </Tabs>
             </CardFooter>
           </Card>
         ))}
@@ -397,4 +549,3 @@ const Designs = () => {
 };
 
 export default Designs;
-
