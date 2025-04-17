@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useToast } from "@/hooks/use-toast";
+import AuthDesigns from '@/components/auth/AuthDesigns';
 
 const Auth = () => {
   const { toast } = useToast();
@@ -164,6 +164,8 @@ const Auth = () => {
           </CardFooter>
         </Card>
       </div>
+      
+      <AuthDesigns />
     </div>
   );
 };
