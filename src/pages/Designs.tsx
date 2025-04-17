@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -348,7 +347,8 @@ const Designs = () => {
     }
   };
   
-  return <div className="flex-1 space-y-6">
+  return (
+    <div className="flex-1 space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl md:text-3xl font-bold">
           Design <span className="text-launch-cyan">Templates</span>
@@ -545,7 +545,8 @@ const Designs = () => {
           </Card>
         ))}
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default Designs;
