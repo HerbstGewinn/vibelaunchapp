@@ -346,6 +346,27 @@ const Designs = () => {
         return "bg-gray-900 text-gray-300 border border-gray-700";
     }
   };
+
+  const getCopyButtonText = (template: typeof designTemplates[0], activeTab: string) => {
+    if (activeTab === 'about') {
+      return copiedId === template.id + 100 ? 'Copied!' : 'Copy About Prompt';
+    }
+    return copiedId === template.id ? 'Copied!' : 'Copy Design Prompt';
+  };
+
+  const handleCopyPrompt = (template: typeof designTemplates[0], activeTab: string) => {
+    const prompt = activeTab === 'about' ? template.aboutPrompt : template.prompt;
+    const copyId = activeTab === 'about' ? template.id + 100 : template.id;
+    
+    navigator.clipboard.writeText(prompt);
+    setCopiedId(copyId);
+    toast({
+      title: `${activeTab === 'about' ? 'About Prompt' : 'Design Prompt'} copied`,
+      description: "The prompt has been copied to your clipboard.",
+      duration: 2000,
+    });
+    setTimeout(() => setCopiedId(null), 2000);
+  };
   
   return (
     <div className="flex-1 space-y-6">
@@ -496,7 +517,7 @@ const Designs = () => {
                               ? "bg-purple-900/50 text-teal-100 border-teal-400/30 hover:bg-purple-800/50"
                             : "border-gray-700"
                     )} 
-                    onClick={() => copyPrompt(template.id, template.prompt)}
+                    onClick={() => handleCopyPrompt(template, 'design')}
                   >
                     {copiedId === template.id ? (
                       <>
@@ -504,7 +525,7 @@ const Designs = () => {
                       </>
                     ) : (
                       <>
-                        <Copy className="w-4 h-4" /> Copy Design Prompt
+                        <Copy className="w-4 h-4" /> {getCopyButtonText(template, 'design')}
                       </>
                     )}
                   </Button>
@@ -527,26 +548,8 @@ const Designs = () => {
                               ? "bg-purple-900/50 text-teal-100 border-teal-400/30 hover:bg-purple-800/50"
                             : "border-gray-700"
                     )} 
-                    onClick={() => copyPrompt(template.id + 100, template.aboutPrompt)}
+                    onClick={() => handleCopyPrompt(template, 'about')}
                   >
                     {copiedId === template.id + 100 ? (
                       <>
                         <Check className="w-4 h-4" /> Copied!
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-4 h-4" /> Copy About Prompt
-                      </>
-                    )}
-                  </Button>
-                </TabsContent>
-              </Tabs>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default Designs;
