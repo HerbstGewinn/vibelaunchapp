@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
@@ -26,8 +27,6 @@ const Auth = () => {
       <p className="text-launch-text-muted max-w-3xl">
         Set up authentication for your application using Supabase Auth. Follow the checklist and resources below to get started.
       </p>
-
-      <AuthDesigns />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
@@ -60,6 +59,8 @@ const Auth = () => {
           </CardContent>
         </Card>
       </div>
+
+      <AuthDesigns />
       
       <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow w-full">
         <CardHeader>
