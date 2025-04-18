@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
@@ -27,6 +26,8 @@ const Auth = () => {
       <p className="text-launch-text-muted max-w-3xl">
         Set up authentication for your application using Supabase Auth. Follow the checklist and resources below to get started.
       </p>
+
+      <AuthDesigns />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
@@ -60,47 +61,43 @@ const Auth = () => {
         </Card>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <ExternalLink className="h-5 w-5 text-launch-cyan" />
-              Documentation
-            </CardTitle>
-            <CardDescription>Official Supabase Auth resources</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {[
-              {
-                title: "Supabase Auth Documentation",
-                url: "https://supabase.com/docs/guides/auth"
-              },
-              {
-                title: "Social Login Setup",
-                url: "https://supabase.com/docs/guides/auth/social-login"
-              },
-              {
-                title: "Auth API Reference",
-                url: "https://supabase.com/docs/reference/javascript/auth-signin"
-              }
-            ].map((item, index) => (
-              <a
-                key={index}
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-launch-cyan/0 via-launch-cyan/5 to-launch-cyan/0 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700"></div>
-                <span className="text-white z-10">{item.title}</span>
-                <ExternalLink className="h-4 w-4 text-launch-cyan z-10 group-hover:translate-x-1 transition-transform" />
-              </a>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-      
-      <AuthDesigns />
+      <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow w-full">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center gap-2">
+            <ExternalLink className="h-5 w-5 text-launch-cyan" />
+            Documentation
+          </CardTitle>
+          <CardDescription>Official Supabase Auth resources</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[
+            {
+              title: "Supabase Auth Documentation",
+              url: "https://supabase.com/docs/guides/auth"
+            },
+            {
+              title: "Social Login Setup",
+              url: "https://supabase.com/docs/guides/auth/social-login"
+            },
+            {
+              title: "Auth API Reference",
+              url: "https://supabase.com/docs/reference/javascript/auth-signin"
+            }
+          ].map((item, index) => (
+            <a
+              key={index}
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-launch-cyan/0 via-launch-cyan/5 to-launch-cyan/0 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700"></div>
+              <span className="text-white z-10">{item.title}</span>
+              <ExternalLink className="h-4 w-4 text-launch-cyan z-10 group-hover:translate-x-1 transition-transform" />
+            </a>
+          ))}
+        </CardContent>
+      </Card>
     </div>
   );
 };
