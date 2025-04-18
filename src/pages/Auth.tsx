@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
@@ -13,12 +12,10 @@ const Auth = () => {
   
   const todoItems = [
     { text: "Setup Supabase project", completed: false },
-    { text: "Enable Auth providers (Email, Google, etc.)", completed: false },
-    { text: "Configure redirect URLs", completed: false },
-    { text: "Implement sign in component", completed: false },
-    { text: "Implement sign up component", completed: false },
-    { text: "Add auth guards to protected routes", completed: false },
-    { text: "Test auth flow end to end", completed: false }
+    { text: "Enable Auth Providers (Email, Google)", completed: false },
+    { text: "Visit Google Bigcloud, configure redirect URLs", completed: false },
+    { text: "Choose a Sign In Template & run the prompt", completed: false },
+    { text: "Test Auth Flow End to End", completed: false }
   ];
 
   return (
