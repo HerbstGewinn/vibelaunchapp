@@ -1,9 +1,10 @@
-
 import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle, Circle, ExternalLink, Rocket, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+import { TodoList } from '@/components/common/TodoList';
 
 const Launch = () => {
   const launchItems = [
@@ -69,25 +70,9 @@ const Launch = () => {
             <CardTitle className="text-white">Launch Checklist</CardTitle>
             <CardDescription>Track your launch preparation progress</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {launchItems.map((item, index) => (
-              <div key={index} className="flex items-start space-x-2">
-                <div className="mt-1">
-                  {item.completed ? (
-                    <CheckCircle className="h-5 w-5 text-launch-cyan" />
-                  ) : (
-                    <Circle className="h-5 w-5 text-gray-500" />
-                  )}
-                </div>
-                <span className="text-white">{item.text}</span>
-              </div>
-            ))}
+          <CardContent>
+            <TodoList items={launchItems} taskId="setup_launch" />
           </CardContent>
-          <CardFooter>
-            <Button variant="outline" className="flex items-center gap-2">
-              Save Progress <CheckCircle className="h-4 w-4" />
-            </Button>
-          </CardFooter>
         </Card>
         
         <Card className="bg-launch-card-bg border-gray-800">

@@ -1,21 +1,21 @@
-
 import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle, Circle, ExternalLink, Search, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TodoList } from '@/components/common/TodoList';
 
 const SEO = () => {
   const seoItems = [
-    { text: "Meta tags properly configured", status: "pending" },
-    { text: "Sitemap.xml file present", status: "pending" },
-    { text: "Robots.txt file configured", status: "pending" },
-    { text: "Semantic HTML structure", status: "pending" },
-    { text: "Mobile responsiveness", status: "pending" },
-    { text: "Page load speed optimized", status: "pending" },
-    { text: "Structured data implemented", status: "pending" },
-    { text: "Canonical URLs set", status: "pending" },
+    { text: "Meta tags properly configured", completed: false },
+    { text: "Sitemap.xml file present", completed: false },
+    { text: "Robots.txt file configured", completed: false },
+    { text: "Semantic HTML structure", completed: false },
+    { text: "Mobile responsiveness", completed: false },
+    { text: "Page load speed optimized", completed: false },
+    { text: "Structured data implemented", completed: false },
+    { text: "Canonical URLs set", completed: false },
   ];
   
   return (
@@ -51,21 +51,8 @@ const SEO = () => {
             <CardTitle className="text-white">SEO Checklist</CardTitle>
             <CardDescription>Current SEO status of your site</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {seoItems.map((item, index) => (
-              <div key={index} className="flex items-start space-x-2">
-                <div className="mt-1">
-                  {item.status === "passed" ? (
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                  ) : item.status === "failed" ? (
-                    <AlertTriangle className="h-5 w-5 text-red-500" />
-                  ) : (
-                    <Circle className="h-5 w-5 text-gray-500" />
-                  )}
-                </div>
-                <span className="text-white">{item.text}</span>
-              </div>
-            ))}
+          <CardContent>
+            <TodoList items={seoItems} taskId="setup_seo" />
           </CardContent>
         </Card>
         

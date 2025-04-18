@@ -1,20 +1,20 @@
-
 import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Shield, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TodoList } from '@/components/common/TodoList';
 
 const Security = () => {
   const securityItems = [
-    { text: "Row Level Security (RLS) enabled on all tables", status: "pending" },
-    { text: "API keys not exposed in client code", status: "pending" },
-    { text: "Authentication properly implemented", status: "pending" },
-    { text: "Environment variables secured", status: "pending" },
-    { text: "CORS policies configured", status: "pending" },
-    { text: "Content Security Policy (CSP) configured", status: "pending" },
-    { text: "Sensitive data encrypted", status: "pending" },
-    { text: "Regular security updates applied", status: "pending" },
+    { text: "Row Level Security (RLS) enabled on all tables", completed: false },
+    { text: "API keys not exposed in client code", completed: false },
+    { text: "Authentication properly implemented", completed: false },
+    { text: "Environment variables secured", completed: false },
+    { text: "CORS policies configured", completed: false },
+    { text: "Content Security Policy (CSP) configured", completed: false },
+    { text: "Sensitive data encrypted", completed: false },
+    { text: "Regular security updates applied", completed: false },
   ];
   
   return (
@@ -30,27 +30,9 @@ const Security = () => {
             <CardTitle className="text-white">Security Checklist</CardTitle>
             <CardDescription>Current security status of your application</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {securityItems.map((item, index) => (
-              <div key={index} className="flex items-start space-x-2">
-                <div className="mt-1">
-                  {item.status === "passed" ? (
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                  ) : item.status === "failed" ? (
-                    <AlertTriangle className="h-5 w-5 text-red-500" />
-                  ) : (
-                    <Circle className="h-5 w-5 text-gray-500" />
-                  )}
-                </div>
-                <span className="text-white">{item.text}</span>
-              </div>
-            ))}
+          <CardContent>
+            <TodoList items={securityItems} taskId="setup_security" />
           </CardContent>
-          <CardFooter>
-            <Button className="w-full bg-launch-cyan hover:bg-launch-cyan/80 text-black font-medium">
-              Run Security Audit
-            </Button>
-          </CardFooter>
         </Card>
         
         <Card className="bg-launch-card-bg border-gray-800">

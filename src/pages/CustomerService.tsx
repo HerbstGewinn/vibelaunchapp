@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +5,7 @@ import { CheckCircle, Circle, ExternalLink, PlayCircle, Mail, Copy, ArrowRight }
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { useToast } from "@/hooks/use-toast";
+import { TodoList } from '@/components/common/TodoList';
 
 const CustomerService = () => {
   const { toast } = useToast();
@@ -40,33 +40,15 @@ const CustomerService = () => {
       </p>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
+        <Card className="bg-launch-card-bg border-gray-800">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-launch-cyan" />
-              Resend Implementation Checklist
-            </CardTitle>
+            <CardTitle className="text-white">Resend Implementation Checklist</CardTitle>
             <CardDescription>Track your progress setting up email services</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {todoItems.map((item, index) => (
-              <div key={index} className="flex items-start space-x-2 p-2 rounded-md hover:bg-launch-dark/50 transition-colors">
-                <div className="mt-1">
-                  {item.completed ? (
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                  ) : (
-                    <Circle className="h-5 w-5 text-gray-500" />
-                  )}
-                </div>
-                <span className="text-white">{item.text}</span>
-              </div>
-            ))}
+          <CardContent>
+            <TodoList items={todoItems} taskId="setup_customer_service" />
           </CardContent>
-          <CardFooter>
-            <Button variant="outline" className="flex items-center gap-2 hover:bg-launch-cyan hover:text-black transition-colors">
-              Save Progress <CheckCircle className="h-4 w-4" />
-            </Button>
-          </CardFooter>
+        
         </Card>
         
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
