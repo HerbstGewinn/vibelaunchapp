@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy } from "lucide-react";
+import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useToast } from "@/hooks/use-toast";
@@ -19,17 +20,6 @@ const Auth = () => {
     { text: "Add auth guards to protected routes", completed: false },
     { text: "Test auth flow end to end", completed: false }
   ];
-
-  const copyPrompt = () => {
-    const promptText = document.getElementById('auth-prompt-text')?.textContent;
-    if (promptText) {
-      navigator.clipboard.writeText(promptText);
-      toast({
-        title: "Copied to clipboard",
-        description: "The prompt has been copied to your clipboard"
-      });
-    }
-  };
 
   return (
     <div className="p-6 space-y-6">
@@ -107,39 +97,6 @@ const Auth = () => {
               </a>
             ))}
           </CardContent>
-        </Card>
-        
-        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-launch-cyan/20 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Copy className="h-5 w-5 text-launch-cyan" />
-              LLM Prompt Example
-            </CardTitle>
-            <CardDescription>Copy and customize for your project</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div id="auth-prompt-text" className="bg-launch-dark/80 p-4 rounded-md border border-gray-800 text-sm text-gray-300 font-mono relative shadow-inner">
-              <p>Create a secure authentication system using Supabase Auth with the following features:</p>
-              <br />
-              <p>1. Email/password sign up with email verification</p>
-              <p>2. Social login with Google and GitHub</p>
-              <p>3. Password reset functionality</p>
-              <p>4. Protected routes using auth guards</p>
-              <p>5. User profile management</p>
-              <p>6. Session persistence between page reloads</p>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2 bg-gradient-to-r from-launch-cyan/10 to-transparent hover:from-launch-cyan/20 hover:to-transparent border-launch-cyan/50"
-              onClick={copyPrompt}
-            >
-              <Copy className="h-4 w-4" />
-              Copy Prompt
-            </Button>
-          </CardFooter>
         </Card>
       </div>
       
