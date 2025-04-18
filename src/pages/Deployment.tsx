@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy, Package } from "lucide-react";
@@ -11,13 +10,11 @@ const Deployment = () => {
   const { toast } = useToast();
   
   const todoItems = [
-    { text: "Initialize Git repository", completed: false },
-    { text: "Connect repository to GitHub", completed: false },
-    { text: "Create Vercel account", completed: false },
-    { text: "Import GitHub repository to Vercel", completed: false },
-    { text: "Configure environment variables", completed: false },
-    { text: "Set up custom domain (if applicable)", completed: false },
-    { text: "Configure build settings", completed: false },
+    { text: "Create Github Account", completed: false },
+    { text: "Connect Lovable Project to Github", completed: false },
+    { text: "Create Vercel Account", completed: false },
+    { text: "Import Github Repository to Vercel", completed: false },
+    { text: "Buy or apply custom Domain", completed: false },
     { text: "Deploy application", completed: false },
   ];
 
