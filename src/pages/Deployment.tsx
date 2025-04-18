@@ -1,14 +1,11 @@
+
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { useToast } from "@/hooks/use-toast";
 import { TodoList } from '@/components/common/TodoList';
 
 const Deployment = () => {
-  const { toast } = useToast();
-  
   const todoItems = [
     { text: "Create Github Account", completed: false },
     { text: "Connect Lovable Project to Github", completed: false },
@@ -17,17 +14,6 @@ const Deployment = () => {
     { text: "Buy or apply custom Domain", completed: false },
     { text: "Deploy application", completed: false },
   ];
-
-  const copyPrompt = () => {
-    const promptText = document.getElementById('deployment-prompt-text')?.textContent;
-    if (promptText) {
-      navigator.clipboard.writeText(promptText);
-      toast({
-        title: "Copied to clipboard",
-        description: "The prompt has been copied to your clipboard",
-      });
-    }
-  };
   
   return (
     <div className="p-6 space-y-6">
@@ -97,39 +83,6 @@ const Deployment = () => {
               </a>
             ))}
           </CardContent>
-        </Card>
-        
-        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-launch-cyan/20 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Package className="h-5 w-5 text-launch-cyan" />
-              LLM Prompt Example
-            </CardTitle>
-            <CardDescription>Copy and customize for your project</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div id="deployment-prompt-text" className="bg-launch-dark/80 p-4 rounded-md border border-gray-800 text-sm text-gray-300 font-mono relative shadow-inner">
-              <p>Help me configure continuous deployment for my React application with:</p>
-              <br />
-              <p>1. GitHub repository setup with proper branching strategy</p>
-              <p>2. Vercel project configuration for preview deployments</p>
-              <p>3. Environment variable management for development and production</p>
-              <p>4. Custom domain setup with SSL</p>
-              <p>5. Build optimization for faster deployments</p>
-              <p>6. Deployment protection and rollback strategies</p>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2 bg-gradient-to-r from-launch-cyan/10 to-transparent hover:from-launch-cyan/20 hover:to-transparent border-launch-cyan/50"
-              onClick={copyPrompt}
-            >
-              <Copy className="h-4 w-4" />
-              Copy Prompt
-            </Button>
-          </CardFooter>
         </Card>
       </div>
     </div>
