@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { CheckCircle, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 interface ProjectUrlCardProps {
   projectName: string;
@@ -13,10 +13,8 @@ const ProjectUrlCard = ({ projectName, isProjectSaved, className }: ProjectUrlCa
   return (
     <div className={cn("bg-launch-card-bg rounded-lg p-6", className)}>
       <div className="flex items-center">
-        {isProjectSaved ? (
+        {isProjectSaved && (
           <Lock className="h-6 w-6 text-launch-cyan mr-2" />
-        ) : (
-          <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
         )}
         <h3 className="text-gray-400 font-medium">Project Name:</h3>
         <span className="ml-2 text-launch-cyan">{projectName}</span>

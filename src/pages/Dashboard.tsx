@@ -57,14 +57,21 @@ const Dashboard = () => {
       </div>
 
       <div className="flex items-center gap-3 w-full md:w-[350px]">
-        <Input
-          value={projectName}
-          onChange={(e) => !isProjectSaved && setProjectName(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Enter project name"
-          className="bg-launch-dark border-gray-800 focus-visible:ring-launch-cyan text-white"
-          readOnly={isProjectSaved}
-        />
+        {isProjectSaved ? (
+          <div className="w-full">
+            <div className="bg-launch-dark-blue border border-launch-cyan/20 text-launch-cyan px-4 py-2 rounded-lg cursor-default text-base flex items-center">
+              {projectName}
+            </div>
+          </div>
+        ) : (
+          <Input
+            value={projectName}
+            onChange={(e) => !isProjectSaved && setProjectName(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Enter project name"
+            className="bg-launch-dark border-gray-800 focus-visible:ring-launch-cyan text-white"
+          />
+        )}
       </div>
 
       <ProjectUrlCard projectName={projectName} isProjectSaved={isProjectSaved} />
