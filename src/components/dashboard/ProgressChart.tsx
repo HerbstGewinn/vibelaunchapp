@@ -46,7 +46,7 @@ const ProgressChart = () => {
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={generateChartData()}
-          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+          margin={{ top: 10, right: 10, left: -20, bottom: 20 }}
         >
           <CartesianGrid 
             strokeDasharray="3 3" 
@@ -62,8 +62,9 @@ const ProgressChart = () => {
             label={{ 
               value: 'Days Since Start', 
               position: 'bottom', 
-              offset: 10,
-              fill: '#8A93A6'
+              offset: 0,
+              fill: '#8A93A6',
+              fontSize: 12
             }}
           />
           <YAxis
