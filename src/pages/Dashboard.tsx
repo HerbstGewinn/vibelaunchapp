@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import StatCard from '../components/dashboard/StatCard';
 import ProgressSection from '../components/dashboard/ProgressSection';
@@ -14,9 +15,23 @@ const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { tasks, progress, loading, toggleTaskComplete } = useTaskProgress();
-  const { saveProject } = useProjectManagement();
+  const { saveProject, fetchUserProject } = useProjectManagement();
   const [projectName, setProjectName] = useState('example.com');
   const [isProjectSaved, setIsProjectSaved] = useState(false);
+
+  useEffect(() => {
+    const loadProject = async () => {
+      if (user) {
+        const project = await fetchUserProject(user.id);
+        if (project) {
+          setProjectName(project.project_name);
+          setIsProjectSaved(true);
+          console.log('Project loaded:', project.project_name);
+        }
+      }
+    };
+    loadProject();
+  }, [user]);
 
   const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && user && !isProjectSaved) {
