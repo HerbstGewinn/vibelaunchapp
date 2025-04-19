@@ -7,6 +7,7 @@ import ProjectUrlCard from '../components/dashboard/ProjectUrlCard';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useTaskProgress } from '@/hooks/useTaskProgress';
 
 const Dashboard = () => {
   const { user } = useAuth();
