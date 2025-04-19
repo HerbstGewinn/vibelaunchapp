@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { useTaskProgress } from '@/hooks/useTaskProgress';
 import { useConfetti } from '@/hooks/useConfetti';
 import { useToast } from '@/hooks/use-toast';
@@ -9,7 +8,7 @@ import { CheckCircle, Circle } from 'lucide-react';
 interface TodoItem {
   id: string;
   text: string;
-  completed: boolean;
+  completed?: boolean;
   task_id: string;
 }
 
@@ -22,12 +21,12 @@ interface TodoListProps {
 }
 
 export const TodoList = ({ items, taskId }: TodoListProps) => {
-  const { toggleTaskComplete } = useTaskProgress();
+  const { toggleTaskComplete } = useTaskProgress(taskId);
   const { triggerConfetti } = useConfetti();
   const { toast } = useToast();
   const [todoItems, setTodoItems] = React.useState<TodoItem[]>(
     items.map(item => ({
-      id: uuidv4(),
+      id: item.text.toLowerCase().replace(/\s+/g, '_'),
       text: item.text,
       completed: item.completed || false,
       task_id: taskId
@@ -41,7 +40,7 @@ export const TodoList = ({ items, taskId }: TodoListProps) => {
     setTodoItems(newTodoItems);
     
     try {
-      await toggleTaskComplete(newTodoItems[index].id, newTodoItems[index].completed);
+      await toggleTaskComplete(newTodoItems[index].id, isCompleting);
       
       if (isCompleting) {
         triggerConfetti();

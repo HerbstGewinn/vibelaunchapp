@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,9 +11,10 @@ interface Task {
   completed_at: string | null;
   created_at: string;
   updated_at: string;
+  category: string;
 }
 
-export function useTaskProgress() {
+export function useTaskProgress(category?: string) {
   const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [progress, setProgress] = useState<number>(0);
@@ -27,14 +29,20 @@ export function useTaskProgress() {
     return () => {
       unsubscribe();
     };
-  }, [user]);
+  }, [user, category]);
 
   const fetchTasks = async () => {
     try {
-      const { data: tasksData, error: tasksError } = await supabase
+      let query = supabase
         .from('user_tasks')
         .select('*')
         .eq('user_id', user?.id);
+      
+      if (category) {
+        query = query.eq('category', category);
+      }
+
+      const { data: tasksData, error: tasksError } = await query;
 
       if (tasksError) throw tasksError;
       
@@ -43,10 +51,8 @@ export function useTaskProgress() {
         setTasks(typedTasksData);
         
         const completedTasks = typedTasksData.filter(task => task.completed).length;
-        // Each completed task adds 2% to the progress
-        const calculatedProgress = completedTasks * 2;
-        
-        setProgress(calculatedProgress);
+        const calculatedProgress = (completedTasks / typedTasksData.length) * 100;
+        setProgress(calculatedProgress || 0);
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -56,16 +62,22 @@ export function useTaskProgress() {
   };
 
   const subscribeToTaskUpdates = () => {
+    let query = {
+      event: '*',
+      schema: 'public',
+      table: 'user_tasks',
+      filter: `user_id=eq.${user?.id}`,
+    };
+
+    if (category) {
+      query.filter += `,category=eq.${category}`;
+    }
+
     const channel = supabase
       .channel('task-updates')
       .on(
         'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'user_tasks',
-          filter: `user_id=eq.${user?.id}`,
-        },
+        query,
         () => {
           fetchTasks();
         }
@@ -104,7 +116,8 @@ export function useTaskProgress() {
           .insert({ 
             id: taskId,
             user_id: user?.id,
-            task_id: 'setup_payment', // Default task_id for new tasks
+            task_id: taskId,
+            category: category || 'uncategorized',
             completed,
             completed_at: completed ? new Date().toISOString() : null
           });
@@ -115,7 +128,7 @@ export function useTaskProgress() {
       await fetchTasks();
     } catch (error) {
       console.error('Error updating task:', error);
-      throw error; // Re-throw to handle in UI
+      throw error;
     }
   };
 
