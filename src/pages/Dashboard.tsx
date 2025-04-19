@@ -80,12 +80,12 @@ const Dashboard = () => {
         <StatCard 
           title="Launch Progress" 
           value={`${Math.round(progress)}%`} 
-          change={tasks.filter(t => t.completed).length} 
+          change={tasks.filter(t => t.completed).length * 2} 
         />
         <StatCard 
           title="Steps Completed" 
-          value="0/50"  // Changed to default 0/50 
-          change={0}    // Changed to 0 to match the default steps
+          value={`${tasks.filter(t => t.completed).length}/50`}
+          change={tasks.filter(t => t.completed).length}
         />
         <StatCard title="Time to Launch" value="7 days" change={-2} />
       </div>

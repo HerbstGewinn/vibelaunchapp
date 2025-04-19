@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,7 +15,7 @@ interface Task {
 export function useTaskProgress() {
   const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [progress, setProgress] = useState<number>(5);
+  const [progress, setProgress] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,11 +43,8 @@ export function useTaskProgress() {
         setTasks(typedTasksData);
         
         const completedTasks = typedTasksData.filter(task => task.completed).length;
-        const totalTasks = typedTasksData.length;
-        const calculatedProgress = 
-          totalTasks > 0 
-            ? 5 + (completedTasks / totalTasks) * 95 
-            : 5;
+        // Each completed task adds 2% to the progress
+        const calculatedProgress = completedTasks * 2;
         
         setProgress(calculatedProgress);
       }
