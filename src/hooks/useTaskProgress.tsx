@@ -62,22 +62,22 @@ export function useTaskProgress(category?: string) {
   };
 
   const subscribeToTaskUpdates = () => {
-    let query = {
-      event: '*',
-      schema: 'public',
-      table: 'user_tasks',
-      filter: `user_id=eq.${user?.id}`,
-    };
+    let filter = `user_id=eq.${user?.id}`;
 
     if (category) {
-      query.filter += `,category=eq.${category}`;
+      filter += `,category=eq.${category}`;
     }
 
     const channel = supabase
       .channel('task-updates')
       .on(
         'postgres_changes',
-        query,
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_tasks',
+          filter: filter
+        },
         () => {
           fetchTasks();
         }
