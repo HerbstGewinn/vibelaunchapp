@@ -64,6 +64,13 @@ const SidebarNav = ({
   const { progress } = useTaskProgress();
   const navigate = useNavigate();
 
+  // Close sidebar on route change
+  React.useEffect(() => {
+    if (isMobile && isOpen) {
+      onToggle();
+    }
+  }, [location.pathname, isMobile, isOpen, onToggle]);
+
   const goToHomepage = () => {
     navigate('/');
   };
