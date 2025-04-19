@@ -1,8 +1,15 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle, Circle, ExternalLink, Rocket, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 import { TodoList } from '@/components/common/TodoList';
 
@@ -20,41 +27,102 @@ const Launch = () => {
   
   const launchPlatforms = [
     { 
-      name: "Product Hunt", 
-      description: "Reach tech-savvy early adopters",
-      link: "https://www.producthunt.com/",
-      icon: "🏠"
-    },
-    { 
       name: "Reddit", 
       description: "Share in relevant subreddits",
       link: "https://www.reddit.com/",
-      icon: "🔴"
+      icon: "🔴",
+      hasDropdown: true,
+      communities: [
+        "r/SideProject",
+        "r/Startup",
+        "r/WebDev",
+        "r/Programming",
+        "r/TechStartups",
+        "r/IndieHackers",
+        "r/Entrepreneur",
+        "r/SaaS",
+        "r/AlphaAndBetaUsers",
+        "r/IMadeThis"
+      ]
     },
     { 
       name: "Twitter/X", 
       description: "Create a launch thread",
       link: "https://twitter.com/",
-      icon: "𝕏"
+      icon: "𝕏",
+      hasDropdown: true,
+      communities: [
+        "#BuildInPublic",
+        "#IndieHackers",
+        "#NoCode",
+        "#MakerCommunity",
+        "#SideProject",
+        "#ProductLaunch",
+        "#IndieDevs",
+        "#TechTwitter",
+        "#StartupLife",
+        "#DevCommunity"
+      ]
     },
     { 
-      name: "Hacker News", 
-      description: "Share your Show HN post",
-      link: "https://news.ycombinator.com/",
-      icon: "🔶"
-    },
-    { 
-      name: "LinkedIn", 
-      description: "Share with professional network",
-      link: "https://www.linkedin.com/",
-      icon: "🔵"
+      name: "Online Directories", 
+      description: "List in tech directories",
+      link: "https://alternativeto.net/",
+      icon: "📖",
+      hasDropdown: true,
+      communities: [
+        "AlternativeTo",
+        "BetaList",
+        "Launching Next",
+        "StartupStash",
+        "SaaSHub",
+        "GetApp",
+        "Capterra",
+        "G2 Crowd",
+        "StackShare",
+        "SaaSworthy"
+      ]
     },
     { 
       name: "Discord Communities", 
       description: "Share in relevant tech servers",
       link: "https://discord.com/",
-      icon: "🎮"
+      icon: "🎮",
+      hasDropdown: true,
+      communities: [
+        "Indie Hackers",
+        "Dev.to",
+        "Startup Grind",
+        "Product School",
+        "Startup Club",
+        "Maker's Kitchen",
+        "Launch Club",
+        "SaaS Growth Hub",
+        "Tech Founders",
+        "Builder Space"
+      ]
     },
+    { 
+      name: "Product Hunt", 
+      description: "Reach tech-savvy early adopters",
+      link: "https://www.producthunt.com/",
+      icon: "🏠",
+      hasDropdown: false
+    },
+    { 
+      name: "Hacker News", 
+      description: "Share your Show HN post",
+      link: "https://news.ycombinator.com/",
+      icon: "🔶",
+      hasDropdown: false
+    },
+    { 
+      name: "LinkedIn", 
+      description: "Share with professional network",
+      link: "https://www.linkedin.com/",
+      icon: "🔵",
+      hasDropdown: false
+    }
   ];
   
   return (
@@ -96,20 +164,52 @@ const Launch = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {launchPlatforms.map((platform, index) => (
-              <div key={index} className="p-4 bg-launch-dark rounded-md border border-gray-800">
+              <div 
+                key={index} 
+                className={`p-4 bg-launch-dark rounded-md border transition-all duration-200 ${
+                  platform.hasDropdown 
+                    ? 'border-launch-cyan hover:border-launch-cyan/80' 
+                    : 'border-gray-800 hover:border-gray-700'
+                }`}
+              >
                 <div className="flex items-center gap-3">
                   <div className="text-2xl">{platform.icon}</div>
-                  <div>
+                  <div className="flex-1">
                     <h3 className="text-white font-medium">{platform.name}</h3>
                     <p className="text-launch-text-muted text-sm">{platform.description}</p>
-                    <a 
-                      href={platform.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-launch-cyan text-xs flex items-center mt-2 hover:underline"
-                    >
-                      Visit platform <ExternalLink className="h-3 w-3 ml-1" />
-                    </a>
+                    <div className="flex items-center gap-2 mt-2">
+                      <a 
+                        href={platform.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-launch-cyan text-xs flex items-center hover:underline"
+                      >
+                        Visit platform <ExternalLink className="h-3 w-3 ml-1" />
+                      </a>
+                      {platform.hasDropdown && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="text-xs bg-launch-cyan/10 border-launch-cyan/20 hover:bg-launch-cyan/20"
+                            >
+                              View Communities
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-56 bg-launch-dark border-gray-800">
+                            {platform.communities.map((community, idx) => (
+                              <DropdownMenuItem 
+                                key={idx}
+                                className="text-sm text-white hover:bg-launch-cyan/10"
+                              >
+                                {community}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
