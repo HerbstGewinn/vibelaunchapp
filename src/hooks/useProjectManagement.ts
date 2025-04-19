@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 interface Project {
   project_name: string;
   id: string;
+  created_at: string; // Add this line
 }
 
 export function useProjectManagement() {
@@ -41,7 +42,7 @@ export function useProjectManagement() {
     try {
       const { data, error } = await supabase
         .from('user_projects')
-        .select('project_name, id')
+        .select('project_name, id, created_at') // Add created_at to select
         .eq('user_id', userId)
         .maybeSingle();
 

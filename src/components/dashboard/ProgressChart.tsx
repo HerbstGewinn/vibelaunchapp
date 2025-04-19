@@ -8,7 +8,6 @@ const ProgressChart = () => {
   const { tasks } = useTaskProgress();
   const daysSinceStart = useDaysSinceStart();
 
-  // Group tasks by completion date and count them
   const generateChartData = () => {
     const completedTasks = tasks
       .filter(task => task.completed && task.completed_at)
@@ -20,13 +19,11 @@ const ProgressChart = () => {
         count: 1
       }));
 
-    // Create an array from day 0 to current day
     const chartData = Array.from({ length: daysSinceStart + 1 }, (_, i) => ({
       day: i,
       tasks: 0
     }));
 
-    // Accumulate completed tasks
     let accumulator = 0;
     completedTasks.forEach(task => {
       if (chartData[task.day]) {
@@ -35,7 +32,6 @@ const ProgressChart = () => {
       }
     });
 
-    // Fill in accumulated values for days without completions
     for (let i = 1; i < chartData.length; i++) {
       if (chartData[i].tasks === 0) {
         chartData[i].tasks = chartData[i - 1].tasks;
@@ -46,27 +42,41 @@ const ProgressChart = () => {
   };
 
   return (
-    <div className="h-[250px] md:h-[300px] w-full">
+    <div className="w-full h-[250px] md:h-[300px] bg-launch-dark-blue rounded-lg p-2 md:p-4 shadow-lg">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={generateChartData()}
-          margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
+          margin={{ top: 20, right: 10, left: -20, bottom: 20 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+          <CartesianGrid 
+            strokeDasharray="3 3" 
+            stroke="rgba(255,255,255,0.1)" 
+            vertical={false} 
+          />
           <XAxis
             dataKey="day"
             stroke="#8A93A6"
             fontSize={12}
             tickLine={false}
             axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
-            label={{ value: 'Days Since Start', position: 'bottom', offset: 0 }}
+            label={{ 
+              value: 'Days Since Start', 
+              position: 'bottom', 
+              offset: 0,
+              fill: '#8A93A6'
+            }}
           />
           <YAxis
             stroke="#8A93A6"
             fontSize={12}
             tickLine={false}
             axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
-            label={{ value: 'Tasks Completed', angle: -90, position: 'left' }}
+            label={{ 
+              value: 'Tasks Completed', 
+              angle: -90, 
+              position: 'left',
+              fill: '#8A93A6'
+            }}
           />
           <Tooltip
             contentStyle={{
@@ -81,9 +91,9 @@ const ProgressChart = () => {
             type="monotone"
             dataKey="tasks"
             stroke="#00E5FF"
-            strokeWidth={2}
-            dot={false}
-            activeDot={{ r: 6 }}
+            strokeWidth={3}
+            dot={{ r: 4, fill: '#00E5FF', strokeWidth: 2, stroke: 'rgba(0,229,255,0.5)' }}
+            activeDot={{ r: 6, fill: '#00E5FF', strokeWidth: 3, stroke: 'rgba(0,229,255,0.7)' }}
             isAnimationActive={true}
           />
         </LineChart>

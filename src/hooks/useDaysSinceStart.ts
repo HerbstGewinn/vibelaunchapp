@@ -12,7 +12,7 @@ export const useDaysSinceStart = () => {
     const calculateDays = async () => {
       if (user) {
         const project = await fetchUserProject(user.id);
-        if (project) {
+        if (project && project.created_at) {
           const startDate = new Date(project.created_at);
           const currentDate = new Date();
           const diffTime = Math.abs(currentDate.getTime() - startDate.getTime());
