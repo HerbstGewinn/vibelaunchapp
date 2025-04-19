@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import StatCard from '../components/dashboard/StatCard';
@@ -10,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTaskProgress } from '@/hooks/useTaskProgress';
 import { useProjectManagement } from '@/hooks/useProjectManagement';
+import { useDaysSinceStart } from '@/hooks/useDaysSinceStart';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -18,6 +18,7 @@ const Dashboard = () => {
   const { saveProject, fetchUserProject } = useProjectManagement();
   const [projectName, setProjectName] = useState('example.com');
   const [isProjectSaved, setIsProjectSaved] = useState(false);
+  const daysSinceStart = useDaysSinceStart();
 
   useEffect(() => {
     const loadProject = async () => {
@@ -102,7 +103,11 @@ const Dashboard = () => {
           value={`${tasks.filter(t => t.completed).length}/50`}
           change={tasks.filter(t => t.completed).length}
         />
-        <StatCard title="Time to Launch" value="7 days" change={-2} />
+        <StatCard 
+          title="Days Since Start" 
+          value={`${daysSinceStart} days`} 
+          change={1} 
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
