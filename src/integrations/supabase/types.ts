@@ -68,6 +68,7 @@ export type Database = {
           created_at: string
           id: string
           task_id: string
+          task_name: string
           updated_at: string
           user_id: string
         }
@@ -78,6 +79,7 @@ export type Database = {
           created_at?: string
           id?: string
           task_id: string
+          task_name?: string
           updated_at?: string
           user_id: string
         }
@@ -88,6 +90,7 @@ export type Database = {
           created_at?: string
           id?: string
           task_id?: string
+          task_name?: string
           updated_at?: string
           user_id?: string
         }

@@ -46,7 +46,8 @@ export const TodoList = ({ items, taskId, category }: TodoListProps) => {
       await toggleTaskComplete(
         newTodoItems[index].id, 
         newTodoItems[index].completed,
-        category
+        category,
+        newTodoItems[index].text  // Pass the task text as task_name
       );
       
       if (isCompleting) {

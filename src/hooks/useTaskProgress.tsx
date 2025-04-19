@@ -7,6 +7,7 @@ interface Task {
   id: string;
   user_id: string;
   task_id: string;
+  task_name: string;  // Added task_name to the interface
   completed: boolean;
   completed_at: string | null;
   created_at: string;
@@ -78,7 +79,7 @@ export function useTaskProgress() {
     };
   };
 
-  const toggleTaskComplete = async (taskId: string, completed: boolean, category: string) => {
+  const toggleTaskComplete = async (taskId: string, completed: boolean, category: string, taskName: string) => {
     try {
       const { data: existingTask } = await supabase
         .from('user_tasks')
@@ -92,7 +93,8 @@ export function useTaskProgress() {
           .update({ 
             completed,
             completed_at: completed ? new Date().toISOString() : null,
-            category: category || 'uncategorized'
+            category: category || 'uncategorized',
+            task_name: taskName  // Add task_name to the update
           })
           .eq('id', taskId);
   
@@ -106,7 +108,8 @@ export function useTaskProgress() {
             task_id: 'setup_task',
             completed,
             completed_at: completed ? new Date().toISOString() : null,
-            category: category || 'uncategorized'
+            category: category || 'uncategorized',
+            task_name: taskName  // Add task_name to the insert
           });
   
         if (error) throw error;
