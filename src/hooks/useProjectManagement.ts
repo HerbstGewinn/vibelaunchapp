@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 interface Project {
   project_name: string;
   id: string;
-  created_at: string; // Add this line
+  created_at: string;
 }
 
 export function useProjectManagement() {
@@ -21,6 +21,9 @@ export function useProjectManagement() {
         ]);
 
       if (error) throw error;
+
+      // Store in localStorage for immediate access
+      localStorage.setItem('project_name', projectName);
 
       toast({
         title: "Success",
@@ -40,16 +43,44 @@ export function useProjectManagement() {
 
   const fetchUserProject = async (userId: string): Promise<Project | null> => {
     try {
+      // First try to get from localStorage for immediate display
+      const cachedProjectName = localStorage.getItem('project_name');
+      
       const { data, error } = await supabase
         .from('user_projects')
-        .select('project_name, id, created_at') // Add created_at to select
+        .select('project_name, id, created_at')
         .eq('user_id', userId)
         .maybeSingle();
 
       if (error) throw error;
-      return data;
+      
+      if (data) {
+        // Update localStorage with latest data from server
+        localStorage.setItem('project_name', data.project_name);
+        return data;
+      } else if (cachedProjectName) {
+        // Return cached data if no server data available
+        return {
+          project_name: cachedProjectName,
+          id: 'local',
+          created_at: new Date().toISOString()
+        };
+      }
+      
+      return null;
     } catch (error) {
       console.error('Error fetching project:', error);
+      
+      // Fallback to localStorage if server fetch fails
+      const cachedProjectName = localStorage.getItem('project_name');
+      if (cachedProjectName) {
+        return {
+          project_name: cachedProjectName,
+          id: 'local',
+          created_at: new Date().toISOString()
+        };
+      }
+      
       return null;
     }
   };

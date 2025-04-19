@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Lock } from 'lucide-react';
 
@@ -10,6 +9,13 @@ interface ProjectUrlCardProps {
 }
 
 const ProjectUrlCard = ({ projectName, isProjectSaved, className }: ProjectUrlCardProps) => {
+  // Keep project name in localStorage whenever it changes
+  useEffect(() => {
+    if (projectName && isProjectSaved) {
+      localStorage.setItem('project_name', projectName);
+    }
+  }, [projectName, isProjectSaved]);
+
   return (
     <div className={cn("bg-launch-card-bg rounded-lg p-6", className)}>
       <div className="flex items-center">
