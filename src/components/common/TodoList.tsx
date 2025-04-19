@@ -23,18 +23,44 @@ interface TodoListProps {
 }
 
 export const TodoList = ({ items, taskId, category }: TodoListProps) => {
-  const { toggleTaskComplete } = useTaskProgress();
+  const { tasks, toggleTaskComplete } = useTaskProgress();
   const { triggerConfetti } = useConfetti();
   const { toast } = useToast();
   
-  const [todoItems, setTodoItems] = React.useState<TodoItem[]>(
-    items.map(item => ({
-      id: uuidv4(),
-      text: item.text,
-      completed: item.completed || false,
-      task_id: taskId
-    }))
-  );
+  // Initialize todoItems with completed states from the database
+  const [todoItems, setTodoItems] = React.useState<TodoItem[]>(() => {
+    return items.map(item => {
+      // Check if this task exists in the database and get its completed state
+      const existingTask = tasks.find(t => 
+        t.task_name === item.text && 
+        t.category === category
+      );
+      
+      return {
+        id: existingTask?.id || uuidv4(),
+        text: item.text,
+        completed: existingTask?.completed || item.completed || false,
+        task_id: taskId
+      };
+    });
+  });
+
+  // Update todoItems when tasks change
+  React.useEffect(() => {
+    setTodoItems(prevItems => 
+      prevItems.map(item => {
+        const existingTask = tasks.find(t => 
+          t.task_name === item.text && 
+          t.category === category
+        );
+        
+        return {
+          ...item,
+          completed: existingTask?.completed || item.completed
+        };
+      })
+    );
+  }, [tasks, category]);
 
   const toggleTodo = async (index: number) => {
     const newTodoItems = [...todoItems];
@@ -45,9 +71,9 @@ export const TodoList = ({ items, taskId, category }: TodoListProps) => {
     try {
       await toggleTaskComplete(
         newTodoItems[index].id, 
-        newTodoItems[index].completed,
+        isCompleting,
         category,
-        newTodoItems[index].text  // Pass the task text as task_name
+        newTodoItems[index].text
       );
       
       if (isCompleting) {
@@ -55,12 +81,12 @@ export const TodoList = ({ items, taskId, category }: TodoListProps) => {
       }
       
       toast({
-        title: newTodoItems[index].completed ? "Task completed!" : "Task marked as incomplete",
+        title: isCompleting ? "Task completed!" : "Task marked as incomplete",
         description: newTodoItems[index].text,
       });
     } catch (error) {
       console.error("Error updating task:", error);
-      newTodoItems[index].completed = !newTodoItems[index].completed;
+      newTodoItems[index].completed = !isCompleting;
       setTodoItems(newTodoItems);
       toast({
         title: "Failed to update task",
