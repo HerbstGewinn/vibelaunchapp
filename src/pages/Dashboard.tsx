@@ -59,7 +59,8 @@ const Dashboard = () => {
 
   // Function to handle task click
   const handleTaskClick = (taskId: string, currentlyCompleted: boolean) => {
-    toggleTaskComplete(taskId, !currentlyCompleted, 'dashboard');
+    // Fix: Add the fourth argument (task name) for the toggleTaskComplete function
+    toggleTaskComplete(taskId, !currentlyCompleted, 'dashboard', taskDescriptions[taskId] || 'Task');
   };
 
   return (

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy, CreditCard } from "lucide-react";
@@ -31,7 +32,13 @@ const Payment = () => {
     setTodoItems(newTodoItems);
     
     try {
-      await toggleTaskComplete(newTodoItems[index].id, newTodoItems[index].completed, 'payment');
+      // Fix: Add the fourth argument (task name) for the toggleTaskComplete function
+      await toggleTaskComplete(
+        newTodoItems[index].id, 
+        isCompleting, 
+        'payment',
+        newTodoItems[index].text
+      );
       
       if (isCompleting) {
         triggerConfetti();
