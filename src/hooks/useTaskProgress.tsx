@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,6 +11,7 @@ interface Task {
   completed_at: string | null;
   created_at: string;
   updated_at: string;
+  category: string;
 }
 
 export function useTaskProgress() {
@@ -43,7 +45,6 @@ export function useTaskProgress() {
         setTasks(typedTasksData);
         
         const completedTasks = typedTasksData.filter(task => task.completed).length;
-        // Each completed task adds 2% to the progress
         const calculatedProgress = completedTasks * 2;
         
         setProgress(calculatedProgress);
@@ -77,9 +78,8 @@ export function useTaskProgress() {
     };
   };
 
-  const toggleTaskComplete = async (taskId: string, completed: boolean) => {
+  const toggleTaskComplete = async (taskId: string, completed: boolean, category: string) => {
     try {
-      // Check if task exists first
       const { data: existingTask } = await supabase
         .from('user_tasks')
         .select('*')
@@ -87,26 +87,26 @@ export function useTaskProgress() {
         .single();
       
       if (existingTask) {
-        // Update existing task
         const { error } = await supabase
           .from('user_tasks')
           .update({ 
             completed,
-            completed_at: completed ? new Date().toISOString() : null
+            completed_at: completed ? new Date().toISOString() : null,
+            category: category || 'uncategorized'
           })
           .eq('id', taskId);
   
         if (error) throw error;
       } else {
-        // Create new task
         const { error } = await supabase
           .from('user_tasks')
           .insert({ 
             id: taskId,
             user_id: user?.id,
-            task_id: 'setup_payment', // Default task_id for new tasks
+            task_id: 'setup_task',
             completed,
-            completed_at: completed ? new Date().toISOString() : null
+            completed_at: completed ? new Date().toISOString() : null,
+            category: category || 'uncategorized'
           });
   
         if (error) throw error;
@@ -115,7 +115,7 @@ export function useTaskProgress() {
       await fetchTasks();
     } catch (error) {
       console.error('Error updating task:', error);
-      throw error; // Re-throw to handle in UI
+      throw error;
     }
   };
 

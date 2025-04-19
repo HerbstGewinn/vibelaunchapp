@@ -5,6 +5,7 @@ import { useTaskProgress } from '@/hooks/useTaskProgress';
 import { useConfetti } from '@/hooks/useConfetti';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, Circle } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 interface TodoItem {
   id: string;
@@ -25,6 +26,14 @@ export const TodoList = ({ items, taskId }: TodoListProps) => {
   const { toggleTaskComplete } = useTaskProgress();
   const { triggerConfetti } = useConfetti();
   const { toast } = useToast();
+  const location = useLocation();
+  
+  // Extract category from the current path
+  const getCategory = () => {
+    const path = location.pathname.split('/');
+    return path[path.length - 1];
+  };
+
   const [todoItems, setTodoItems] = React.useState<TodoItem[]>(
     items.map(item => ({
       id: uuidv4(),
@@ -41,7 +50,11 @@ export const TodoList = ({ items, taskId }: TodoListProps) => {
     setTodoItems(newTodoItems);
     
     try {
-      await toggleTaskComplete(newTodoItems[index].id, newTodoItems[index].completed);
+      await toggleTaskComplete(
+        newTodoItems[index].id, 
+        newTodoItems[index].completed,
+        getCategory()
+      );
       
       if (isCompleting) {
         triggerConfetti();
