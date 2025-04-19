@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy, CreditCard } from "lucide-react";
@@ -30,7 +31,7 @@ const Payment = () => {
     setTodoItems(newTodoItems);
     
     try {
-      await toggleTaskComplete(newTodoItems[index].id, newTodoItems[index].completed);
+      await toggleTaskComplete(newTodoItems[index].id, newTodoItems[index].completed, 'payment');
       
       if (isCompleting) {
         triggerConfetti();

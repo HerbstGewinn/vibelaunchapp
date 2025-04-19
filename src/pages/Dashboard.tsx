@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import StatCard from '../components/dashboard/StatCard';
@@ -58,7 +59,7 @@ const Dashboard = () => {
 
   // Function to handle task click
   const handleTaskClick = (taskId: string, currentlyCompleted: boolean) => {
-    toggleTaskComplete(taskId, !currentlyCompleted);
+    toggleTaskComplete(taskId, !currentlyCompleted, 'dashboard');
   };
 
   return (
