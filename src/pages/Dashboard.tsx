@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import StatCard from '../components/dashboard/StatCard';
@@ -30,25 +31,6 @@ const Dashboard = () => {
   const handleTaskClick = (taskId: string, currentlyCompleted: boolean) => {
     toggleTaskComplete(taskId, !currentlyCompleted);
   };
-
-  // Sample action items data
-  const actionItems = [
-    {
-      id: 1,
-      title: "Completed domain setup",
-      date: "2 days ago"
-    },
-    {
-      id: 2,
-      title: "Added Google Analytics tracking",
-      date: "3 days ago"
-    },
-    {
-      id: 3,
-      title: "Submitted sitemap to Google",
-      date: "4 days ago"
-    }
-  ];
 
   return (
     <div className="flex-1 space-y-6">
@@ -84,8 +66,8 @@ const Dashboard = () => {
         />
         <StatCard 
           title="Steps Completed" 
-          value={`${tasks.filter(t => t.completed).length}/7`} 
-          change={1} 
+          value="0/50"  // Changed to default 0/50 
+          change={0}    // Changed to 0 to match the default steps
         />
         <StatCard title="Time to Launch" value="7 days" change={-2} />
       </div>
