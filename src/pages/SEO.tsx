@@ -1,10 +1,11 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, Circle, ExternalLink, Search, AlertTriangle } from "lucide-react";
+import { CheckCircle, Circle, ExternalLink, Search, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TodoList } from '@/components/common/TodoList';
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const SEO = () => {
   const seoItems = [
@@ -58,15 +59,18 @@ const SEO = () => {
         
         <Card className="bg-launch-card-bg border-gray-800">
           <CardHeader>
-            <CardTitle className="text-white">SEO Report</CardTitle>
-            <CardDescription>Results from your most recent SEO audit</CardDescription>
+            <CardTitle className="text-white flex items-center gap-2">
+              <PlayCircle className="h-5 w-5 text-launch-cyan" />
+              Tutorial Video
+            </CardTitle>
+            <CardDescription>Learn SEO optimization techniques</CardDescription>
           </CardHeader>
-          <CardContent className="h-[320px] flex flex-col items-center justify-center text-center">
-            <Search className="h-16 w-16 text-launch-cyan mb-4" />
-            <p className="text-white text-lg font-medium">No SEO audit has been run yet</p>
-            <p className="text-launch-text-muted mt-2 max-w-md">
-              Run an SEO audit to analyze your site's search engine optimization and get detailed recommendations for improvement.
-            </p>
+          <CardContent>
+            <AspectRatio ratio={16 / 9}>
+              <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md flex items-center justify-center border border-gray-800 h-full group cursor-pointer">
+                <PlayCircle className="h-12 w-12 md:h-16 md:w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
+              </div>
+            </AspectRatio>
           </CardContent>
         </Card>
       </div>
