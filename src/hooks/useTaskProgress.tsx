@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,10 +10,9 @@ interface Task {
   completed_at: string | null;
   created_at: string;
   updated_at: string;
-  category: string;
 }
 
-export function useTaskProgress(category?: string) {
+export function useTaskProgress() {
   const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [progress, setProgress] = useState<number>(0);
@@ -29,20 +27,14 @@ export function useTaskProgress(category?: string) {
     return () => {
       unsubscribe();
     };
-  }, [user, category]);
+  }, [user]);
 
   const fetchTasks = async () => {
     try {
-      let query = supabase
+      const { data: tasksData, error: tasksError } = await supabase
         .from('user_tasks')
         .select('*')
         .eq('user_id', user?.id);
-      
-      if (category) {
-        query = query.eq('category', category);
-      }
-
-      const { data: tasksData, error: tasksError } = await query;
 
       if (tasksError) throw tasksError;
       
@@ -51,8 +43,10 @@ export function useTaskProgress(category?: string) {
         setTasks(typedTasksData);
         
         const completedTasks = typedTasksData.filter(task => task.completed).length;
-        const calculatedProgress = (completedTasks / typedTasksData.length) * 100;
-        setProgress(calculatedProgress || 0);
+        // Each completed task adds 2% to the progress
+        const calculatedProgress = completedTasks * 2;
+        
+        setProgress(calculatedProgress);
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -62,12 +56,6 @@ export function useTaskProgress(category?: string) {
   };
 
   const subscribeToTaskUpdates = () => {
-    let filter = `user_id=eq.${user?.id}`;
-
-    if (category) {
-      filter += `,category=eq.${category}`;
-    }
-
     const channel = supabase
       .channel('task-updates')
       .on(
@@ -76,7 +64,7 @@ export function useTaskProgress(category?: string) {
           event: '*',
           schema: 'public',
           table: 'user_tasks',
-          filter: filter
+          filter: `user_id=eq.${user?.id}`,
         },
         () => {
           fetchTasks();
@@ -116,8 +104,7 @@ export function useTaskProgress(category?: string) {
           .insert({ 
             id: taskId,
             user_id: user?.id,
-            task_id: taskId,
-            category: category || 'uncategorized',
+            task_id: 'setup_payment', // Default task_id for new tasks
             completed,
             completed_at: completed ? new Date().toISOString() : null
           });
@@ -128,7 +115,7 @@ export function useTaskProgress(category?: string) {
       await fetchTasks();
     } catch (error) {
       console.error('Error updating task:', error);
-      throw error;
+      throw error; // Re-throw to handle in UI
     }
   };
 
