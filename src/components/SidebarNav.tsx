@@ -63,11 +63,15 @@ const SidebarNav = ({
   const isMobile = useIsMobile();
   const { progress } = useTaskProgress();
   const navigate = useNavigate();
+  const prevPathRef = React.useRef(location.pathname);
 
-  // Close sidebar on route change
+  // Close sidebar on route change - only when path actually changes
   React.useEffect(() => {
-    if (isMobile && isOpen) {
+    if (isMobile && isOpen && location.pathname !== prevPathRef.current) {
       onToggle();
+      prevPathRef.current = location.pathname;
+    } else {
+      prevPathRef.current = location.pathname;
     }
   }, [location.pathname, isMobile, isOpen, onToggle]);
 
