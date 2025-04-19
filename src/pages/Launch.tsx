@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, Circle, ExternalLink, Rocket, PlayCircle } from "lucide-react";
+import { ExternalLink, PlayCircle, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +13,16 @@ import {
 import { TodoList } from '@/components/common/TodoList';
 
 const Launch = () => {
+  const [openPlatforms, setOpenPlatforms] = useState<number[]>([]);
+
+  const togglePlatform = (index: number) => {
+    setOpenPlatforms(current => 
+      current.includes(index) 
+        ? current.filter(i => i !== index)
+        : [...current, index]
+    );
+  };
+
   const launchItems = [
     { text: "All features completed and tested", completed: false },
     { text: "SEO optimization completed", completed: false },
@@ -162,57 +171,66 @@ const Launch = () => {
           <CardDescription>Recommended platforms for announcing your product</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {launchPlatforms.map((platform, index) => (
-              <div 
-                key={index} 
-                className={`p-4 bg-launch-dark rounded-md border transition-all duration-200 ${
-                  platform.hasDropdown 
-                    ? 'border-launch-cyan hover:border-launch-cyan/80' 
-                    : 'border-gray-800 hover:border-gray-700'
+              <Collapsible
+                key={index}
+                open={openPlatforms.includes(index)}
+                onOpenChange={() => togglePlatform(index)}
+                className={`rounded-md transition-all duration-200 ${
+                  index < 4 
+                    ? 'border border-launch-cyan/40 hover:border-launch-cyan' 
+                    : 'border border-gray-800 hover:border-gray-700'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <div className="text-2xl">{platform.icon}</div>
-                  <div className="flex-1">
-                    <h3 className="text-white font-medium">{platform.name}</h3>
-                    <p className="text-launch-text-muted text-sm">{platform.description}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <a 
-                        href={platform.link} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-launch-cyan text-xs flex items-center hover:underline"
-                      >
-                        Visit platform <ExternalLink className="h-3 w-3 ml-1" />
-                      </a>
-                      {platform.hasDropdown && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="text-xs bg-launch-cyan/10 border-launch-cyan/20 hover:bg-launch-cyan/20"
-                            >
-                              View Communities
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-56 bg-launch-dark border-gray-800">
-                            {platform.communities.map((community, idx) => (
-                              <DropdownMenuItem 
-                                key={idx}
-                                className="text-sm text-white hover:bg-launch-cyan/10"
-                              >
-                                {community}
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
+                <CollapsibleTrigger asChild>
+                  <div 
+                    className="p-4 bg-launch-dark rounded-md w-full cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3 justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="text-2xl">{platform.icon}</div>
+                        <div className="flex-1 text-left">
+                          <h3 className="text-white font-medium">{platform.name}</h3>
+                          <p className="text-launch-text-muted text-sm">{platform.description}</p>
+                        </div>
+                      </div>
+                      <ChevronDown 
+                        className={`h-5 w-5 text-launch-cyan transition-transform duration-200 ${
+                          openPlatforms.includes(index) ? 'rotate-180' : ''
+                        }`}
+                      />
                     </div>
                   </div>
-                </div>
-              </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="p-4 bg-launch-dark/50">
+                  <div className="flex flex-col gap-2">
+                    <a 
+                      href={platform.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-launch-cyan text-sm flex items-center hover:underline"
+                    >
+                      Visit platform <ExternalLink className="h-4 w-4 ml-1" />
+                    </a>
+                    {platform.hasDropdown && (
+                      <div className="mt-2">
+                        <h4 className="text-white text-sm font-medium mb-2">Recommended Communities</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {platform.communities.map((community, idx) => (
+                            <div 
+                              key={idx}
+                              className="text-sm text-white/80 bg-launch-dark p-2 rounded border border-gray-800"
+                            >
+                              {community}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             ))}
           </div>
         </CardContent>
