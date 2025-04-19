@@ -1,9 +1,8 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
+import { CheckCircle, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useToast } from "@/hooks/use-toast";
 import AuthDesigns from '@/components/auth/AuthDesigns';
 import { TodoList } from '@/components/common/TodoList';
@@ -38,23 +37,6 @@ const Auth = () => {
           </CardHeader>
           <CardContent>
             <TodoList items={todoItems} taskId="setup_auth" />
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <PlayCircle className="h-5 w-5 text-launch-cyan" />
-              Tutorial Video
-            </CardTitle>
-            <CardDescription>Learn how to implement Supabase Auth</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AspectRatio ratio={16 / 9}>
-              <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md flex items-center justify-center border border-gray-800 h-full group cursor-pointer">
-                <PlayCircle className="h-12 w-12 md:h-16 md:w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
-              </div>
-            </AspectRatio>
           </CardContent>
         </Card>
       </div>
