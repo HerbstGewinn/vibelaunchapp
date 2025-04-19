@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, Circle, ExternalLink, Search, Film } from "lucide-react";
+import { CheckCircle, Circle, ExternalLink, Search, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TodoList } from '@/components/common/TodoList';
@@ -67,24 +67,6 @@ const SEO = () => {
             <p className="text-launch-text-muted mt-2 max-w-md">
               Run an SEO audit to analyze your site's search engine optimization and get detailed recommendations for improvement.
             </p>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-white">SEO Video Guide</CardTitle>
-            <CardDescription>Learn SEO optimization techniques</CardDescription>
-          </CardHeader>
-          <CardContent className="h-[400px] flex items-center justify-center bg-launch-dark rounded-lg">
-            <div className="text-center">
-              <Film className="h-24 w-24 text-launch-cyan mx-auto mb-4" />
-              <p className="text-white text-lg font-medium mb-2">SEO Video Tutorial Placeholder</p>
-              <p className="text-launch-text-muted max-w-md mx-auto">
-                A comprehensive video guide on SEO optimization strategies will be added soon.
-              </p>
-            </div>
           </CardContent>
         </Card>
       </div>
