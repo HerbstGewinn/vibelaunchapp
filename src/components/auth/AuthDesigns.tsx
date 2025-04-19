@@ -1,3 +1,4 @@
+
 import React from 'react';
 import AuthDesignCard from './AuthDesignCard';
 import { AuthDesignTemplate } from '@/types/auth-designs';
@@ -6,44 +7,16 @@ const authDesignTemplates: AuthDesignTemplate[] = [{
   id: 1,
   title: "Sign In Template",
   description: "Professional, modern auth design optimized for conversion",
-  imageUrl: "/lovable-uploads/9fb3e038-fc54-4507-b6aa-ee1846e9cfae.png",
+  imageUrl: "/lovable-uploads/d3f76e3e-1f64-452c-8dfd-9eb2eff2f46e.png",
   style: 'modern',
-  prompt: `Design a modern sign-in page UI for a web app. The layout should include:
-
-A logo or app name at the top with a tagline underneath.
-
-A "Sign in with Google" button at the top.
-
-A divider with "OR" separating the Google option from manual sign-in.
-
-Email and Password fields, each with appropriate icons and placeholders.
-
-A password visibility toggle icon.
-
-A prominent "Sign In" button.
-
-"Forgot your password?" and "Sign up" links below the button.
-
-Also, add a "Sign Up" page that will be linked to the Sign Up page. Design it matching the landing page, too!
-
-Use clean, modern fonts, rounded corners, and consistent spacing.
-Choose a color palette and branding that suits the landing page and creates a professional, cohesive look.`
+  prompt: `Design a modern sign-in page UI for a web app. The layout should include: A logo or app name at the top with a tagline underneath...`
 }, {
   id: 2,
   title: "Sign Up Template",
   description: "Clean, focused registration flow",
-  imageUrl: "/lovable-uploads/770c33b4-90ca-4bc9-8164-713413257dd7.png",
+  imageUrl: "/lovable-uploads/0e65ad78-78b5-4380-8c8b-bb2a12773595.png",
   style: 'modern',
-  prompt: `Design a matching sign-up page with:
-- Clean, modern typography
-- Consistent branding with sign-in page
-- Full name input field with user icon
-- Email input with mail icon
-- Password field with visibility toggle
-- Clear password requirements
-- Prominent "Create Account" button
-- Link back to sign in page
-- Matching dark theme and rounded corners`
+  prompt: `Design a matching sign-up page with: Clean, modern typography...`
 }];
 
 const AuthDesigns = () => {

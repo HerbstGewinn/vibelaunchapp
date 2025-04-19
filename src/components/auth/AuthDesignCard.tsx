@@ -1,12 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Copy, Check } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { AuthDesignTemplate } from '@/types/auth-designs';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 
 interface AuthDesignCardProps {
@@ -25,6 +24,13 @@ const AuthDesignCard = ({ template }: AuthDesignCardProps) => {
       description: "The prompt has been copied to your clipboard",
     });
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const getPromptPreview = (prompt: string) => {
+    const previewLength = 100;
+    return prompt.length > previewLength 
+      ? `${prompt.substring(0, previewLength)}...`
+      : prompt;
   };
 
   return (
@@ -48,7 +54,7 @@ const AuthDesignCard = ({ template }: AuthDesignCardProps) => {
         </AspectRatio>
         <div className="bg-launch-dark/50 rounded-md p-3 text-sm text-gray-300 border border-gray-800">
           <pre className="whitespace-pre-wrap font-mono text-xs">
-            {template.prompt}
+            {getPromptPreview(template.prompt)}
           </pre>
         </div>
       </CardContent>
