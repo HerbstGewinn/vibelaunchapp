@@ -1,44 +1,38 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CalendarDays } from 'lucide-react';
 
 const ProgressOverview = () => {
   return (
     <Card className="bg-launch-card-bg border-gray-800">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-semibold">Overall Progress</CardTitle>
-        <p className="text-sm text-gray-400">Total completion: 65%</p>
+        <CardTitle className="text-xl font-semibold">Recent Activity</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span>Total Progress</span>
-            <span>65%</span>
-          </div>
-          <div className="h-2 bg-gray-800 rounded-full">
+      <CardContent>
+        <div className="space-y-4">
+          {[
+            { title: 'Completed domain setup', time: '2 days ago' },
+            { title: 'Added Google Analytics', time: '3 days ago' },
+            { title: 'Updated meta tags', time: '5 days ago' }
+          ].map((activity, index) => (
             <div 
-              className="h-full bg-launch-cyan rounded-full" 
-              style={{ width: '65%' }} 
-            />
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-medium mb-2">Recent Activity</h4>
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span>Completed domain setup</span>
-              <span className="text-gray-500">2 days ago</span>
+              key={index}
+              className="flex items-start gap-3 p-3 rounded-lg bg-launch-dark border border-gray-800 hover:border-gray-700 transition-colors"
+            >
+              <div className="rounded-full p-2 bg-launch-cyan/10">
+                <CalendarDays className="h-4 w-4 text-launch-cyan" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white truncate">
+                  {activity.title}
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {activity.time}
+                </p>
+              </div>
             </div>
-            <div className="flex justify-between text-sm">
-              <span>Added Google Analytics</span>
-              <span className="text-gray-500">3 days ago</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span>Updated meta tags</span>
-              <span className="text-gray-500">5 days ago</span>
-            </div>
-          </div>
+          ))}
         </div>
       </CardContent>
     </Card>
