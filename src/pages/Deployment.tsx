@@ -32,7 +32,7 @@ const Deployment = () => {
             <CardDescription>Track your deployment progress</CardDescription>
           </CardHeader>
           <CardContent>
-            <TodoList items={todoItems} taskId="setup_deployment" />
+            <TodoList items={todoItems} taskId="setup_deployment" category="deployment" />
           </CardContent>
         </Card>
         

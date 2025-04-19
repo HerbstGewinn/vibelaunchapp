@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
@@ -37,7 +36,7 @@ const Auth = () => {
             <CardDescription>Track your progress with authentication setup</CardDescription>
           </CardHeader>
           <CardContent>
-            <TodoList items={todoItems} taskId="setup_auth" />
+            <TodoList items={todoItems} taskId="setup_auth" category="auth" />
           </CardContent>
         </Card>
         

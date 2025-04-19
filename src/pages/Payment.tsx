@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTaskProgress } from '@/hooks/useTaskProgress';
 import { v4 as uuidv4 } from 'uuid';
 import { useConfetti } from '@/hooks/useConfetti';
+import { TodoList } from '@/components/common/TodoList';
 
 const Payment = () => {
   const { toast } = useToast();
