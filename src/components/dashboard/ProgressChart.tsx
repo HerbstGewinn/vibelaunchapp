@@ -42,11 +42,11 @@ const ProgressChart = () => {
   };
 
   return (
-    <div className="w-full h-[250px] md:h-[300px] bg-launch-dark-blue rounded-lg p-2 md:p-4 shadow-lg">
+    <div className="w-full h-[300px] bg-launch-dark-blue rounded-lg p-4">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={generateChartData()}
-          margin={{ top: 20, right: 10, left: -20, bottom: 20 }}
+          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
         >
           <CartesianGrid 
             strokeDasharray="3 3" 
@@ -62,7 +62,7 @@ const ProgressChart = () => {
             label={{ 
               value: 'Days Since Start', 
               position: 'bottom', 
-              offset: 0,
+              offset: 10,
               fill: '#8A93A6'
             }}
           />
@@ -75,6 +75,7 @@ const ProgressChart = () => {
               value: 'Tasks Completed', 
               angle: -90, 
               position: 'left',
+              offset: 35,
               fill: '#8A93A6'
             }}
           />
@@ -82,7 +83,8 @@ const ProgressChart = () => {
             contentStyle={{
               backgroundColor: '#1A1F2C',
               border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '8px'
+              borderRadius: '8px',
+              padding: '8px 12px'
             }}
             labelStyle={{ color: '#8A93A6' }}
             itemStyle={{ color: '#00E5FF' }}

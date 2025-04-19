@@ -24,9 +24,9 @@ const ProgressSection = () => {
           </p>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="mb-4 cursor-pointer" onClick={goToHomepage}>
-          <div className="flex justify-between mb-1">
+      <CardContent className="space-y-6">
+        <div onClick={goToHomepage} className="space-y-1.5 cursor-pointer">
+          <div className="flex justify-between items-center">
             <span className="text-sm text-gray-400">Current progress:</span>
             <span className="text-sm font-medium">{Math.round(progress)}%</span>
           </div>
@@ -34,9 +34,9 @@ const ProgressSection = () => {
             value={progress} 
             className="h-2 bg-gray-800"
           />
-          <p className="text-xs text-gray-500 mt-1">Click the progress bar to go to homepage</p>
+          <p className="text-xs text-gray-500">Click the progress bar to go to homepage</p>
         </div>
-        <div className="h-[250px]">
+        <div className="h-[300px] -mx-2">
           <ProgressChart />
         </div>
       </CardContent>
