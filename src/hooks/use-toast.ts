@@ -5,8 +5,9 @@ import type {
   ToastProps,
 } from "@/components/ui/toast"
 
+// Reduce the TOAST_REMOVE_DELAY to 2000 milliseconds (2 seconds)
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_REMOVE_DELAY = 2000 // Changed from 1000000 to 2000
 
 type ToasterToast = ToastProps & {
   id: string
@@ -76,7 +77,14 @@ export const reducer = (state: State, action: Action): State => {
     case "ADD_TOAST":
       return {
         ...state,
-        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT).map(toast => ({
+          ...toast,
+          // Automatically start the dismiss timer when toast is added
+          open: true,
+          onOpenChange: (open) => {
+            if (!open) dispatch({ type: "DISMISS_TOAST", toastId: toast.id });
+          }
+        })),
       }
 
     case "UPDATE_TOAST":
