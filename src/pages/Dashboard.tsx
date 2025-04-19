@@ -8,11 +8,20 @@ import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTaskProgress } from '@/hooks/useTaskProgress';
+import { useProjectManagement } from '@/hooks/useProjectManagement';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { tasks, progress, loading, toggleTaskComplete } = useTaskProgress();
+  const { saveProject } = useProjectManagement();
+  const [projectName, setProjectName] = useState('example.com');
+
+  const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && user) {
+      await saveProject(projectName, user.id);
+    }
+  };
 
   // Mapping of task_ids to their descriptions
   const taskDescriptions: Record<string, string> = {
@@ -31,8 +40,6 @@ const Dashboard = () => {
     toggleTaskComplete(taskId, !currentlyCompleted);
   };
 
-  const [projectName, setProjectName] = useState('example.com');
-
   return (
     <div className="flex-1 space-y-6">
       <div className="space-y-2">
@@ -48,6 +55,7 @@ const Dashboard = () => {
         <Input
           value={projectName}
           onChange={(e) => setProjectName(e.target.value)}
+          onKeyPress={handleKeyPress}
           placeholder="Enter project name"
           className="bg-launch-dark border-gray-800 focus-visible:ring-launch-cyan text-white"
         />
