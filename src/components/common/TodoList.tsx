@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useTaskProgress } from '@/hooks/useTaskProgress';
 import { useConfetti } from '@/hooks/useConfetti';
@@ -23,7 +23,7 @@ interface TodoListProps {
 }
 
 export const TodoList = ({ items, taskId, category }: TodoListProps) => {
-  const { toggleTaskComplete, tasks } = useTaskProgress();
+  const { toggleTaskComplete } = useTaskProgress();
   const { triggerConfetti } = useConfetti();
   const { toast } = useToast();
   
@@ -35,31 +35,6 @@ export const TodoList = ({ items, taskId, category }: TodoListProps) => {
       task_id: taskId
     }))
   );
-
-  // Effect to update todo items when tasks from the DB change
-  useEffect(() => {
-    if (tasks && tasks.length > 0) {
-      // Update local todoItems with completion status from the DB
-      const updatedTodos = todoItems.map(todo => {
-        // Find matching task in tasks array by text/task_name
-        const matchingTask = tasks.find(task => 
-          task.task_name === todo.text && 
-          task.category === category
-        );
-        
-        // If found and completed, update the local state
-        if (matchingTask) {
-          return {
-            ...todo,
-            completed: matchingTask.completed
-          };
-        }
-        return todo;
-      });
-      
-      setTodoItems(updatedTodos);
-    }
-  }, [tasks, category]);
 
   const toggleTodo = async (index: number) => {
     const newTodoItems = [...todoItems];
