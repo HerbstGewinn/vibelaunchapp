@@ -5,9 +5,9 @@ import type {
   ToastProps,
 } from "@/components/ui/toast"
 
-// Reduce the TOAST_REMOVE_DELAY to 1000 milliseconds (1 second)
+// Set TOAST_REMOVE_DELAY to 1000 milliseconds (1 second)
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000 // Changed from 2000 to 1000
+const TOAST_REMOVE_DELAY = 1000
 
 type ToasterToast = ToastProps & {
   id: string
@@ -56,22 +56,6 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
-const addToRemoveQueue = (toastId: string) => {
-  if (toastTimeouts.has(toastId)) {
-    return
-  }
-
-  const timeout = setTimeout(() => {
-    toastTimeouts.delete(toastId)
-    dispatch({
-      type: "REMOVE_TOAST",
-      toastId: toastId,
-    })
-  }, TOAST_REMOVE_DELAY)
-
-  toastTimeouts.set(toastId, timeout)
-}
-
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "ADD_TOAST":
@@ -79,10 +63,12 @@ export const reducer = (state: State, action: Action): State => {
         ...state,
         toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT).map(toast => ({
           ...toast,
-          // Automatically start the dismiss timer when toast is added
           open: true,
+          // Ensure toast is automatically dismissed after 1 second
           onOpenChange: (open) => {
-            if (!open) dispatch({ type: "DISMISS_TOAST", toastId: toast.id });
+            if (!open) {
+              dispatch({ type: "DISMISS_TOAST", toastId: toast.id });
+            }
           }
         })),
       }
@@ -132,6 +118,23 @@ export const reducer = (state: State, action: Action): State => {
         toasts: state.toasts.filter((t) => t.id !== action.toastId),
       }
   }
+}
+
+const addToRemoveQueue = (toastId: string) => {
+  if (toastTimeouts.has(toastId)) {
+    return
+  }
+
+  // Ensure timeout is set to 1 second for all toasts
+  const timeout = setTimeout(() => {
+    toastTimeouts.delete(toastId)
+    dispatch({
+      type: "REMOVE_TOAST",
+      toastId: toastId,
+    })
+  }, TOAST_REMOVE_DELAY)
+
+  toastTimeouts.set(toastId, timeout)
 }
 
 const listeners: Array<(state: State) => void> = []
