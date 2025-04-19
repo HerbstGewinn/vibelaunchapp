@@ -16,10 +16,15 @@ const Dashboard = () => {
   const { tasks, progress, loading, toggleTaskComplete } = useTaskProgress();
   const { saveProject } = useProjectManagement();
   const [projectName, setProjectName] = useState('example.com');
+  const [isProjectSaved, setIsProjectSaved] = useState(false);
 
   const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && user) {
-      await saveProject(projectName, user.id);
+    if (e.key === 'Enter' && user && !isProjectSaved) {
+      console.log('Saving project:', projectName);
+      const success = await saveProject(projectName, user.id);
+      if (success) {
+        setIsProjectSaved(true);
+      }
     }
   };
 
@@ -54,14 +59,15 @@ const Dashboard = () => {
       <div className="flex items-center gap-3 w-full md:w-[350px]">
         <Input
           value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
+          onChange={(e) => !isProjectSaved && setProjectName(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Enter project name"
           className="bg-launch-dark border-gray-800 focus-visible:ring-launch-cyan text-white"
+          readOnly={isProjectSaved}
         />
       </div>
 
-      <ProjectUrlCard projectName={projectName} />
+      <ProjectUrlCard projectName={projectName} isProjectSaved={isProjectSaved} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <StatCard 
