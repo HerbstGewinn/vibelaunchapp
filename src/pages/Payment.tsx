@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy, CreditCard } from "lucide-react";
@@ -80,25 +79,8 @@ const Payment = () => {
             </CardTitle>
             <CardDescription>Track your progress with Stripe setup</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {todoItems.map((item, index) => (
-              <div 
-                key={index} 
-                className="flex items-start space-x-2 p-2 rounded-md hover:bg-launch-dark/50 transition-colors cursor-pointer"
-                onClick={() => toggleTodo(index)}
-              >
-                <div className="mt-1">
-                  {item.completed ? (
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                  ) : (
-                    <Circle className="h-5 w-5 text-gray-500" />
-                  )}
-                </div>
-                <span className={`${item.completed ? "text-gray-400 line-through" : "text-white"}`}>
-                  {item.text}
-                </span>
-              </div>
-            ))}
+          <CardContent>
+            <TodoList items={todoItems} taskId="setup_payment" category="payment" />
           </CardContent>
           <CardFooter>
             <Button variant="outline" className="flex items-center gap-2 hover:bg-launch-cyan hover:text-black transition-colors">

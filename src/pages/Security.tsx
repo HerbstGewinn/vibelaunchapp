@@ -31,7 +31,7 @@ const Security = () => {
             <CardDescription>Current security status of your application</CardDescription>
           </CardHeader>
           <CardContent>
-            <TodoList items={securityItems} taskId="setup_security" />
+            <TodoList items={securityItems} taskId="setup_security" category="security" />
           </CardContent>
         </Card>
         

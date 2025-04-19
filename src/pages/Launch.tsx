@@ -71,7 +71,7 @@ const Launch = () => {
             <CardDescription>Track your launch preparation progress</CardDescription>
           </CardHeader>
           <CardContent>
-            <TodoList items={launchItems} taskId="setup_launch" />
+            <TodoList items={launchItems} taskId="setup_launch" category="launch" />
           </CardContent>
         </Card>
         

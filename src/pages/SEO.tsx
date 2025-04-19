@@ -52,7 +52,7 @@ const SEO = () => {
             <CardDescription>Current SEO status of your site</CardDescription>
           </CardHeader>
           <CardContent>
-            <TodoList items={seoItems} taskId="setup_seo" />
+            <TodoList items={seoItems} taskId="setup_seo" category="seo" />
           </CardContent>
         </Card>
         
