@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
@@ -15,6 +16,7 @@ const Auth = () => {
     { text: "Enable Auth Providers (Email, Google)", completed: false },
     { text: "Visit Google Bigcloud, configure redirect URLs", completed: false },
     { text: "Choose a Sign In Template & run the prompt", completed: false },
+    { text: "Setup Auth flow", completed: false },
     { text: "Test Auth Flow End to End", completed: false }
   ];
 
