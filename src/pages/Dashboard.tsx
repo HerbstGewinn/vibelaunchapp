@@ -1,12 +1,10 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import StatCard from '../components/dashboard/StatCard';
 import ProgressSection from '../components/dashboard/ProgressSection';
 import ProgressOverview from '../components/dashboard/ProgressOverview';
 import ProjectUrlCard from '../components/dashboard/ProjectUrlCard';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useTaskProgress } from '@/hooks/useTaskProgress';
+import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
@@ -32,6 +30,8 @@ const Dashboard = () => {
     toggleTaskComplete(taskId, !currentlyCompleted);
   };
 
+  const [projectName, setProjectName] = useState('example.com');
+
   return (
     <div className="flex-1 space-y-6">
       <div className="space-y-2">
@@ -43,20 +43,16 @@ const Dashboard = () => {
         </p>
       </div>
 
-      <div className="w-full md:w-[250px]">
-        <Select defaultValue="example.com">
-          <SelectTrigger className="bg-launch-dark border-gray-800 focus:ring-launch-cyan">
-            <SelectValue placeholder="Select project" />
-          </SelectTrigger>
-          <SelectContent className="bg-launch-dark border-gray-800">
-            <SelectItem value="example.com">example.com</SelectItem>
-            <SelectItem value="myapp.io">myapp.io</SelectItem>
-            <SelectItem value="myproject.dev">myproject.dev</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex items-center gap-3 w-full md:w-[350px]">
+        <Input
+          value={projectName}
+          onChange={(e) => setProjectName(e.target.value)}
+          placeholder="Enter project name"
+          className="bg-launch-dark border-gray-800 focus-visible:ring-launch-cyan text-white"
+        />
       </div>
 
-      <ProjectUrlCard url="example.com" />
+      <ProjectUrlCard projectName={projectName} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <StatCard 
