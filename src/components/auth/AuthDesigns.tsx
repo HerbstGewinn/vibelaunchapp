@@ -1,9 +1,10 @@
 import React from 'react';
 import AuthDesignCard from './AuthDesignCard';
 import { AuthDesignTemplate } from '@/types/auth-designs';
+
 const authDesignTemplates: AuthDesignTemplate[] = [{
   id: 1,
-  title: "High Converting Authentication Template",
+  title: "Sign In Template",
   description: "Professional, modern auth design optimized for conversion",
   imageUrl: "/lovable-uploads/9fb3e038-fc54-4507-b6aa-ee1846e9cfae.png",
   style: 'modern',
@@ -44,8 +45,10 @@ Choose a color palette and branding that suits the landing page and creates a pr
 - Link back to sign in page
 - Matching dark theme and rounded corners`
 }];
+
 const AuthDesigns = () => {
-  return <div className="space-y-6 my-8">
+  return (
+    <div className="space-y-6 my-8">
       <div className="space-y-2">
         <h2 className="text-2xl font-bold text-white">
           Authentication <span className="text-launch-cyan">Template</span>
@@ -55,8 +58,12 @@ const AuthDesigns = () => {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {authDesignTemplates.map(template => <AuthDesignCard key={template.id} template={template} />)}
+        {authDesignTemplates.map(template => (
+          <AuthDesignCard key={template.id} template={template} />
+        ))}
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default AuthDesigns;
