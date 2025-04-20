@@ -32,28 +32,18 @@ const Payment = () => {
   const prompts = [
     {
       step: "1",
-      title: "Setup Stripe Account",
-      prompt: "Create a new Stripe account and get your API keys ready for integration with the application."
+      title: "User Authentication Edge Function",
+      prompt: "Create a Supabase edge function to handle user authentication and payment status verification. This function will check if the user is authenticated and if they have an active subscription."
     },
     {
       step: "2",
-      title: "Configure Webhooks",
-      prompt: "Set up Stripe webhooks to handle payment events and configure the endpoint in your application."
+      title: "Stripe Webhook Edge Function",
+      prompt: "Implement a Supabase edge function to handle Stripe webhook events. This function will process payment events, update subscription status, and manage customer data in your database."
     },
     {
       step: "3",
-      title: "Create Products",
-      prompt: "Define your products and pricing tiers in the Stripe dashboard and note down the product IDs."
-    },
-    {
-      step: "4",
-      title: "Implement Checkout",
-      prompt: "Integrate Stripe Checkout into your frontend to handle payment processing securely."
-    },
-    {
-      step: "5",
-      title: "Test Payment Flow",
-      prompt: "Use Stripe test cards to verify the complete payment flow in your development environment."
+      title: "Payment Processing Edge Function",
+      prompt: "Set up a Supabase edge function to handle the payment processing flow. This function will create Stripe checkout sessions, manage subscription updates, and handle payment method changes."
     }
   ];
 
@@ -112,13 +102,13 @@ const Payment = () => {
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           <CheckCircle className="h-5 w-5 text-launch-cyan" />
-          Prompt Order
+          Edge Function Prompts
         </CardTitle>
-        <CardDescription>Follow these prompts step by step to implement Stripe payments</CardDescription>
+        <CardDescription>Follow these prompts to implement Stripe payment edge functions</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="1" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3">
             {prompts.map((prompt) => (
               <TabsTrigger
                 key={prompt.step}
