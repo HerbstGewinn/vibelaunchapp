@@ -27,7 +27,7 @@ const Deployment = () => {
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-launch-cyan" />
-              Todo Checklist
+              Deployment Checklist
             </CardTitle>
             <CardDescription>Track your deployment progress</CardDescription>
           </CardHeader>

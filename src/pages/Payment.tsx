@@ -83,7 +83,7 @@ const Payment = () => {
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-launch-cyan" />
-              Todo Checklist
+              Payment Checklist
             </CardTitle>
             <CardDescription>Track your progress with Stripe setup</CardDescription>
           </CardHeader>
