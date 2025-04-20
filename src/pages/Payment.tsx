@@ -4,24 +4,30 @@ import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { TodoList } from '@/components/common/TodoList';
 import { PageFeedback } from '@/components/common/PageFeedback';
-
 const Payment = () => {
-  const todoItems = [
-    { text: "Create Stripe Account", completed: false },
-    { text: "Setup Stripe Webhooks", completed: false },
-    { text: "Create Pricing Plans", completed: false },
-    { text: "Implement Checkout Flow", completed: false },
-    { text: "Setup Subscription Logic", completed: false },
-    { text: "Test Payment Flow End to End", completed: false }
-  ];
-
-  return (
-    <div className="p-6 space-y-6">
+  const todoItems = [{
+    text: "Create Stripe Account",
+    completed: false
+  }, {
+    text: "Setup Stripe Webhooks",
+    completed: false
+  }, {
+    text: "Create Pricing Plans",
+    completed: false
+  }, {
+    text: "Implement Checkout Flow",
+    completed: false
+  }, {
+    text: "Setup Subscription Logic",
+    completed: false
+  }, {
+    text: "Test Payment Flow End to End",
+    completed: false
+  }];
+  return <div className="p-6 space-y-6">
       <div className="space-y-2">
         <h1 className="text-4xl font-bold relative group">
-          <span className="bg-gradient-to-r from-launch-cyan to-white bg-clip-text text-transparent inline-block transform transition-transform group-hover:scale-105">
-            Payment Integration
-          </span>
+          <span className="bg-gradient-to-r from-launch-cyan to-white bg-clip-text text-transparent inline-block transform transition-transform group-hover:scale-105">Stripe Payments </span>
           <span className="absolute -top-2 -right-2 w-3 h-3 bg-launch-cyan rounded-full opacity-75 group-hover:animate-ping"></span>
         </h1>
         <p className="text-launch-text-muted max-w-3xl">
@@ -70,37 +76,23 @@ const Payment = () => {
           <CardDescription>Official Stripe resources</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {[
-            {
-              title: "Stripe Documentation",
-              url: "https://stripe.com/docs"
-            },
-            {
-              title: "Stripe Checkout",
-              url: "https://stripe.com/docs/checkout"
-            },
-            {
-              title: "Stripe Subscriptions",
-              url: "https://stripe.com/docs/billing/subscriptions/overview"
-            }
-          ].map((item, index) => (
-            <a
-              key={index}
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative"
-            >
+          {[{
+          title: "Stripe Documentation",
+          url: "https://stripe.com/docs"
+        }, {
+          title: "Stripe Checkout",
+          url: "https://stripe.com/docs/checkout"
+        }, {
+          title: "Stripe Subscriptions",
+          url: "https://stripe.com/docs/billing/subscriptions/overview"
+        }].map((item, index) => <a key={index} href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative">
               <div className="absolute inset-0 bg-gradient-to-r from-launch-cyan/0 via-launch-cyan/5 to-launch-cyan/0 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700"></div>
               <span className="text-white z-10">{item.title}</span>
               <ExternalLink className="h-4 w-4 text-launch-cyan z-10 group-hover:translate-x-1 transition-transform" />
-            </a>
-          ))}
+            </a>)}
         </CardContent>
       </Card>
       <PageFeedback category="payment" />
-    </div>
-  );
+    </div>;
 };
-
 export default Payment;
