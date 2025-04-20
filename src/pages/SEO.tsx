@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
@@ -8,12 +7,13 @@ import { PageFeedback } from '@/components/common/PageFeedback';
 
 const SEO = () => {
   const todoItems = [
-    { text: "Setup Google Analytics", completed: false },
-    { text: "Add Meta Description to all pages", completed: false },
-    { text: "Implement Sitemap", completed: false },
-    { text: "Setup robots.txt", completed: false },
-    { text: "Implement structured data markup", completed: false },
-    { text: "Optimize images with descriptive alt text", completed: false }
+    { text: "Meta tags set (Title, Meta Description)", completed: false },
+    { text: "Sitemap.xml generated", completed: false },
+    { text: "Robots.txt created", completed: false },
+    { text: "Mobile-friendly", completed: false },
+    { text: "Fast loading", completed: false },
+    { text: "Sitemap submitted to Google Search Console & page index requested", completed: false },
+    { text: "Google Analytics Snippet added in <head> section", completed: false }
   ];
 
   return (
