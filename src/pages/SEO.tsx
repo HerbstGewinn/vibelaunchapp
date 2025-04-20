@@ -1,11 +1,12 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, Circle, ExternalLink, Search, AlertTriangle } from "lucide-react";
+import { CheckCircle, Circle, ExternalLink, Search, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { TodoList } from '@/components/common/TodoList';
 import { PageFeedback } from '@/components/common/PageFeedback';
+
 const SEO = () => {
   const seoItems = [{
     text: "Meta tags set (Title, Meta Description)",
@@ -29,12 +30,43 @@ const SEO = () => {
     text: "Google Analytics Snippet added in <head> section",
     completed: false
   }];
-  return <div className="p-6 space-y-6">
+
+  return (
+    <div className="p-6 space-y-6">
       <h1 className="text-3xl font-bold text-launch-cyan">SEO</h1>
       <p className="text-launch-text-muted max-w-3xl">
         Optimize your site for search engines and improve your visibility online.
       </p>
       
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="bg-launch-card-bg border-gray-800">
+          <CardHeader>
+            <CardTitle className="text-white">SEO Checklist</CardTitle>
+            <CardDescription>Current SEO status of your site</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <TodoList items={seoItems} taskId="setup_seo" category="seo" />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-launch-card-bg border-gray-800">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <PlayCircle className="h-5 w-5 text-launch-cyan" />
+              Tutorial Video
+            </CardTitle>
+            <CardDescription>Learn how to implement SEO best practices</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AspectRatio ratio={16 / 9}>
+              <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md flex items-center justify-center border border-gray-800 h-full group cursor-pointer">
+                <PlayCircle className="h-16 w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
+              </div>
+            </AspectRatio>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="grid grid-cols-1 gap-6">
         <Card className="bg-launch-card-bg border-gray-800">
           <CardHeader>
@@ -51,18 +83,8 @@ const SEO = () => {
           </CardContent>
         </Card>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-white">SEO Checklist</CardTitle>
-            <CardDescription>Current SEO status of your site</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <TodoList items={seoItems} taskId="setup_seo" category="seo" />
-          </CardContent>
-        </Card>
-        
         <Card className="bg-launch-card-bg border-gray-800">
           <CardHeader>
             <CardTitle className="text-white">SEO Report</CardTitle>
@@ -77,7 +99,7 @@ const SEO = () => {
           </CardContent>
         </Card>
       </div>
-      
+
       <div className="grid grid-cols-1 gap-6">
         <Card className="bg-launch-card-bg border-gray-800">
           <CardHeader>
@@ -126,7 +148,10 @@ const SEO = () => {
           </CardContent>
         </Card>
       </div>
+      
       <PageFeedback category="seo" />
-    </div>;
+    </div>
+  );
 };
+
 export default SEO;
