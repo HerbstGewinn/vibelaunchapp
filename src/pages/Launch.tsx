@@ -150,7 +150,7 @@ const Launch = () => {
         Prepare your application for launch with a comprehensive checklist and platform strategy.
       </p>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <Card className="bg-launch-card-bg border-gray-800">
           <CardHeader>
             <CardTitle className="text-white">Launch Checklist</CardTitle>
@@ -158,18 +158,6 @@ const Launch = () => {
           </CardHeader>
           <CardContent>
             <TodoList items={launchItems} taskId="setup_launch" category="launch" />
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-launch-card-bg border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-white">Tutorial Video</CardTitle>
-            <CardDescription>Learn about successful product launches</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="aspect-video bg-black/30 rounded-md flex items-center justify-center border border-gray-800">
-              <PlayCircle className="h-16 w-16 text-launch-cyan/50" />
-            </div>
           </CardContent>
         </Card>
       </div>
