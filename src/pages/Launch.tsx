@@ -67,15 +67,15 @@ const Launch = () => {
       hasDropdown: true,
       communities: [
         "#BuildInPublic",
-        "#IndieHackers",
+        "#IndieSaaS",
+        "#SaaS",
         "#NoCode",
-        "#MakerCommunity",
-        "#SideProject",
-        "#ProductLaunch",
-        "#IndieDevs",
-        "#TechTwitter",
-        "#StartupLife",
-        "#DevCommunity"
+        "Indie Hackers Community",
+        "Product Hunt Makers Community",
+        "SaaStr Community",
+        "SaaS Growth Hacks",
+        "Micro SaaS Founders",
+        "#LaunchWeek"
       ]
     },
     { 
