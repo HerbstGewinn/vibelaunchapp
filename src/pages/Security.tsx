@@ -5,25 +5,35 @@ import { CheckCircle, Circle, ExternalLink, PlayCircle, Shield, AlertTriangle } 
 import { Button } from "@/components/ui/button";
 import { TodoList } from '@/components/common/TodoList';
 import { PageFeedback } from '@/components/common/PageFeedback';
-
 const Security = () => {
-  const securityItems = [
-    { text: "Row Level Security (RLS) enabled on all tables", completed: false },
-    { text: "API keys not exposed in client code", completed: false },
-    { text: "Authentication properly implemented", completed: false },
-    { text: "Environment variables secured", completed: false },
-    { text: "CORS policies configured", completed: false },
-    { text: "Content Security Policy (CSP) configured", completed: false },
-    { text: "Sensitive data encrypted", completed: false },
-    { text: "Regular security updates applied", completed: false },
-  ];
-  
-  return (
-    <div className="p-6 space-y-6">
+  const securityItems = [{
+    text: "Row Level Security (RLS) enabled on all tables",
+    completed: false
+  }, {
+    text: "API keys not exposed in client code",
+    completed: false
+  }, {
+    text: "Authentication properly implemented",
+    completed: false
+  }, {
+    text: "Environment variables secured",
+    completed: false
+  }, {
+    text: "CORS policies configured",
+    completed: false
+  }, {
+    text: "Content Security Policy (CSP) configured",
+    completed: false
+  }, {
+    text: "Sensitive data encrypted",
+    completed: false
+  }, {
+    text: "Regular security updates applied",
+    completed: false
+  }];
+  return <div className="p-6 space-y-6">
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-launch-cyan via-white to-launch-cyan bg-clip-text text-transparent animate-pulse">
-          Security Audit
-        </h1>
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-launch-cyan via-white to-launch-cyan bg-clip-text text-transparent animate-pulse">Security</h1>
         <p className="text-launch-text-muted max-w-3xl">
           Ensure your application follows security best practices and doesn't expose sensitive information.
         </p>
@@ -71,12 +81,7 @@ const Security = () => {
                 <p className="text-launch-text-muted text-sm">
                   Enable RLS on all Supabase tables and create policies to restrict data access based on user ID.
                 </p>
-                <a 
-                  href="https://supabase.com/docs/guides/auth/row-level-security" 
-                  target="_blank"
-                  rel="noopener noreferrer" 
-                  className="text-launch-cyan text-xs flex items-center mt-2 hover:underline"
-                >
+                <a href="https://supabase.com/docs/guides/auth/row-level-security" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
                   Learn more <ExternalLink className="h-3 w-3 ml-1" />
                 </a>
               </div>
@@ -85,12 +90,7 @@ const Security = () => {
                 <p className="text-launch-text-muted text-sm">
                   Never expose sensitive API keys in client-side code. Use Edge Functions to make authenticated requests.
                 </p>
-                <a 
-                  href="https://supabase.com/docs/guides/functions" 
-                  target="_blank"
-                  rel="noopener noreferrer" 
-                  className="text-launch-cyan text-xs flex items-center mt-2 hover:underline"
-                >
+                <a href="https://supabase.com/docs/guides/functions" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
                   Learn more <ExternalLink className="h-3 w-3 ml-1" />
                 </a>
               </div>
@@ -99,12 +99,7 @@ const Security = () => {
                 <p className="text-launch-text-muted text-sm">
                   Implement proper authentication flow with Supabase Auth and protect routes that require authentication.
                 </p>
-                <a 
-                  href="https://supabase.com/docs/guides/auth" 
-                  target="_blank"
-                  rel="noopener noreferrer" 
-                  className="text-launch-cyan text-xs flex items-center mt-2 hover:underline"
-                >
+                <a href="https://supabase.com/docs/guides/auth" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
                   Learn more <ExternalLink className="h-3 w-3 ml-1" />
                 </a>
               </div>
@@ -113,12 +108,7 @@ const Security = () => {
                 <p className="text-launch-text-muted text-sm">
                   Store sensitive information in environment variables and never commit them to your repository.
                 </p>
-                <a 
-                  href="https://vercel.com/docs/concepts/projects/environment-variables" 
-                  target="_blank"
-                  rel="noopener noreferrer" 
-                  className="text-launch-cyan text-xs flex items-center mt-2 hover:underline"
-                >
+                <a href="https://vercel.com/docs/concepts/projects/environment-variables" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
                   Learn more <ExternalLink className="h-3 w-3 ml-1" />
                 </a>
               </div>
@@ -127,8 +117,6 @@ const Security = () => {
         </Card>
       </div>
       <PageFeedback category="security" />
-    </div>
-  );
+    </div>;
 };
-
 export default Security;
