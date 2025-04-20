@@ -192,35 +192,40 @@ const Designs = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {designTemplates.slice(0, 3).map(template => (
-            <Card key={template.id} className={cn("transition-all duration-300", getCardClassName(template.style))}>
+            <Card key={template.id} className={cn(
+              "transition-all duration-300 hover:scale-[1.02]",
+              "bg-launch-dark-blue/50 backdrop-blur-sm",
+              "border border-launch-cyan/20",
+              "hover:border-launch-cyan/40 hover:shadow-[0_0_15px_rgba(0,229,255,0.1)]"
+            )}>
               <CardHeader>
-                <CardTitle className={getTitleClassName(template.style)}>{template.title}</CardTitle>
-                <CardDescription className={getDescriptionClassName(template.style)}>
-                  {template.description}
-                </CardDescription>
+                <CardTitle className="text-white font-light tracking-wide">{template.title}</CardTitle>
+                <CardDescription className="text-gray-400">{template.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className={cn("relative rounded-lg overflow-hidden border", template.style === 'brutalism' ? "border-black" : "border-gray-800")}>
+                <div className="relative rounded-lg overflow-hidden border border-launch-cyan/10 bg-launch-dark/50">
                   <AspectRatio ratio={16 / 9}>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
-                        <PlayCircle className={cn("w-16 h-16", template.style === 'brutalism' ? "text-black" : "text-launch-cyan")} />
+                        <PlayCircle className="w-16 h-16 text-launch-cyan" />
                       </Button>
                     </div>
-                    <div className={cn("absolute inset-0", template.style !== 'brutalism' && "bg-gradient-to-t from-black/50 to-transparent")} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-launch-dark/80 to-transparent" />
                   </AspectRatio>
                 </div>
                 <div className="mt-4">
-                  <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
-                    <Code className="w-4 h-4 inline mr-1" /> Design Prompt
+                  <h4 className="text-sm font-medium mb-2 text-white">
+                    <Code className="w-4 h-4 inline mr-1 text-launch-cyan" /> Design Prompt
                   </h4>
                   <ScrollArea 
                     className={cn(
                       "text-xs rounded relative group",
                       expandedPromptId === template.id ? "max-h-80" : "max-h-24",
-                      getPromptBackgroundClassName(template.style),
+                      "bg-launch-dark/60 backdrop-blur-sm text-gray-300",
+                      "border border-launch-cyan/10",
+                      "hover:border-launch-cyan/30",
                       "transition-all duration-300 ease-in-out",
-                      "hover:ring-2 hover:ring-launch-cyan/50",
+                      "hover:ring-1 hover:ring-launch-cyan/20",
                       "cursor-pointer",
                       "transform hover:scale-[1.01]"
                     )}
@@ -244,20 +249,24 @@ const Designs = () => {
                   variant="outline" 
                   size="sm" 
                   className={cn(
-                    "w-full text-xs gap-2", 
-                    template.style === 'brutalism' 
-                      ? "bg-black text-white hover:bg-gray-800 border-0" 
-                      : "bg-launch-dark border-gray-700 hover:border-launch-cyan/30 hover:bg-launch-dark/80"
+                    "w-full text-xs gap-2",
+                    "bg-launch-dark/60 backdrop-blur-sm",
+                    "border-launch-cyan/20",
+                    "hover:border-launch-cyan/40",
+                    "hover:bg-launch-dark/80",
+                    "text-gray-300",
+                    "hover:text-white",
+                    "transition-all duration-300"
                   )} 
                   onClick={() => copyPrompt(template.id, template.prompt)}
                 >
                   {copiedId === template.id ? (
                     <>
-                      <Check className="w-4 h-4" /> Copied!
+                      <Check className="w-4 h-4 text-launch-cyan" /> Copied!
                     </>
                   ) : (
                     <>
-                      <Copy className="w-4 h-4" /> Copy Design Prompt
+                      <Copy className="w-4 h-4 text-launch-cyan" /> Copy Design Prompt
                     </>
                   )}
                 </Button>
@@ -274,35 +283,40 @@ const Designs = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {designTemplates.slice(3).map(template => (
-            <Card key={template.id} className={cn("transition-all duration-300", getCardClassName(template.style))}>
+            <Card key={template.id} className={cn(
+              "transition-all duration-300 hover:scale-[1.02]",
+              "bg-launch-dark-blue/50 backdrop-blur-sm",
+              "border border-launch-cyan/20",
+              "hover:border-launch-cyan/40 hover:shadow-[0_0_15px_rgba(0,229,255,0.1)]"
+            )}>
               <CardHeader>
-                <CardTitle className={getTitleClassName(template.style)}>{template.title}</CardTitle>
-                <CardDescription className={getDescriptionClassName(template.style)}>
-                  {template.description}
-                </CardDescription>
+                <CardTitle className="text-white font-light tracking-wide">{template.title}</CardTitle>
+                <CardDescription className="text-gray-400">{template.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className={cn("relative rounded-lg overflow-hidden border", template.style === 'brutalism' ? "border-black" : "border-gray-800")}>
+                <div className="relative rounded-lg overflow-hidden border border-launch-cyan/10 bg-launch-dark/50">
                   <AspectRatio ratio={16 / 9}>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
-                        <PlayCircle className={cn("w-16 h-16", template.style === 'brutalism' ? "text-black" : "text-launch-cyan")} />
+                        <PlayCircle className="w-16 h-16 text-launch-cyan" />
                       </Button>
                     </div>
-                    <div className={cn("absolute inset-0", template.style !== 'brutalism' && "bg-gradient-to-t from-black/50 to-transparent")} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-launch-dark/80 to-transparent" />
                   </AspectRatio>
                 </div>
                 <div className="mt-4">
-                  <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
-                    <Code className="w-4 h-4 inline mr-1" /> Design Prompt
+                  <h4 className="text-sm font-medium mb-2 text-white">
+                    <Code className="w-4 h-4 inline mr-1 text-launch-cyan" /> Design Prompt
                   </h4>
                   <ScrollArea 
                     className={cn(
                       "text-xs rounded relative group",
                       expandedPromptId === template.id ? "max-h-80" : "max-h-24",
-                      getPromptBackgroundClassName(template.style),
+                      "bg-launch-dark/60 backdrop-blur-sm text-gray-300",
+                      "border border-launch-cyan/10",
+                      "hover:border-launch-cyan/30",
                       "transition-all duration-300 ease-in-out",
-                      "hover:ring-2 hover:ring-launch-cyan/50",
+                      "hover:ring-1 hover:ring-launch-cyan/20",
                       "cursor-pointer",
                       "transform hover:scale-[1.01]"
                     )}
@@ -326,20 +340,24 @@ const Designs = () => {
                   variant="outline" 
                   size="sm" 
                   className={cn(
-                    "w-full text-xs gap-2", 
-                    template.style === 'brutalism' 
-                      ? "bg-black text-white hover:bg-gray-800 border-0" 
-                      : "bg-launch-dark border-gray-700 hover:border-launch-cyan/30 hover:bg-launch-dark/80"
+                    "w-full text-xs gap-2",
+                    "bg-launch-dark/60 backdrop-blur-sm",
+                    "border-launch-cyan/20",
+                    "hover:border-launch-cyan/40",
+                    "hover:bg-launch-dark/80",
+                    "text-gray-300",
+                    "hover:text-white",
+                    "transition-all duration-300"
                   )} 
                   onClick={() => copyPrompt(template.id, template.prompt)}
                 >
                   {copiedId === template.id ? (
                     <>
-                      <Check className="w-4 h-4" /> Copied!
+                      <Check className="w-4 h-4 text-launch-cyan" /> Copied!
                     </>
                   ) : (
                     <>
-                      <Copy className="w-4 h-4" /> Copy Design Prompt
+                      <Copy className="w-4 h-4 text-launch-cyan" /> Copy Design Prompt
                     </>
                   )}
                 </Button>
