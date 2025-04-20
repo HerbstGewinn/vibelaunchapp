@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -9,7 +8,55 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 
 const designTemplates = [{
+  id: 1,
+  title: "Gradient Deploy",
+  description: "Modern, gradient-rich SaaS design with smooth transitions",
+  demoUrl: "#",
+  style: "glassmorphism",
+  prompt: `Design a sophisticated SaaS landing page featuring vibrant gradients and smooth transitions.
+
+Components (use Vite.JS, Framer Motion):
+- Gradient Hero Section: Dynamic gradient backgrounds that subtly shift on scroll
+- Feature Grid: Clean, modern cards with gradient accents and hover states
+- CTAs: Bold gradient buttons with micro-interactions
+
+Suggested Libraries:
+- Framer Motion (for smooth transitions)
+- Vite.JS (development & bundling)`
+}, {
   id: 2,
+  title: "Dark Cosmos",
+  description: "Space-themed dark mode SaaS interface with stellar accents",
+  demoUrl: "#",
+  style: "glassmorphism",
+  prompt: `Create a cosmic-themed SaaS dashboard with dark mode aesthetics and star-like particle effects.
+
+Components (use Vite.JS, Three.js):
+- Starfield Background: Subtle particle system creating a space-like atmosphere
+- Dashboard Widgets: Dark glass cards with cosmic accent colors
+- Navigation: Constellation-inspired menu with glowing highlights
+
+Suggested Libraries:
+- Three.js (for particle effects)
+- Vite.JS (for development)`
+}, {
+  id: 3,
+  title: "Cosmic Beam",
+  description: "Light trails and beam effects for modern SaaS platforms",
+  demoUrl: "#",
+  style: "glassmorphism",
+  prompt: `Design a modern SaaS platform with light beam effects and dynamic trails.
+
+Components (use Vite.JS, GSAP):
+- Light Trail Hero: Animated light beams that follow cursor movement
+- Feature Cards: Clean designs with subtle beam accents
+- Pricing Section: Dynamic beam highlights on hover
+
+Suggested Libraries:
+- GSAP (for beam animations)
+- Vite.JS (for rapid development)`
+}, {
+  id: 4,
   title: "Neo-Brutalism",
   description: "Bold typography, high contrast, raw edges, animated type",
   demoUrl: "#",
@@ -25,7 +72,7 @@ Suggested Libraries:
 - 21st.dev (interactive buttons & rich micro-interactions)
 - Vite.JS (development & bundling)`
 }, {
-  id: 8,
+  id: 5,
   title: "Interactive Collage & Scrapbook",
   description: "Tactile elements, layered textures, interactive collage-style content",
   demoUrl: "#",
@@ -41,7 +88,7 @@ Suggested Libraries:
 - MagicUI (smooth interactive behaviors)
 - Vite.JS (for rapid iteration)`
 }, {
-  id: 1,
+  id: 6,
   title: "Minimalistic Glassmorphism",
   description: "Translucent elements, soft gradients, blur effects, subtle shadows",
   demoUrl: "#",
@@ -138,80 +185,168 @@ const Designs = () => {
         <p className="text-gray-400 text-sm md:text-base">Tired of your App looking too Generic? Try out our variety of design prompts!</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {designTemplates.map(template => (
-          <Card key={template.id} className={cn("transition-all duration-300", getCardClassName(template.style))}>
-            <CardHeader>
-              <CardTitle className={getTitleClassName(template.style)}>{template.title}</CardTitle>
-              <CardDescription className={getDescriptionClassName(template.style)}>
-                {template.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className={cn("relative rounded-lg overflow-hidden border", template.style === 'brutalism' ? "border-black" : "border-gray-800")}>
-                <AspectRatio ratio={16 / 9}>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
-                      <PlayCircle className={cn("w-16 h-16", template.style === 'brutalism' ? "text-black" : "text-launch-cyan")} />
-                    </Button>
-                  </div>
-                  <div className={cn("absolute inset-0", template.style !== 'brutalism' && "bg-gradient-to-t from-black/50 to-transparent")} />
-                </AspectRatio>
-              </div>
-              <div className="mt-4">
-                <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
-                  <Code className="w-4 h-4 inline mr-1" /> Design Prompt
-                </h4>
-                <ScrollArea 
+      {/* SaaS Templates Section */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold text-white">
+          SaaS <span className="text-launch-cyan">Templates</span>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {designTemplates.slice(0, 3).map(template => (
+            <Card key={template.id} className={cn("transition-all duration-300", getCardClassName(template.style))}>
+              <CardHeader>
+                <CardTitle className={getTitleClassName(template.style)}>{template.title}</CardTitle>
+                <CardDescription className={getDescriptionClassName(template.style)}>
+                  {template.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className={cn("relative rounded-lg overflow-hidden border", template.style === 'brutalism' ? "border-black" : "border-gray-800")}>
+                  <AspectRatio ratio={16 / 9}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
+                        <PlayCircle className={cn("w-16 h-16", template.style === 'brutalism' ? "text-black" : "text-launch-cyan")} />
+                      </Button>
+                    </div>
+                    <div className={cn("absolute inset-0", template.style !== 'brutalism' && "bg-gradient-to-t from-black/50 to-transparent")} />
+                  </AspectRatio>
+                </div>
+                <div className="mt-4">
+                  <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
+                    <Code className="w-4 h-4 inline mr-1" /> Design Prompt
+                  </h4>
+                  <ScrollArea 
+                    className={cn(
+                      "text-xs rounded relative group",
+                      expandedPromptId === template.id ? "max-h-80" : "max-h-24",
+                      getPromptBackgroundClassName(template.style),
+                      "transition-all duration-300 ease-in-out",
+                      "hover:ring-2 hover:ring-launch-cyan/50",
+                      "cursor-pointer",
+                      "transform hover:scale-[1.01]"
+                    )}
+                    clickable={true}
+                    onContentClick={() => togglePromptExpansion(template.id)}
+                  >
+                    <div className={cn(
+                      "p-3 relative",
+                      "after:content-['Click_to_expand'] after:absolute after:bottom-1 after:right-1",
+                      "after:text-[0.6rem] after:text-launch-cyan/50 after:opacity-0",
+                      "group-hover:after:opacity-100",
+                      "transition-opacity duration-300"
+                    )}>
+                      {template.prompt}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
                   className={cn(
-                    "text-xs rounded relative group",
-                    expandedPromptId === template.id ? "max-h-80" : "max-h-24",
-                    getPromptBackgroundClassName(template.style),
-                    "transition-all duration-300 ease-in-out",
-                    "hover:ring-2 hover:ring-launch-cyan/50",
-                    "cursor-pointer",
-                    "transform hover:scale-[1.01]"
-                  )}
-                  clickable={true}
-                  onContentClick={() => togglePromptExpansion(template.id)}
+                    "w-full text-xs gap-2", 
+                    template.style === 'brutalism' 
+                      ? "bg-black text-white hover:bg-gray-800 border-0" 
+                      : "bg-launch-dark border-gray-700 hover:border-launch-cyan/30 hover:bg-launch-dark/80"
+                  )} 
+                  onClick={() => copyPrompt(template.id, template.prompt)}
                 >
-                  <div className={cn(
-                    "p-3 relative",
-                    "after:content-['Click_to_expand'] after:absolute after:bottom-1 after:right-1",
-                    "after:text-[0.6rem] after:text-launch-cyan/50 after:opacity-0",
-                    "group-hover:after:opacity-100",
-                    "transition-opacity duration-300"
-                  )}>
-                    {template.prompt}
-                  </div>
-                </ScrollArea>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={cn(
-                  "w-full text-xs gap-2", 
-                  template.style === 'brutalism' 
-                    ? "bg-black text-white hover:bg-gray-800 border-0" 
-                    : "bg-launch-dark border-gray-700 hover:border-launch-cyan/30 hover:bg-launch-dark/80"
-                )} 
-                onClick={() => copyPrompt(template.id, template.prompt)}
-              >
-                {copiedId === template.id ? (
-                  <>
-                    <Check className="w-4 h-4" /> Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" /> Copy Design Prompt
-                  </>
-                )}
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+                  {copiedId === template.id ? (
+                    <>
+                      <Check className="w-4 h-4" /> Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" /> Copy Design Prompt
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Creative Templates Section */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold text-white">
+          Creative <span className="text-launch-cyan">Templates</span>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {designTemplates.slice(3).map(template => (
+            <Card key={template.id} className={cn("transition-all duration-300", getCardClassName(template.style))}>
+              <CardHeader>
+                <CardTitle className={getTitleClassName(template.style)}>{template.title}</CardTitle>
+                <CardDescription className={getDescriptionClassName(template.style)}>
+                  {template.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className={cn("relative rounded-lg overflow-hidden border", template.style === 'brutalism' ? "border-black" : "border-gray-800")}>
+                  <AspectRatio ratio={16 / 9}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
+                        <PlayCircle className={cn("w-16 h-16", template.style === 'brutalism' ? "text-black" : "text-launch-cyan")} />
+                      </Button>
+                    </div>
+                    <div className={cn("absolute inset-0", template.style !== 'brutalism' && "bg-gradient-to-t from-black/50 to-transparent")} />
+                  </AspectRatio>
+                </div>
+                <div className="mt-4">
+                  <h4 className={cn("text-sm font-medium mb-2", template.style === 'brutalism' ? "text-black" : "text-white")}>
+                    <Code className="w-4 h-4 inline mr-1" /> Design Prompt
+                  </h4>
+                  <ScrollArea 
+                    className={cn(
+                      "text-xs rounded relative group",
+                      expandedPromptId === template.id ? "max-h-80" : "max-h-24",
+                      getPromptBackgroundClassName(template.style),
+                      "transition-all duration-300 ease-in-out",
+                      "hover:ring-2 hover:ring-launch-cyan/50",
+                      "cursor-pointer",
+                      "transform hover:scale-[1.01]"
+                    )}
+                    clickable={true}
+                    onContentClick={() => togglePromptExpansion(template.id)}
+                  >
+                    <div className={cn(
+                      "p-3 relative",
+                      "after:content-['Click_to_expand'] after:absolute after:bottom-1 after:right-1",
+                      "after:text-[0.6rem] after:text-launch-cyan/50 after:opacity-0",
+                      "group-hover:after:opacity-100",
+                      "transition-opacity duration-300"
+                    )}>
+                      {template.prompt}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className={cn(
+                    "w-full text-xs gap-2", 
+                    template.style === 'brutalism' 
+                      ? "bg-black text-white hover:bg-gray-800 border-0" 
+                      : "bg-launch-dark border-gray-700 hover:border-launch-cyan/30 hover:bg-launch-dark/80"
+                  )} 
+                  onClick={() => copyPrompt(template.id, template.prompt)}
+                >
+                  {copiedId === template.id ? (
+                    <>
+                      <Check className="w-4 h-4" /> Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" /> Copy Design Prompt
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
