@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
@@ -24,7 +23,7 @@ const Deployment = () => {
       </p>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow relative">
+        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-launch-cyan" />
@@ -35,9 +34,6 @@ const Deployment = () => {
           <CardContent>
             <TodoList items={todoItems} taskId="setup_deployment" category="deployment" />
           </CardContent>
-          <div className="absolute bottom-4 right-4">
-            <PageFeedback category="deployment" />
-          </div>
         </Card>
         
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
