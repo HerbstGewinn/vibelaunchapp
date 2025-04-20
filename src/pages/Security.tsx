@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Shield, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TodoList } from '@/components/common/TodoList';
+import { PageFeedback } from '@/components/common/PageFeedback';
 
 const Security = () => {
   const securityItems = [
@@ -118,6 +119,7 @@ const Security = () => {
           </CardContent>
         </Card>
       </div>
+      <PageFeedback category="security" />
     </div>
   );
 };

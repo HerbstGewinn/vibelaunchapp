@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { TodoList } from '@/components/common/TodoList';
+import { PageFeedback } from '@/components/common/PageFeedback';
+
 const Launch = () => {
   const [openPlatforms, setOpenPlatforms] = useState<number[]>([]);
   const togglePlatform = (index: number) => {
@@ -188,6 +190,8 @@ const Launch = () => {
           </div>
         </CardContent>
       </Card>
+      <PageFeedback category="launch" />
     </div>;
 };
+
 export default Launch;

@@ -6,6 +6,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useToast } from "@/hooks/use-toast";
 import AuthDesigns from '@/components/auth/AuthDesigns';
 import { TodoList } from '@/components/common/TodoList';
+import { PageFeedback } from '@/components/common/PageFeedback';
 
 const Auth = () => {
   const { toast } = useToast();
@@ -97,6 +98,7 @@ const Auth = () => {
           ))}
         </CardContent>
       </Card>
+      <PageFeedback category="auth" />
     </div>
   );
 };

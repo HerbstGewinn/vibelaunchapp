@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Circle, ExternalLink, PlayCircle, Copy, CreditCard } from "lucide-react";
@@ -9,6 +8,7 @@ import { useTaskProgress } from '@/hooks/useTaskProgress';
 import { v4 as uuidv4 } from 'uuid';
 import { useConfetti } from '@/hooks/useConfetti';
 import { TodoList } from '@/components/common/TodoList';
+import { PageFeedback } from '@/components/common/PageFeedback';
 
 const Payment = () => {
   const { toast } = useToast();
@@ -179,6 +179,7 @@ const Payment = () => {
           </CardFooter>
         </Card>
       </div>
+      <PageFeedback category="payment" />
     </div>
   );
 };

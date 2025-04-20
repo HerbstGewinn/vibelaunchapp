@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { TodoList } from '@/components/common/TodoList';
+import { PageFeedback } from '@/components/common/PageFeedback';
 
 const Deployment = () => {
   const todoItems = [
@@ -85,6 +85,7 @@ const Deployment = () => {
           </CardContent>
         </Card>
       </div>
+      <PageFeedback category="deployment" />
     </div>
   );
 };

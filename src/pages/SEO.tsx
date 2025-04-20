@@ -5,6 +5,7 @@ import { CheckCircle, Circle, ExternalLink, Search, AlertTriangle } from "lucide
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TodoList } from '@/components/common/TodoList';
+import { PageFeedback } from '@/components/common/PageFeedback';
 
 const SEO = () => {
   const seoItems = [
@@ -139,6 +140,7 @@ const SEO = () => {
           </CardContent>
         </Card>
       </div>
+      <PageFeedback category="seo" />
     </div>
   );
 };
