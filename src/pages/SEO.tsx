@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
@@ -58,7 +59,7 @@ const SEO = () => {
         </Card>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6"> {/* Changed to 1 column on desktop */}
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
