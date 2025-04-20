@@ -6,6 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { TodoList } from '@/components/common/TodoList';
 import { PageFeedback } from '@/components/common/PageFeedback';
+import { ProgressOverview } from '@/components/dashboard/ProgressOverview';
 
 const Launch = () => {
   const [openPlatforms, setOpenPlatforms] = useState<number[]>([]);
@@ -169,6 +170,10 @@ const Launch = () => {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        <ProgressOverview />
       </div>
       
       <PageFeedback category="launch" />
