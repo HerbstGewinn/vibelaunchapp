@@ -102,9 +102,9 @@ const Payment = () => {
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           <CheckCircle className="h-5 w-5 text-launch-cyan" />
-          Edge Function Prompts
+          Implement Checkout Flow & Edge Functions
         </CardTitle>
-        <CardDescription>Follow these prompts to implement Stripe payment edge functions</CardDescription>
+        <CardDescription>Follow these prompts to implement Stripe payment edge functions and checkout flow</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="1" className="w-full">
