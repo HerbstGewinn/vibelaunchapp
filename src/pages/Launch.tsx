@@ -51,7 +51,12 @@ const Launch = () => {
         "r/Entrepreneur",
         "r/SaaS",
         "r/AlphaAndBetaUsers",
-        "r/IMadeThis"
+        "r/IMadeThis",
+        "r/Launchmystartup",
+        "r/microsaas", 
+        "r/chatgptcoding", 
+        "r/nocode", 
+        "r/lovable"
       ]
     },
     { 
