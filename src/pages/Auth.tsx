@@ -22,10 +22,14 @@ const Auth = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-launch-cyan">Authentication</h1>
-      <p className="text-launch-text-muted max-w-3xl">
-        Set up authentication for your application using Supabase Auth. Follow the checklist and resources below to get started.
-      </p>
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-launch-cyan to-white bg-clip-text text-transparent">
+          Authentication
+        </h1>
+        <p className="text-launch-text-muted max-w-3xl">
+          Set up authentication for your application using Supabase Auth. Follow the checklist and resources below to get started.
+        </p>
+      </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">

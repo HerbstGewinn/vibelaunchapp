@@ -20,10 +20,14 @@ const Security = () => {
   
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-launch-cyan">Security Audit</h1>
-      <p className="text-launch-text-muted max-w-3xl">
-        Ensure your application follows security best practices and doesn't expose sensitive information.
-      </p>
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-launch-cyan via-white to-launch-cyan bg-clip-text text-transparent animate-pulse">
+          Security Audit
+        </h1>
+        <p className="text-launch-text-muted max-w-3xl">
+          Ensure your application follows security best practices and doesn't expose sensitive information.
+        </p>
+      </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">

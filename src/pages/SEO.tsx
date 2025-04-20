@@ -1,64 +1,52 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Circle, ExternalLink, Search, PlayCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { CheckCircle, ExternalLink, PlayCircle } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { TodoList } from '@/components/common/TodoList';
 import { PageFeedback } from '@/components/common/PageFeedback';
 
 const SEO = () => {
-  const seoItems = [{
-    text: "Meta tags set (Title, Meta Description)",
-    completed: false
-  }, {
-    text: "Sitemap.xml generated",
-    completed: false
-  }, {
-    text: "Robots.txt created",
-    completed: false
-  }, {
-    text: "Mobile-friendly",
-    completed: false
-  }, {
-    text: "Fast loading",
-    completed: false
-  }, {
-    text: "Sitemap submitted to Google Search Console & page index requested",
-    completed: false
-  }, {
-    text: "Google Analytics Snippet added in <head> section",
-    completed: false
-  }];
+  const todoItems = [
+    { text: "Setup Google Analytics", completed: false },
+    { text: "Add Meta Description to all pages", completed: false },
+    { text: "Implement Sitemap", completed: false },
+    { text: "Setup robots.txt", completed: false },
+    { text: "Implement structured data markup", completed: false },
+    { text: "Optimize images with descriptive alt text", completed: false }
+  ];
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-launch-cyan">SEO</h1>
-      <p className="text-launch-text-muted max-w-3xl">
-        Optimize your site for search engines and improve your visibility online.
-      </p>
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-br from-launch-cyan via-white to-launch-cyan bg-clip-text text-transparent hover:scale-105 transition-transform">
+          Search Engine Optimization
+        </h1>
+        <p className="text-launch-text-muted max-w-3xl">
+          Optimize your application for search engines and improve your visibility online.
+        </p>
+      </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800">
+        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-launch-cyan" />
               SEO Checklist
             </CardTitle>
-            <CardDescription>Current SEO status of your site</CardDescription>
+            <CardDescription>Track your SEO optimization progress</CardDescription>
           </CardHeader>
           <CardContent>
-            <TodoList items={seoItems} taskId="setup_seo" category="seo" />
+            <TodoList items={todoItems} taskId="setup_seo" category="seo" />
           </CardContent>
         </Card>
-
-        <Card className="bg-launch-card-bg border-gray-800">
+        
+        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <PlayCircle className="h-5 w-5 text-launch-cyan" />
               Tutorial Video
             </CardTitle>
-            <CardDescription>Learn how to implement SEO best practices</CardDescription>
+            <CardDescription>Learn SEO optimization techniques</CardDescription>
           </CardHeader>
           <CardContent>
             <AspectRatio ratio={16 / 9}>
@@ -69,89 +57,38 @@ const SEO = () => {
           </CardContent>
         </Card>
       </div>
-
-      <div className="grid grid-cols-1 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-white">Run SEO Audit</CardTitle>
-            <CardDescription>Enter your site URL to analyze SEO performance</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Input placeholder="https://example.com" className="bg-launch-dark border-gray-800 text-white flex-grow" />
-              <Button className="bg-launch-cyan hover:bg-launch-cyan/80 text-black font-medium whitespace-nowrap">
-                Run SEO Audit
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800">
+        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
-            <CardTitle className="text-white">SEO Report</CardTitle>
-            <CardDescription>Results from your most recent SEO audit</CardDescription>
-          </CardHeader>
-          <CardContent className="h-[320px] flex flex-col items-center justify-center text-center">
-            <Search className="h-16 w-16 text-launch-cyan mb-4" />
-            <p className="text-white text-lg font-medium">No SEO audit has been run yet</p>
-            <p className="text-launch-text-muted mt-2 max-w-md">
-              Run an SEO audit to analyze your site's search engine optimization and get detailed recommendations for improvement.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-white">SEO Best Practices</CardTitle>
-            <CardDescription>Follow these guidelines to improve your search ranking</CardDescription>
+            <CardTitle className="text-white flex items-center gap-2">
+              <ExternalLink className="h-5 w-5 text-launch-cyan" />
+              Documentation
+            </CardTitle>
+            <CardDescription>Official SEO resources</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-launch-dark rounded-md border border-gray-800">
-                <h3 className="text-white font-medium mb-2">Meta Tags</h3>
-                <p className="text-launch-text-muted text-sm">
-                  Include title, description, and Open Graph tags on all pages for better search visibility.
-                </p>
-                <a href="https://moz.com/learn/seo/meta-description" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
-                  Learn more <ExternalLink className="h-3 w-3 ml-1" />
-                </a>
-              </div>
-              <div className="p-4 bg-launch-dark rounded-md border border-gray-800">
-                <h3 className="text-white font-medium mb-2">Sitemap & Robots.txt</h3>
-                <p className="text-launch-text-muted text-sm">
-                  Create a sitemap.xml file and configure robots.txt to help search engines crawl your site effectively.
-                </p>
-                <a href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
-                  Learn more <ExternalLink className="h-3 w-3 ml-1" />
-                </a>
-              </div>
-              <div className="p-4 bg-launch-dark rounded-md border border-gray-800">
-                <h3 className="text-white font-medium mb-2">Performance Optimization</h3>
-                <p className="text-launch-text-muted text-sm">
-                  Optimize page load speed by compressing images, using lazy loading, and minimizing JavaScript.
-                </p>
-                <a href="https://web.dev/fast/" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
-                  Learn more <ExternalLink className="h-3 w-3 ml-1" />
-                </a>
-              </div>
-              <div className="p-4 bg-launch-dark rounded-md border border-gray-800">
-                <h3 className="text-white font-medium mb-2">Structured Data</h3>
-                <p className="text-launch-text-muted text-sm">
-                  Implement JSON-LD structured data to enhance your search results with rich snippets.
-                </p>
-                <a href="https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
-                  Learn more <ExternalLink className="h-3 w-3 ml-1" />
-                </a>
-              </div>
-            </div>
+            {[
+              { title: "Google Search Central", url: "https://developers.google.com/search" },
+              { title: "Moz SEO Learning Center", url: "https://moz.com/learn/seo" },
+              { title: "Yoast SEO Blog", url: "https://yoast.com/seo-blog/" },
+              { title: "Backlinko", url: "https://backlinko.com/" }
+            ].map((item, index) => (
+              <a 
+                key={index}
+                href={item.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 bg-launch-dark rounded-md hover:bg-gray-800 transition-colors group overflow-hidden relative"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-launch-cyan/0 via-launch-cyan/5 to-launch-cyan/0 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-all duration-700"></div>
+                <span className="text-white z-10">{item.title}</span>
+                <ExternalLink className="h-4 w-4 text-launch-cyan z-10 group-hover:translate-x-1 transition-transform" />
+              </a>
+            ))}
           </CardContent>
         </Card>
       </div>
-      
       <PageFeedback category="seo" />
     </div>
   );

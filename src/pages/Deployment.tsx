@@ -17,10 +17,17 @@ const Deployment = () => {
   
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-launch-cyan">Deployment</h1>
-      <p className="text-launch-text-muted max-w-3xl">
-        Deploy your application to production using GitHub and Vercel for continuous deployment.
-      </p>
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold relative">
+          <span className="bg-gradient-to-r from-launch-cyan to-white bg-clip-text text-transparent">
+            Deployment
+          </span>
+          <span className="absolute -top-1 -right-1 w-2 h-2 bg-launch-cyan rounded-full animate-ping"></span>
+        </h1>
+        <p className="text-launch-text-muted max-w-3xl">
+          Deploy your application to production using GitHub and Vercel for continuous deployment.
+        </p>
+      </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
