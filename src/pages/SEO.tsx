@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,14 +10,13 @@ import { PageFeedback } from '@/components/common/PageFeedback';
 
 const SEO = () => {
   const seoItems = [
-    { text: "Meta tags properly configured", completed: false },
-    { text: "Sitemap.xml file present", completed: false },
-    { text: "Robots.txt file configured", completed: false },
-    { text: "Semantic HTML structure", completed: false },
-    { text: "Mobile responsiveness", completed: false },
-    { text: "Page load speed optimized", completed: false },
-    { text: "Structured data implemented", completed: false },
-    { text: "Canonical URLs set", completed: false },
+    { text: "Meta tags set (Title, Meta Description)", completed: false },
+    { text: "Sitemap.xml generated", completed: false },
+    { text: "Robots.txt created", completed: false },
+    { text: "Mobile-friendly", completed: false },
+    { text: "Fast loading", completed: false },
+    { text: "Sitemap submitted to Google Search Console & page index requested", completed: false },
+    { text: "Google Analytics Snippet added in <head> section", completed: false },
   ];
   
   return (
