@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, PlayCircle, ChevronDown } from "lucide-react";
+import { ExternalLink, PlayCircle, ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from "@/components/ui/dropdown-menu";
@@ -93,7 +93,10 @@ const Launch = () => {
       <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <Card className="bg-launch-card-bg border-gray-800">
           <CardHeader>
-            <CardTitle className="text-white">Launch Checklist</CardTitle>
+            <CardTitle className="text-white flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-launch-cyan" />
+              Launch Checklist
+            </CardTitle>
             <CardDescription>Track your launch preparation progress</CardDescription>
           </CardHeader>
           <CardContent>

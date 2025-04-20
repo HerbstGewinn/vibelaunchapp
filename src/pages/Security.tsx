@@ -26,9 +26,12 @@ const Security = () => {
       </p>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-launch-card-bg border-gray-800">
+        <Card className="bg-launch-card-bg border-gray-800 shadow-lg hover:shadow-xl transition-shadow">
           <CardHeader>
-            <CardTitle className="text-white">Security Checklist</CardTitle>
+            <CardTitle className="text-white flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-launch-cyan" />
+              Security Checklist
+            </CardTitle>
             <CardDescription>Current security status of your application</CardDescription>
           </CardHeader>
           <CardContent>
