@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,21 +6,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TodoList } from '@/components/common/TodoList';
 import { PageFeedback } from '@/components/common/PageFeedback';
-
 const SEO = () => {
-  const seoItems = [
-    { text: "Meta tags set (Title, Meta Description)", completed: false },
-    { text: "Sitemap.xml generated", completed: false },
-    { text: "Robots.txt created", completed: false },
-    { text: "Mobile-friendly", completed: false },
-    { text: "Fast loading", completed: false },
-    { text: "Sitemap submitted to Google Search Console & page index requested", completed: false },
-    { text: "Google Analytics Snippet added in <head> section", completed: false },
-  ];
-  
-  return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-launch-cyan">SEO Audit</h1>
+  const seoItems = [{
+    text: "Meta tags set (Title, Meta Description)",
+    completed: false
+  }, {
+    text: "Sitemap.xml generated",
+    completed: false
+  }, {
+    text: "Robots.txt created",
+    completed: false
+  }, {
+    text: "Mobile-friendly",
+    completed: false
+  }, {
+    text: "Fast loading",
+    completed: false
+  }, {
+    text: "Sitemap submitted to Google Search Console & page index requested",
+    completed: false
+  }, {
+    text: "Google Analytics Snippet added in <head> section",
+    completed: false
+  }];
+  return <div className="p-6 space-y-6">
+      <h1 className="text-3xl font-bold text-launch-cyan">SEO</h1>
       <p className="text-launch-text-muted max-w-3xl">
         Optimize your site for search engines and improve your visibility online.
       </p>
@@ -34,10 +43,7 @@ const SEO = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Input 
-                placeholder="https://example.com" 
-                className="bg-launch-dark border-gray-800 text-white flex-grow"
-              />
+              <Input placeholder="https://example.com" className="bg-launch-dark border-gray-800 text-white flex-grow" />
               <Button className="bg-launch-cyan hover:bg-launch-cyan/80 text-black font-medium whitespace-nowrap">
                 Run SEO Audit
               </Button>
@@ -85,12 +91,7 @@ const SEO = () => {
                 <p className="text-launch-text-muted text-sm">
                   Include title, description, and Open Graph tags on all pages for better search visibility.
                 </p>
-                <a 
-                  href="https://moz.com/learn/seo/meta-description" 
-                  target="_blank"
-                  rel="noopener noreferrer" 
-                  className="text-launch-cyan text-xs flex items-center mt-2 hover:underline"
-                >
+                <a href="https://moz.com/learn/seo/meta-description" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
                   Learn more <ExternalLink className="h-3 w-3 ml-1" />
                 </a>
               </div>
@@ -99,12 +100,7 @@ const SEO = () => {
                 <p className="text-launch-text-muted text-sm">
                   Create a sitemap.xml file and configure robots.txt to help search engines crawl your site effectively.
                 </p>
-                <a 
-                  href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview" 
-                  target="_blank"
-                  rel="noopener noreferrer" 
-                  className="text-launch-cyan text-xs flex items-center mt-2 hover:underline"
-                >
+                <a href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
                   Learn more <ExternalLink className="h-3 w-3 ml-1" />
                 </a>
               </div>
@@ -113,12 +109,7 @@ const SEO = () => {
                 <p className="text-launch-text-muted text-sm">
                   Optimize page load speed by compressing images, using lazy loading, and minimizing JavaScript.
                 </p>
-                <a 
-                  href="https://web.dev/fast/" 
-                  target="_blank"
-                  rel="noopener noreferrer" 
-                  className="text-launch-cyan text-xs flex items-center mt-2 hover:underline"
-                >
+                <a href="https://web.dev/fast/" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
                   Learn more <ExternalLink className="h-3 w-3 ml-1" />
                 </a>
               </div>
@@ -127,12 +118,7 @@ const SEO = () => {
                 <p className="text-launch-text-muted text-sm">
                   Implement JSON-LD structured data to enhance your search results with rich snippets.
                 </p>
-                <a 
-                  href="https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" 
-                  target="_blank"
-                  rel="noopener noreferrer" 
-                  className="text-launch-cyan text-xs flex items-center mt-2 hover:underline"
-                >
+                <a href="https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" target="_blank" rel="noopener noreferrer" className="text-launch-cyan text-xs flex items-center mt-2 hover:underline">
                   Learn more <ExternalLink className="h-3 w-3 ml-1" />
                 </a>
               </div>
@@ -141,8 +127,6 @@ const SEO = () => {
         </Card>
       </div>
       <PageFeedback category="seo" />
-    </div>
-  );
+    </div>;
 };
-
 export default SEO;
