@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Copy, Check } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { AuthDesignTemplate } from '@/types/auth-designs';
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useToast } from "@/hooks/use-toast";
+import AuthImagePreview from './AuthImagePreview';
 
 interface AuthDesignCardProps {
   template: AuthDesignTemplate;
@@ -45,13 +45,7 @@ const AuthDesignCard = ({ template }: AuthDesignCardProps) => {
         <CardDescription className="text-gray-400">{template.description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <AspectRatio ratio={16/9}>
-          <img 
-            src={template.imageUrl} 
-            alt={template.title}
-            className="rounded-md object-cover w-full h-full"
-          />
-        </AspectRatio>
+        <AuthImagePreview imageUrl={template.imageUrl} title={template.title} />
         <div className="bg-launch-dark/50 rounded-md p-3 text-sm text-gray-300 border border-gray-800">
           <pre className="whitespace-pre-wrap font-mono text-xs">
             {getPromptPreview(template.prompt)}
