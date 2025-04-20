@@ -7,7 +7,7 @@ interface Task {
   id: string;
   user_id: string;
   task_id: string;
-  task_name: string;  // Added task_name to the interface
+  task_name: string;
   completed: boolean;
   completed_at: string | null;
   created_at: string;
@@ -94,7 +94,7 @@ export function useTaskProgress() {
             completed,
             completed_at: completed ? new Date().toISOString() : null,
             category: category || 'uncategorized',
-            task_name: taskName  // Add task_name to the update
+            task_name: taskName
           })
           .eq('id', taskId);
   
@@ -109,7 +109,7 @@ export function useTaskProgress() {
             completed,
             completed_at: completed ? new Date().toISOString() : null,
             category: category || 'uncategorized',
-            task_name: taskName  // Add task_name to the insert
+            task_name: taskName
           });
   
         if (error) throw error;
