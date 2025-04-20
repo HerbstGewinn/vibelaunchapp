@@ -112,16 +112,12 @@ const Launch = () => {
       icon: "🎮",
       hasDropdown: true,
       communities: [
-        "Indie Hackers",
-        "Dev.to",
-        "Startup Grind",
-        "Product School",
-        "Startup Club",
-        "Maker's Kitchen",
-        "Launch Club",
-        "SaaS Growth Hub",
-        "Tech Founders",
-        "Builder Space"
+        "Furlough",
+        "Makerlog", 
+        "No Code Founders",
+        "Lovable",
+        "Indiehackers",
+        "Saastr"
       ]
     },
     { 
