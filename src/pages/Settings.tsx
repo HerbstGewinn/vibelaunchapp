@@ -1,16 +1,32 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings as SettingsIcon, User, Bell, Lock, Globe, Save } from "lucide-react";
+import { Settings as SettingsIcon, User, Bell, Lock, Globe, Save, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import BillingSection from '@/components/settings/BillingSection';
 
 const Settings = () => {
   const { user } = useAuth();
-  
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'account';
+
+  const handleTabChange = (value: string) => {
+    setSearchParams({ tab: value });
+  };
+
+  // Validate tab parameter on component mount
+  useEffect(() => {
+    const validTabs = ['account', 'notifications', 'security', 'appearance', 'billing'];
+    if (!validTabs.includes(activeTab)) {
+      setSearchParams({ tab: 'account' });
+    }
+  }, [activeTab, setSearchParams]);
+
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-3xl font-bold text-launch-cyan">Settings</h1>
@@ -18,7 +34,7 @@ const Settings = () => {
         Manage your account settings and preferences.
       </p>
       
-      <Tabs defaultValue="account" className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="bg-launch-card-bg border-gray-800 mb-6">
           <TabsTrigger value="account" className="data-[state=active]:bg-launch-cyan data-[state=active]:text-black">
             <User className="h-4 w-4 mr-2" />
@@ -35,6 +51,10 @@ const Settings = () => {
           <TabsTrigger value="appearance" className="data-[state=active]:bg-launch-cyan data-[state=active]:text-black">
             <Globe className="h-4 w-4 mr-2" />
             Appearance
+          </TabsTrigger>
+          <TabsTrigger value="billing" className="data-[state=active]:bg-launch-cyan data-[state=active]:text-black">
+            <CreditCard className="h-4 w-4 mr-2" />
+            Billing
           </TabsTrigger>
         </TabsList>
         
@@ -261,6 +281,10 @@ const Settings = () => {
               </Button>
             </CardFooter>
           </Card>
+        </TabsContent>
+        
+        <TabsContent value="billing">
+          <BillingSection />
         </TabsContent>
       </Tabs>
     </div>

@@ -48,6 +48,7 @@ const App = () => (
               <Route path="customer-service" element={<CustomerService />} />
               <Route path="growth" element={<Growth />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="settings/:tab" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="*" element={<NotFound />} />

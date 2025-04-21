@@ -128,6 +128,44 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          id: string;
+          user_id: string;
+          status: string;
+          price_id: string;
+          current_period_end: string;
+          cancel_at_period_end: boolean;
+          plan_name?: string;
+          stripe_customer_id: string;
+          stripe_subscription_id: string;
+          created_at?: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          status: string;
+          price_id: string;
+          current_period_end: string;
+          cancel_at_period_end: boolean;
+          plan_name?: string;
+          stripe_customer_id: string;
+          stripe_subscription_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          status?: string;
+          price_id?: string;
+          current_period_end?: string;
+          cancel_at_period_end?: boolean;
+          plan_name?: string;
+          stripe_customer_id?: string;
+          stripe_subscription_id?: string;
+          created_at?: string;
+        };
+      }
     }
     Views: {
       [_ in never]: never
