@@ -8,7 +8,7 @@ const corsHeaders = {
 }
 
 const PLAN_MAPPING = {
-  'price_1RFyySCEMnmk0WNT4Ho7QbMh': 'lifetime',
+  'price_1RHCDICSrP7lXLyW6nCrvj0a': 'lifetime',
 } as const;
 
 serve(async (req) => {
@@ -162,12 +162,11 @@ serve(async (req) => {
               stripe_subscription_id: paymentIntent.id, // Using payment intent ID as subscription ID
               stripe_customer_id: paymentIntent.customer,
               status: paymentIntent.status,
-              price_id: 'price_1RFyySCEMnmk0WNT4Ho7QbMh', // Payment intent doesn't have price ID
-              plan_name: 'lifetime', // Default to explorer as we don't have plan info
+              price_id: 'price_1RHCDICSrP7lXLyW6nCrvj0a', // Payment intent doesn't have price ID
+              plan_name: 'Lifetime', // Default to explorer as we don't have plan info
               quantity: 1, // Default quantity
               cancel_at_period_end: false, // Payment intents don't have this info
-              current_period_start: new Date(paymentIntent.created * 1000),
-              current_period_end: new Date(paymentIntent.created * 1000), // Same as start since we don't have period info
+              current_period_start: new Date(paymentIntent.created * 1000), // Same as start since we don't have period info
               updated_at: new Date(),
             },
             {
