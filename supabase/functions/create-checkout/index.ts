@@ -129,8 +129,8 @@ serve(async (req: Request) => {
           coupon: 'earlyaccess20',
         },
       ],
-      success_url: `${req.headers.get('origin')}/dashboard/settings?tab=billing`,
-      cancel_url: `${req.headers.get('origin')}/dashboard/settings?tab=billing`,
+      success_url: `${req.headers.get('origin')}/dashboard`,
+      cancel_url: `https://vibelaunch.io`,
     });
 
     console.info(`Checkout session created successfully: ${session.id}`)

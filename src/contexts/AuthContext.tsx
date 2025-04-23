@@ -1,8 +1,11 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { Database } from '@/integrations/supabase/types';
+
+type Subscription = Database['public']['Tables']['subscriptions']['Row'];
 
 interface UserProfile {
   id: string;
@@ -184,18 +187,92 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [checkingSubscription, setCheckingSubscription] = useState(true);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!authLoading && !user) {
       navigate('/signin');
     }
-  }, [user, loading, navigate]);
+  }, [user, authLoading, navigate]);
 
-  if (loading) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  useEffect(() => {
+    if (user && !authLoading) {
+      const checkSubscription = async () => {
+        setCheckingSubscription(true);
+        try {
+          const { data, error } = await supabase
+            .from('subscriptions')
+            .select('status')
+            .eq('user_id', user.id)
+            .in('status', ['active', 'succeeded', 'trialing'])
+            .maybeSingle();
+
+          if (error && error.code !== 'PGRST116') {
+            console.error("Error checking subscription:", error);
+            toast.error('Failed to verify subscription status.');
+            setHasActiveSubscription(false);
+            return;
+          }
+
+          const isActive = !!data;
+          setHasActiveSubscription(isActive);
+
+          const isBillingPage = location.pathname === '/dashboard/settings' && new URLSearchParams(location.search).get('tab') === 'billing';
+          if (!isActive && !isBillingPage) {
+            console.log('No active subscription found, creating checkout session...');
+            setIsRedirecting(true);
+            const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke('create-checkout', {
+              body: { plan: 'lifetime', currency: 'usd' },
+            });
+
+            if (checkoutError) throw checkoutError;
+
+            if (checkoutData?.url) {
+              setCheckoutUrl(checkoutData.url);
+            } else {
+              throw new Error('Could not retrieve checkout URL.');
+            }
+          }
+        } catch (err) {
+          console.error('Error during subscription check or checkout creation:', err);
+          toast.error(`Error: ${err instanceof Error ? err.message : 'An unexpected error occurred.'}`);
+          setHasActiveSubscription(false);
+        } finally {
+          setCheckingSubscription(false);
+          if (!checkoutUrl) {
+            setIsRedirecting(false);
+          }
+        }
+      };
+      checkSubscription();
+    } else if (!authLoading) {
+      setCheckingSubscription(false);
+    }
+  }, [user, authLoading, location.pathname, location.search]);
+
+  useEffect(() => {
+    if (checkoutUrl) {
+      window.location.href = checkoutUrl;
+    }
+  }, [checkoutUrl]);
+
+  const isLoading = authLoading || checkingSubscription || isRedirecting;
+
+  if (isLoading) {
+    let loadingMessage = "Loading...";
+    if (authLoading) loadingMessage = "Authenticating...";
+    else if (checkingSubscription) loadingMessage = "Verifying subscription...";
+    else if (isRedirecting) loadingMessage = "Redirecting to checkout...";
+
+    return <div className="flex items-center justify-center h-screen text-white bg-launch-dark">{loadingMessage}</div>;
   }
 
-  return user ? <>{children}</> : null;
+  const isBillingPage = location.pathname === '/dashboard/settings' && new URLSearchParams(location.search).get('tab') === 'billing';
+  return user && (hasActiveSubscription || isBillingPage) ? <>{children}</> : null;
 };
