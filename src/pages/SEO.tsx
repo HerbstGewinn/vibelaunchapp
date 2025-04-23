@@ -54,7 +54,7 @@ new file mode 100644
 +    const appHtml = render(URL);
 +    const html = template.replace(⁠ <!--app-html--> ⁠, appHtml)
 
-+    const filePath = ⁠ dist${URL === '/' ? '/index' : URL}.html ⁠
++    const filePath = ⁠ dist$ {URL === '/' ? '/index' : URL}.html ⁠
 +    fs.writeFileSync(toAbsolute(filePath), html)
 +    console.log('pre-rendered:', filePath)
 +  }

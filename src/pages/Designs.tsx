@@ -1,24 +1,17 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { PlayCircle, Copy, Check, Code, PauseCircle } from 'lucide-react';
+import { PlayCircle, Copy, Check, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client with hardcoded credentials
-const SUPABASE_URL = "https://xnqbmtsphlduhxrkaopt.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhucWJtdHNwaGxkdWh4cmthb3B0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMzNzE4MDMsImV4cCI6MjA1ODk0NzgwM30.1qgN3Dg7mQYcCHv0De5rCuI5J1YOcmE6ZQhIKAoc-cQ";
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
 const designTemplates = [{
   id: 1,
   title: "Gradient Deploy",
   description: "Modern, gradient-rich SaaS design with smooth transitions",
-  videoId: 1, // This will match the id in the design_videos table
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/bold.mp4",
   style: "glassmorphism",
   prompt: `LaunchPad – blue‑gradient SaaS deploy landing page
 
@@ -89,7 +82,7 @@ make the landing page mobile responsive and make sure to replace all images and 
   id: 2,
   title: "Dark Cosmos",
   description: "Space-themed dark mode SaaS interface with stellar accents",
-  videoId: 2,
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/dark%20cosmos.mp4",
   style: "glassmorphism",
   prompt: `OrbitHub – cosmic‑dark community landing page
 
@@ -175,7 +168,7 @@ make the landing page mobile responsive and fill every picture and video placeho
   id: 3,
   title: "Cosmic Beam",
   description: "Light trails and beam effects for modern SaaS platforms",
-  videoId: 3,
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/cosmic.mp4",
   style: "glassmorphism",
   prompt: `NovaHub – cosmic‑beam collaboration landing page"
 
@@ -238,7 +231,7 @@ Make the landing page mobile responsive and make sure that all pictures or video
   id: 4,
   title: "Neo-Brutalism",
   description: "Bold typography, high contrast, raw edges, animated type",
-  videoId: 1,
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/creative.mp4",
   style: "brutalism",
   prompt: `Create an impactful, bold homepage using the Neo-Brutalism aesthetic, showcasing stark contrasts, animated typography, and edgy, raw layouts.
 
@@ -254,7 +247,7 @@ Suggested Libraries:
   id: 5,
   title: "Interactive Collage & Scrapbook",
   description: "Tactile elements, layered textures, interactive collage-style content",
-  videoId: 2,
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/glassy.mp4",
   style: "collage",
   prompt: `Design a portfolio site using a creative Interactive Collage & Scrapbook style. The design should evoke tactile interactions, textured backgrounds, and draggable scrapbook elements.
 
@@ -270,7 +263,7 @@ Suggested Libraries:
   id: 6,
   title: "Minimalistic Glassmorphism",
   description: "Translucent elements, soft gradients, blur effects, subtle shadows",
-  videoId: 3,
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/gradient.mp4",
   style: "glassmorphism",
   prompt: `Design a highly interactive landing page using Minimalistic Glassmorphism. The layout features translucent cards with vibrant pastel gradients, subtle background blur effects, and delicate shadows.
 
@@ -287,44 +280,10 @@ const Designs = () => {
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [expandedPromptId, setExpandedPromptId] = useState<number | null>(null);
   const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
-  const [videoUrls, setVideoUrls] = useState<Record<number, string>>({});
   const { toast } = useToast();
   
-  // Fetch video URLs when component mounts
-  React.useEffect(() => {
-    const fetchVideoUrls = async () => {
-      console.log("Fetching video URLs from Supabase...");
-      
-      try {
-        const { data, error } = await supabase
-          .from('design_videos')
-          .select('id, video_url');
-        
-        if (error) {
-          console.error('Error fetching videos:', error);
-          return;
-        }
-
-        console.log("Fetched video data:", data);
-
-        if (data && data.length > 0) {
-          const urls = data.reduce((acc, video) => {
-            acc[video.id] = video.video_url;
-            return acc;
-          }, {} as Record<number, string>);
-
-          console.log("Processed video URLs:", urls);
-          setVideoUrls(urls);
-        } else {
-          console.warn("No video data returned from Supabase");
-        }
-      } catch (err) {
-        console.error("Error in fetchVideoUrls:", err);
-      }
-    };
-
-    fetchVideoUrls();
-  }, []);
+  // Create a ref map for multiple videos
+  const videoRefs = React.useRef<{ [key: number]: HTMLVideoElement | null }>({});
   
   const copyPrompt = (id: number, prompt: string) => {
     navigator.clipboard.writeText(prompt);
@@ -341,17 +300,29 @@ const Designs = () => {
     setExpandedPromptId(expandedPromptId === id ? null : id);
   };
   
-  const toggleVideoPlayback = (id: number) => {
-    console.log(`Toggling video playback for template ID: ${id}`);
-    
-    // Get the template with the given ID
-    const template = designTemplates.find(t => t.id === id);
-    if (template) {
-      const videoUrl = videoUrls[template.videoId];
-      console.log(`Video ID: ${template.videoId}, URL: ${videoUrl || 'not found'}`);
+  const toggleVideoPlayback = async (id: number) => {
+    try {
+      const videoElement = videoRefs.current[id];
+      
+      if (playingVideoId === id) {
+        if (videoElement) {
+          await videoElement.pause();
+        }
+        setPlayingVideoId(null);
+      } else {
+        // Pause any currently playing video
+        if (playingVideoId && videoRefs.current[playingVideoId]) {
+          await videoRefs.current[playingVideoId]?.pause();
+        }
+        
+        if (videoElement) {
+          await videoElement.play();
+          setPlayingVideoId(id);
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling video playback:', error);
     }
-    
-    setPlayingVideoId(playingVideoId === id ? null : id);
   };
   
   const getCardClassName = (style: string) => {
@@ -406,6 +377,40 @@ const Designs = () => {
     }
   };
 
+  const renderVideo = (template: typeof designTemplates[0]) => {
+    return (
+      <div className="relative rounded-lg overflow-hidden border border-launch-cyan/10 bg-launch-dark/50">
+        <AspectRatio ratio={16 / 9}>
+          <video
+            ref={el => videoRefs.current[template.id] = el}
+            src={template.videoUrl}
+            className="w-full h-full object-cover"
+            controls={playingVideoId === template.id}
+            playsInline
+            preload="metadata"
+            autoPlay={playingVideoId === template.id}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleVideoPlayback(template.id);
+            }}
+            onEnded={() => setPlayingVideoId(null)}
+          />
+          {playingVideoId !== template.id && (
+            <div 
+              className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black/30"
+              onClick={() => toggleVideoPlayback(template.id)}
+            >
+              <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
+                <PlayCircle className="w-16 h-16 text-launch-cyan" />
+              </Button>
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-launch-dark/80 to-transparent pointer-events-none" />
+        </AspectRatio>
+      </div>
+    );
+  };
+
   return (
     <div className="flex-1 space-y-6">
       <div className="space-y-2">
@@ -433,39 +438,7 @@ const Designs = () => {
                 <CardDescription className="text-gray-400">{template.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="relative rounded-lg overflow-hidden border border-launch-cyan/10 bg-launch-dark/50">
-                  <AspectRatio ratio={16 / 9}>
-                    {videoUrls[template.videoId] ? (
-                      <>
-                        {playingVideoId === template.id ? (
-                          <video
-                            src={videoUrls[template.videoId]}
-                            className="w-full h-full object-cover"
-                            controls
-                            autoPlay
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        ) : (
-                          <div 
-                            className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                            onClick={() => toggleVideoPlayback(template.id)}
-                          >
-                            <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
-                              <PlayCircle className="w-16 h-16 text-launch-cyan" />
-                            </Button>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
-                          <PlayCircle className="w-16 h-16 text-launch-cyan" />
-                        </Button>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-launch-dark/80 to-transparent" />
-                  </AspectRatio>
-                </div>
+                {renderVideo(template)}
                 <div className="mt-4">
                   <h4 className="text-sm font-medium mb-2 text-white">
                     <Code className="w-4 h-4 inline mr-1 text-launch-cyan" /> Design Prompt
@@ -547,42 +520,7 @@ const Designs = () => {
                 <CardDescription className="text-gray-400">{template.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="relative rounded-lg overflow-hidden border border-launch-cyan/10 bg-launch-dark/50">
-                  <AspectRatio ratio={16 / 9}>
-                    {videoUrls[template.videoId] ? (
-                      <>
-                        {playingVideoId === template.id ? (
-                          <video
-                            src={videoUrls[template.videoId]}
-                            className="w-full h-full object-cover"
-                            controls
-                            autoPlay
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        ) : (
-                          <div 
-                            className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                            onClick={() => toggleVideoPlayback(template.id)}
-                          >
-                            <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
-                              <PlayCircle className="w-16 h-16 text-launch-cyan" />
-                            </Button>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div 
-                        className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                        onClick={() => console.log("Video not found for ID:", template.videoId)}
-                      >
-                        <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
-                          <PlayCircle className="w-16 h-16 text-launch-cyan" />
-                        </Button>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-launch-dark/80 to-transparent" />
-                  </AspectRatio>
-                </div>
+                {renderVideo(template)}
                 <div className="mt-4">
                   <h4 className="text-sm font-medium mb-2 text-white">
                     <Code className="w-4 h-4 inline mr-1 text-launch-cyan" /> Design Prompt
