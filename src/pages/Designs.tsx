@@ -1,26 +1,33 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { PlayCircle, Copy, Check, Code } from 'lucide-react';
+import { PlayCircle, Copy, Check, Code, PauseCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client with hardcoded credentials
+const SUPABASE_URL = "https://xnqbmtsphlduhxrkaopt.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhucWJtdHNwaGxkdWh4cmthb3B0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMzNzE4MDMsImV4cCI6MjA1ODk0NzgwM30.1qgN3Dg7mQYcCHv0De5rCuI5J1YOcmE6ZQhIKAoc-cQ";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
 const designTemplates = [{
   id: 1,
   title: "Gradient Deploy",
   description: "Modern, gradient-rich SaaS design with smooth transitions",
-  demoUrl: "#",
+  videoId: 1, // This will match the id in the design_videos table
   style: "glassmorphism",
   prompt: `LaunchPad – blue‑gradient SaaS deploy landing page
 
 You are a UI/IX designer
 
 Goal
-Generate a production‑ready Vite + React landing site for LaunchPad, a “one‑click deploy & scale” platform. Re‑create this visual pattern (no screenshot supplied):
+Generate a production‑ready Vite + React landing site for LaunchPad, a "one‑click deploy & scale" platform. Re‑create this visual pattern (no screenshot supplied):
 
-Top‑nav: tiny logo, 4 text links, “Log in” ghost link.
+Top‑nav: tiny logo, 4 text links, "Log in" ghost link.
 
 Hero: full‑width deep‑blue gradient (#0047FF → #001BFF). Left: H1 (max‑w‑md), sub‑p, primary CTA (white text, #001BFF bg). Right: large browser‑frame screenshot, overlapped by a small dark terminal card.
 
@@ -40,7 +47,7 @@ Testimonials grid: 3 × 2 quote cards (border, rounded, author avatar).
 
 FAQ: plain list of 6 links columns.
 
-Bottom CTA: identical blue gradient bar (“Ready to ship?” + CTA & ghost link).
+Bottom CTA: identical blue gradient bar ("Ready to ship?" + CTA & ghost link).
 
 Footer: 3 columns links + newsletter field; beneath, tiny social icons row.
 
@@ -82,7 +89,7 @@ make the landing page mobile responsive and make sure to replace all images and 
   id: 2,
   title: "Dark Cosmos",
   description: "Space-themed dark mode SaaS interface with stellar accents",
-  demoUrl: "#",
+  videoId: 2,
   style: "glassmorphism",
   prompt: `OrbitHub – cosmic‑dark community landing page
 
@@ -93,7 +100,7 @@ Generate a production‑ready Vite + React landing page for OrbitHub, a private 
 
 Dark, near‑black background
 
-Soft “cosmic horizon” radial glow behind every main heading
+Soft "cosmic horizon" radial glow behind every main heading
 
 Centered 900 px column, huge vertical spacing
 
@@ -131,9 +138,9 @@ Community benefits – 3 feature cards.
 
 Quote block inside oval glow.
 
-Member carousel (5 tiles) + “Join waitlist”.
+Member carousel (5 tiles) + "Join waitlist".
 
-“Why join” list (3 bullets) over blurred circle.
+"Why join" list (3 bullets) over blurred circle.
 
 Video testimonial (video + text + CTA).
 
@@ -168,14 +175,14 @@ make the landing page mobile responsive and fill every picture and video placeho
   id: 3,
   title: "Cosmic Beam",
   description: "Light trails and beam effects for modern SaaS platforms",
-  demoUrl: "#",
+  videoId: 3,
   style: "glassmorphism",
-  prompt: `NovaHub – cosmic‑beam collaboration landing page”
+  prompt: `NovaHub – cosmic‑beam collaboration landing page"
 
 You are a UI/UX designer. 
 
 Goal
-Ship a Vite + React landing site for NovaHub, an “everything‑app” for teams. Re‑create this layout & vibe (image not provided):
+Ship a Vite + React landing site for NovaHub, an "everything‑app" for teams. Re‑create this layout & vibe (image not provided):
 
 Hero – midnight backdrop, vertical neon beam in center. Left column: H1, sub‑p, solid CTA. Right: dark‑UI screenshot framed by thin luminous border.
 
@@ -183,15 +190,15 @@ Grey logo bar under hero.
 
 Productivity section (white bg): H2, two rows of 3 tilted feature shots (dark cards, subtle glow).
 
-“Work together” section (pale‑blue wash bg): large video‑call panel with glow, 3 bullet icons below.
+"Work together" section (pale‑blue wash bg): large video‑call panel with glow, 3 bullet icons below.
 
-Dark band – H2 “Sync with GitHub” + single glow‑border screenshot; beneath, 4 small feature tiles.
+Dark band – H2 "Sync with GitHub" + single glow‑border screenshot; beneath, 4 small feature tiles.
 
-“MetaBrain” grid (white): heading, 8 small cards (stats/images).
+"MetaBrain" grid (white): heading, 8 small cards (stats/images).
 
 Knowledge blog strip: left card, right image, paragraph, code block.
 
-Final CTA – dark cosmic orb + “Join the Movement” text, bright CTA; footer links below.
+Final CTA – dark cosmic orb + "Join the Movement" text, bright CTA; footer links below.
 
 All content max‑w‑7xl mx‑auto‑px‑6, huge vertical spacing.
 
@@ -231,7 +238,7 @@ Make the landing page mobile responsive and make sure that all pictures or video
   id: 4,
   title: "Neo-Brutalism",
   description: "Bold typography, high contrast, raw edges, animated type",
-  demoUrl: "#",
+  videoId: 1,
   style: "brutalism",
   prompt: `Create an impactful, bold homepage using the Neo-Brutalism aesthetic, showcasing stark contrasts, animated typography, and edgy, raw layouts.
 
@@ -247,7 +254,7 @@ Suggested Libraries:
   id: 5,
   title: "Interactive Collage & Scrapbook",
   description: "Tactile elements, layered textures, interactive collage-style content",
-  demoUrl: "#",
+  videoId: 2,
   style: "collage",
   prompt: `Design a portfolio site using a creative Interactive Collage & Scrapbook style. The design should evoke tactile interactions, textured backgrounds, and draggable scrapbook elements.
 
@@ -263,7 +270,7 @@ Suggested Libraries:
   id: 6,
   title: "Minimalistic Glassmorphism",
   description: "Translucent elements, soft gradients, blur effects, subtle shadows",
-  demoUrl: "#",
+  videoId: 3,
   style: "glassmorphism",
   prompt: `Design a highly interactive landing page using Minimalistic Glassmorphism. The layout features translucent cards with vibrant pastel gradients, subtle background blur effects, and delicate shadows.
 
@@ -279,7 +286,45 @@ Suggested Libraries:
 const Designs = () => {
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [expandedPromptId, setExpandedPromptId] = useState<number | null>(null);
+  const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
+  const [videoUrls, setVideoUrls] = useState<Record<number, string>>({});
   const { toast } = useToast();
+  
+  // Fetch video URLs when component mounts
+  React.useEffect(() => {
+    const fetchVideoUrls = async () => {
+      console.log("Fetching video URLs from Supabase...");
+      
+      try {
+        const { data, error } = await supabase
+          .from('design_videos')
+          .select('id, video_url');
+        
+        if (error) {
+          console.error('Error fetching videos:', error);
+          return;
+        }
+
+        console.log("Fetched video data:", data);
+
+        if (data && data.length > 0) {
+          const urls = data.reduce((acc, video) => {
+            acc[video.id] = video.video_url;
+            return acc;
+          }, {} as Record<number, string>);
+
+          console.log("Processed video URLs:", urls);
+          setVideoUrls(urls);
+        } else {
+          console.warn("No video data returned from Supabase");
+        }
+      } catch (err) {
+        console.error("Error in fetchVideoUrls:", err);
+      }
+    };
+
+    fetchVideoUrls();
+  }, []);
   
   const copyPrompt = (id: number, prompt: string) => {
     navigator.clipboard.writeText(prompt);
@@ -294,6 +339,19 @@ const Designs = () => {
   
   const togglePromptExpansion = (id: number) => {
     setExpandedPromptId(expandedPromptId === id ? null : id);
+  };
+  
+  const toggleVideoPlayback = (id: number) => {
+    console.log(`Toggling video playback for template ID: ${id}`);
+    
+    // Get the template with the given ID
+    const template = designTemplates.find(t => t.id === id);
+    if (template) {
+      const videoUrl = videoUrls[template.videoId];
+      console.log(`Video ID: ${template.videoId}, URL: ${videoUrl || 'not found'}`);
+    }
+    
+    setPlayingVideoId(playingVideoId === id ? null : id);
   };
   
   const getCardClassName = (style: string) => {
@@ -377,11 +435,34 @@ const Designs = () => {
               <CardContent>
                 <div className="relative rounded-lg overflow-hidden border border-launch-cyan/10 bg-launch-dark/50">
                   <AspectRatio ratio={16 / 9}>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
-                        <PlayCircle className="w-16 h-16 text-launch-cyan" />
-                      </Button>
-                    </div>
+                    {videoUrls[template.videoId] ? (
+                      <>
+                        {playingVideoId === template.id ? (
+                          <video
+                            src={videoUrls[template.videoId]}
+                            className="w-full h-full object-cover"
+                            controls
+                            autoPlay
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        ) : (
+                          <div 
+                            className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                            onClick={() => toggleVideoPlayback(template.id)}
+                          >
+                            <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
+                              <PlayCircle className="w-16 h-16 text-launch-cyan" />
+                            </Button>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
+                          <PlayCircle className="w-16 h-16 text-launch-cyan" />
+                        </Button>
+                      </div>
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-launch-dark/80 to-transparent" />
                   </AspectRatio>
                 </div>
@@ -454,7 +535,7 @@ const Designs = () => {
           Creative <span className="text-launch-cyan">Templates</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {designTemplates.slice(3).map(template => (
+          {designTemplates.slice(3).map((template) => (
             <Card key={template.id} className={cn(
               "transition-all duration-300 hover:scale-[1.02]",
               "bg-launch-dark-blue/50 backdrop-blur-sm",
@@ -468,11 +549,37 @@ const Designs = () => {
               <CardContent>
                 <div className="relative rounded-lg overflow-hidden border border-launch-cyan/10 bg-launch-dark/50">
                   <AspectRatio ratio={16 / 9}>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
-                        <PlayCircle className="w-16 h-16 text-launch-cyan" />
-                      </Button>
-                    </div>
+                    {videoUrls[template.videoId] ? (
+                      <>
+                        {playingVideoId === template.id ? (
+                          <video
+                            src={videoUrls[template.videoId]}
+                            className="w-full h-full object-cover"
+                            controls
+                            autoPlay
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        ) : (
+                          <div 
+                            className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                            onClick={() => toggleVideoPlayback(template.id)}
+                          >
+                            <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
+                              <PlayCircle className="w-16 h-16 text-launch-cyan" />
+                            </Button>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                        onClick={() => console.log("Video not found for ID:", template.videoId)}
+                      >
+                        <Button variant="ghost" size="icon" className="w-16 h-16 rounded-full hover:scale-105 transition-transform">
+                          <PlayCircle className="w-16 h-16 text-launch-cyan" />
+                        </Button>
+                      </div>
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-launch-dark/80 to-transparent" />
                   </AspectRatio>
                 </div>
