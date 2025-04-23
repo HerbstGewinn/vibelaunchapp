@@ -18,25 +18,25 @@ const Launch = () => {
     text: "All features completed and tested",
     completed: false
   }, {
-    text: "SEO optimization completed",
+    text: "Launched on all Subreddits",
     completed: false
   }, {
-    text: "Analytics tracking implemented",
+    text: "Launched on Twitter/X",
     completed: false
   }, {
-    text: "Error tracking configured",
+    text: "Launched on Online Directories",
     completed: false
   }, {
-    text: "Documentation updated",
+    text: "Launched on Discord Communities",
     completed: false
   }, {
-    text: "Performance optimization completed",
+    text: "Launched on Producthunt",
     completed: false
   }, {
-    text: "Launch announcement prepared",
+    text: "Launched on Hackernews",
     completed: false
   }, {
-    text: "Launch platforms selected",
+    text: "Launched on Linkedin",
     completed: false
   }];
   const launchPlatforms = [{

@@ -13,48 +13,220 @@ const designTemplates = [{
   description: "Modern, gradient-rich SaaS design with smooth transitions",
   demoUrl: "#",
   style: "glassmorphism",
-  prompt: `Design a sophisticated SaaS landing page featuring vibrant gradients and smooth transitions.
+  prompt: `LaunchPad – blue‑gradient SaaS deploy landing page
 
-Components (use Vite.JS, Framer Motion):
-- Gradient Hero Section: Dynamic gradient backgrounds that subtly shift on scroll
-- Feature Grid: Clean, modern cards with gradient accents and hover states
-- CTAs: Bold gradient buttons with micro-interactions
+You are a UI/IX designer
 
-Suggested Libraries:
-- Framer Motion (for smooth transitions)
-- Vite.JS (development & bundling)`
+Goal
+Generate a production‑ready Vite + React landing site for LaunchPad, a “one‑click deploy & scale” platform. Re‑create this visual pattern (no screenshot supplied):
+
+Top‑nav: tiny logo, 4 text links, “Log in” ghost link.
+
+Hero: full‑width deep‑blue gradient (#0047FF → #001BFF). Left: H1 (max‑w‑md), sub‑p, primary CTA (white text, #001BFF bg). Right: large browser‑frame screenshot, overlapped by a small dark terminal card.
+
+Under hero: grey logo strip (e.g., GitHub, DigitalOcean…).
+
+Feature blocks (white bg): every block = short heading + para (left) + tilted screenshot card (right). Alternate tilt rotate‑2 & -rotate‑2. Repeat 6 times; two blocks per row on lg, stacked on sm.
+
+Between feature rows: skinny icon bar (3 icons + captions).
+
+Security band: light‑grey backdrop; world‑map SVG on left, small screenshot on right; 4 bullet tiles beneath.
+
+Scale band: same layout (heading + screenshot) but reversed.
+
+Connect resources band (heading + two small tilted screenshots).
+
+Testimonials grid: 3 × 2 quote cards (border, rounded, author avatar).
+
+FAQ: plain list of 6 links columns.
+
+Bottom CTA: identical blue gradient bar (“Ready to ship?” + CTA & ghost link).
+
+Footer: 3 columns links + newsletter field; beneath, tiny social icons row.
+
+Content max‑width max-w-7xl mx-auto px-6, huge vertical spacing, plenty of white space.
+
+Stack & Deps
+
+nginx
+Copy
+Edit
+Vite (React template)
+Tailwind CSS ^3  darkMode:'class'
+lucide‑react      icons
+framer‑motion     fade/slide in view
+Tailwind Theme Add‑on
+
+js
+Copy
+Edit
+fontFamily:{display:['Poppins'],body:['Inter']},
+colors:{primary:'#0047FF',primaryDark:'#001BFF',surface:'#ffffff',muted:'#6B7280'},
+Components
+Button bg-primaryDark text-white py-2 px-6 rounded-md shadow hover:bg-primary
+Card border border-gray-200 rounded-lg shadow-md p-6 bg-surface
+Add motion.div with initial={{opacity:0,y:30}} whileInView={{opacity:1,y:0}}.
+
+Deliverables
+
+Full Vite project (index.html, /src/components/*).
+
+tailwind.config.js, package.json.
+
+README with pnpm i, pnpm dev, pnpm build.
+
+Reproduce the described layout, blue gradients, tilted screenshots, and airy spacing exactly—change only copy & brand to LaunchPad.
+
+make the landing page mobile responsive and make sure to replace all images and video spots with either placeholders or AI generated pictures`
 }, {
   id: 2,
   title: "Dark Cosmos",
   description: "Space-themed dark mode SaaS interface with stellar accents",
   demoUrl: "#",
   style: "glassmorphism",
-  prompt: `Create a cosmic-themed SaaS dashboard with dark mode aesthetics and star-like particle effects.
+  prompt: `OrbitHub – cosmic‑dark community landing page
 
-Components (use Vite.JS, Three.js):
-- Starfield Background: Subtle particle system creating a space-like atmosphere
-- Dashboard Widgets: Dark glass cards with cosmic accent colors
-- Navigation: Constellation-inspired menu with glowing highlights
+You are a UI/UX Designer. 
 
-Suggested Libraries:
-- Three.js (for particle effects)
-- Vite.JS (for development)`
+Goal
+Generate a production‑ready Vite + React landing page for OrbitHub, a private community for senior makers. Replicate this layout & style (no image supplied):
+
+Dark, near‑black background
+
+Soft “cosmic horizon” radial glow behind every main heading
+
+Centered 900 px column, huge vertical spacing
+
+Rounded cards (1 px #2A2A2A border, 12 px radius)
+
+Lime accent #C6FF00 for CTAs & pricing highlight
+
+Stack & Deps
+
+nginx
+Copy
+Edit
+Vite (React template)
+Tailwind CSS ^3      darkMode:'class'
+lucide‑react          icons
+framer‑motion         scroll fades/slides
+@headlessui/react     FAQ accordion
+Tailwind Theme Snippet
+
+js
+Copy
+Edit
+fontFamily:{display:['Playfair Display'],body:['Inter'],mono:['JetBrains Mono']},
+colors:{accent:'#C6FF00',surface:'#0A0A0A',card:'#141414',text:'#E6E6E6',muted:'#8B8B8B'},
+boxShadow:{glow:'0 0 120px 60px rgba(102,132,255,.08)'}
+Section Outline (keep order)
+
+Hero – left: H1, sub‑p, lime CTA; right: 2×2 avatar card. Radial glow bg.
+
+Mini nav row (text links).
+
+Faces strip (4 circular avatars).
+
+Community benefits – 3 feature cards.
+
+Quote block inside oval glow.
+
+Member carousel (5 tiles) + “Join waitlist”.
+
+“Why join” list (3 bullets) over blurred circle.
+
+Video testimonial (video + text + CTA).
+
+Tiers – 2‑column plan card (Free vs Pro).
+
+Neon‑green pricing card + comparison list.
+
+FAQ accordion (6 items).
+
+Tweet‑wall social proof (12 masonry cards).
+
+Final CTA banner (portrait + text + button, lime glow).
+
+Wrap each section in max-w-5xl mx-auto px-6. Use motion.div initial={{opacity:0,y:40}} whileInView={{opacity:1,y:0}}.
+
+Components
+Button: bg-accent text-black px-6 py-2 rounded-full font-semibold hover:bg-accent/80.
+Card: bg-card border border-[#2A2A2A] rounded-xl p-6 shadow-glow/10.
+
+Deliverables
+
+Source in /src (components per section)
+
+tailwind.config.js, package.json
+
+README with pnpm i, pnpm dev, pnpm build
+
+Match the described visual hierarchy exactly—only copy and brand differ. 
+
+make the landing page mobile responsive and fill every picture and video placeholder with an AI generated version or a plceholder. `
 }, {
   id: 3,
   title: "Cosmic Beam",
   description: "Light trails and beam effects for modern SaaS platforms",
   demoUrl: "#",
   style: "glassmorphism",
-  prompt: `Design a modern SaaS platform with light beam effects and dynamic trails.
+  prompt: `NovaHub – cosmic‑beam collaboration landing page”
 
-Components (use Vite.JS, GSAP):
-- Light Trail Hero: Animated light beams that follow cursor movement
-- Feature Cards: Clean designs with subtle beam accents
-- Pricing Section: Dynamic beam highlights on hover
+You are a UI/UX designer. 
 
-Suggested Libraries:
-- GSAP (for beam animations)
-- Vite.JS (for rapid development)`
+Goal
+Ship a Vite + React landing site for NovaHub, an “everything‑app” for teams. Re‑create this layout & vibe (image not provided):
+
+Hero – midnight backdrop, vertical neon beam in center. Left column: H1, sub‑p, solid CTA. Right: dark‑UI screenshot framed by thin luminous border.
+
+Grey logo bar under hero.
+
+Productivity section (white bg): H2, two rows of 3 tilted feature shots (dark cards, subtle glow).
+
+“Work together” section (pale‑blue wash bg): large video‑call panel with glow, 3 bullet icons below.
+
+Dark band – H2 “Sync with GitHub” + single glow‑border screenshot; beneath, 4 small feature tiles.
+
+“MetaBrain” grid (white): heading, 8 small cards (stats/images).
+
+Knowledge blog strip: left card, right image, paragraph, code block.
+
+Final CTA – dark cosmic orb + “Join the Movement” text, bright CTA; footer links below.
+
+All content max‑w‑7xl mx‑auto‑px‑6, huge vertical spacing.
+
+Stack
+
+nginx
+Copy
+Edit
+Vite (React)
+Tailwind CSS ^3   darkMode:'class'
+lucide‑react       icons
+framer‑motion      fade/slide
+Theme additions (tailwind.config.js)
+
+js
+Copy
+Edit
+fontFamily:{display:['Sora'],body:['Inter']},
+colors:{beam:'#3A7BFF',beamLight:'#5F9BFF',surface:'#0d0d0f',card:'#16171a',muted:'#6b7280'}
+Snippets
+Primary button bg-beam text-white px-6 py-2 rounded-md shadow hover:bg-beamLight
+Glow frame ring-1 ring-beam/40 rounded-xl overflow-hidden
+Motion: initial={{opacity:0,y:30}} whileInView={{opacity:1,y:0}}.
+
+Deliverables
+
+/src components per section
+
+tailwind.config.js, package.json
+
+README (pnpm i, pnpm dev, pnpm build)
+
+Replicate the cosmic beam hero, glow‑border screenshots, alternating dark/white bands, and generous spacing—change only copy & brand to NovaHub.
+
+Make the landing page mobile responsive and make sure that all pictures or videos are replaced by either placeholders or AI generated pictures.`
 }, {
   id: 4,
   title: "Neo-Brutalism",
