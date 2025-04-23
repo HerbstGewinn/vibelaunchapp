@@ -59,7 +59,7 @@ const Launch = () => {
     link: "https://alternativeto.net/",
     icon: "📖",
     hasDropdown: true,
-    communities: ["Theres an Ai for that", "AItechsuite", "topai.tools", "aimojo.io", "eliteai.tools", "alltopstartups.com", "Saasgenius", "betalist", "AlternativeTo", "BetaList", "Launching Next", "StartupStash", "SaaSHub", "GetApp", "Capterra", "G2 Crowd", "StackShare", "SaaSworthy"]
+    communities: ["Theres an Ai for that", "Tinylaunch", "AItechsuite", "topai.tools", "aimojo.io", "eliteai.tools", "alltopstartups.com", "Saasgenius", "betalist", "AlternativeTo", "BetaList", "Launching Next", "StartupStash", "SaaSHub", "GetApp", "Capterra", "G2 Crowd", "StackShare", "SaaSworthy"]
   }, {
     name: "Discord Communities",
     description: "Share in relevant tech servers",
