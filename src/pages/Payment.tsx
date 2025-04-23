@@ -58,7 +58,7 @@ const Payment = () => {
   return <div className="p-6 space-y-6">
     <div className="space-y-2">
       <h1 className="text-4xl font-bold relative group">
-        <span className="bg-gradient-to-r from-launch-cyan to-white bg-clip-text text-transparent inline-block transform transition-transform group-hover:scale-105">Stripe Payments </span>
+        <span className="bg-gradient-to-r from-launch-cyan to-white bg-clip-text text-transparent inline-block transform transition-transform">Stripe Payments </span>
         <span className="absolute -top-2 -right-2 w-3 h-3 bg-launch-cyan rounded-full opacity-75 group-hover:animate-ping"></span>
       </h1>
       <p className="text-launch-text-muted max-w-3xl">
