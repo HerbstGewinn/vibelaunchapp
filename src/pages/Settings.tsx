@@ -1,19 +1,94 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings as SettingsIcon, User, Bell, Lock, Globe, Save, CreditCard } from "lucide-react";
+import { Settings as SettingsIcon, User, Bell, Save, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import BillingSection from '@/components/settings/BillingSection';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/components/ui/use-toast';
 
 const Settings = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'account';
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    bio: ''
+  });
+
+  useEffect(() => {
+    fetchProfile();
+  }, [user]);
+
+  const fetchProfile = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('name, bio')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setFormData({
+          name: data.name || '',
+          bio: data.bio || ''
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSaveChanges = async () => {
+    if (!user) return;
+
+    try {
+      setIsLoading(true);
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({
+          name: formData.name,
+          bio: formData.bio,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Your profile has been updated successfully.",
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleTabChange = (value: string) => {
     setSearchParams({ tab: value });
@@ -21,7 +96,7 @@ const Settings = () => {
 
   // Validate tab parameter on component mount
   useEffect(() => {
-    const validTabs = ['account', 'notifications', 'security', 'appearance', 'billing'];
+    const validTabs = ['account', 'notifications', 'billing'];
     if (!validTabs.includes(activeTab)) {
       setSearchParams({ tab: 'account' });
     }
@@ -44,14 +119,6 @@ const Settings = () => {
             <Bell className="h-4 w-4 mr-2" />
             Notifications
           </TabsTrigger>
-          <TabsTrigger value="security" className="data-[state=active]:bg-launch-cyan data-[state=active]:text-black">
-            <Lock className="h-4 w-4 mr-2" />
-            Security
-          </TabsTrigger>
-          <TabsTrigger value="appearance" className="data-[state=active]:bg-launch-cyan data-[state=active]:text-black">
-            <Globe className="h-4 w-4 mr-2" />
-            Appearance
-          </TabsTrigger>
           <TabsTrigger value="billing" className="data-[state=active]:bg-launch-cyan data-[state=active]:text-black">
             <CreditCard className="h-4 w-4 mr-2" />
             Billing
@@ -69,14 +136,16 @@ const Settings = () => {
                 <div className="space-y-2">
                   <label className="text-sm text-launch-text-muted">Name</label>
                   <Input 
-                    defaultValue={user?.user_metadata?.name || ''} 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                     className="bg-launch-dark border-gray-800 text-white"
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm text-launch-text-muted">Email</label>
                   <Input 
-                    defaultValue={user?.email || ''} 
+                    value={user?.email || ''} 
                     disabled 
                     className="bg-launch-dark border-gray-800 text-white"
                   />
@@ -85,15 +154,22 @@ const Settings = () => {
               <div className="space-y-2">
                 <label className="text-sm text-launch-text-muted">Bio</label>
                 <textarea 
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleInputChange}
                   className="w-full bg-launch-dark border border-gray-800 rounded-md p-2 h-24 text-white resize-none focus:outline-none focus:ring-2 focus:ring-launch-cyan"
                   placeholder="Tell us about yourself"
                 />
               </div>
             </CardContent>
             <CardFooter>
-              <Button className="bg-launch-cyan hover:bg-launch-cyan/80 text-black font-medium">
+              <Button 
+                className="bg-launch-cyan hover:bg-launch-cyan/80 text-black font-medium"
+                onClick={handleSaveChanges}
+                disabled={isLoading}
+              >
                 <Save className="h-4 w-4 mr-2" />
-                Save Changes
+                {isLoading ? 'Saving...' : 'Save Changes'}
               </Button>
             </CardFooter>
           </Card>
@@ -141,136 +217,6 @@ const Settings = () => {
                       <Switch defaultChecked={index !== 2} />
                     </div>
                   ))}
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button className="bg-launch-cyan hover:bg-launch-cyan/80 text-black font-medium">
-                <Save className="h-4 w-4 mr-2" />
-                Save Preferences
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="security">
-          <Card className="bg-launch-card-bg border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Security Settings</CardTitle>
-              <CardDescription>Manage your account security</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-white font-medium">Password</h3>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm text-launch-text-muted">Current Password</label>
-                    <Input 
-                      type="password" 
-                      placeholder="••••••••" 
-                      className="bg-launch-dark border-gray-800 text-white"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm text-launch-text-muted">New Password</label>
-                    <Input 
-                      type="password" 
-                      placeholder="••••••••" 
-                      className="bg-launch-dark border-gray-800 text-white"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm text-launch-text-muted">Confirm New Password</label>
-                    <Input 
-                      type="password" 
-                      placeholder="••••••••" 
-                      className="bg-launch-dark border-gray-800 text-white"
-                    />
-                  </div>
-                </div>
-                <Button className="bg-launch-cyan hover:bg-launch-cyan/80 text-black font-medium">
-                  Update Password
-                </Button>
-              </div>
-              
-              <div className="pt-4 border-t border-gray-800 space-y-4">
-                <h3 className="text-white font-medium">Two-Factor Authentication</h3>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-white">Enable 2FA</p>
-                    <p className="text-launch-text-muted text-sm">Add an extra layer of security to your account</p>
-                  </div>
-                  <Switch />
-                </div>
-              </div>
-              
-              <div className="pt-4 border-t border-gray-800 space-y-4">
-                <h3 className="text-white font-medium">Sessions</h3>
-                <div className="p-4 bg-launch-dark rounded-md border border-gray-800">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-white">Current Session</p>
-                      <p className="text-launch-text-muted text-sm">Chrome on MacOS • Last active now</p>
-                    </div>
-                    <div className="text-green-400 text-sm">Active</div>
-                  </div>
-                </div>
-                <Button variant="outline">Sign Out of All Devices</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="appearance">
-          <Card className="bg-launch-card-bg border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Appearance Settings</CardTitle>
-              <CardDescription>Customize how the application looks</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-white font-medium">Theme</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="border border-launch-cyan rounded-md p-4 cursor-pointer bg-launch-dark">
-                    <div className="h-24 w-full bg-gradient-to-b from-launch-dark to-black rounded-md mb-2"></div>
-                    <p className="text-white text-center">Dark (Default)</p>
-                  </div>
-                  <div className="border border-gray-800 rounded-md p-4 cursor-pointer">
-                    <div className="h-24 w-full bg-gradient-to-b from-gray-100 to-white rounded-md mb-2"></div>
-                    <p className="text-white text-center">Light</p>
-                  </div>
-                  <div className="border border-gray-800 rounded-md p-4 cursor-pointer">
-                    <div className="h-24 w-full bg-gradient-to-b from-blue-900 to-purple-900 rounded-md mb-2"></div>
-                    <p className="text-white text-center">Night</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="pt-4 border-t border-gray-800 space-y-4">
-                <h3 className="text-white font-medium">Accent Color</h3>
-                <div className="flex flex-wrap gap-3">
-                  {['#00C2FF', '#6366F1', '#10B981', '#F59E0B', '#EF4444', '#EC4899'].map((color, index) => (
-                    <div 
-                      key={index} 
-                      className={`h-8 w-8 rounded-full cursor-pointer ${index === 0 ? 'ring-2 ring-white ring-offset-2 ring-offset-gray-900' : ''}`}
-                      style={{ backgroundColor: color }}
-                    ></div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="pt-4 border-t border-gray-800 space-y-4">
-                <h3 className="text-white font-medium">Font Size</h3>
-                <div className="flex items-center space-x-4">
-                  <span className="text-launch-text-muted text-sm">A</span>
-                  <input 
-                    type="range" 
-                    min="1" 
-                    max="5" 
-                    defaultValue="3" 
-                    className="w-full h-2 bg-launch-dark rounded-lg appearance-none cursor-pointer accent-launch-cyan"
-                  />
-                  <span className="text-launch-text-muted text-base font-bold">A</span>
                 </div>
               </div>
             </CardContent>

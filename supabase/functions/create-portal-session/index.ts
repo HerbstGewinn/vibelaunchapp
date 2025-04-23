@@ -38,7 +38,7 @@ serve(async (req: Request) => {
     }
 
     console.debug(`Initializing Stripe client`)
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY_PROD') || '', {
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
       apiVersion: '2024-12-18.acacia',
     });
 
@@ -72,7 +72,7 @@ serve(async (req: Request) => {
     // Create portal session
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: `${req.headers.get('origin')}/account`,
+      return_url: `${req.headers.get('origin')}/dashboard/settings?tab=billing`,
     });
 
     console.info(`Portal session created successfully`)

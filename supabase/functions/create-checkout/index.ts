@@ -8,7 +8,7 @@ type CurrencyType = 'usd';
 // Stripe price IDs for each plan and currency
 const STRIPE_PRICE_IDS: Record<PlanType, Record<CurrencyType, string>> = {
   lifetime: {
-    usd: 'price_1RFyySCEMnmk0WNT4Ho7QbMh',
+    usd: 'price_1RHCDICSrP7lXLyW6nCrvj0a',
   }
 };
 
@@ -126,11 +126,11 @@ serve(async (req: Request) => {
       mode: 'payment',
       discounts: [
         {
-          coupon: 'tZsxFraY',
+          coupon: 'earlyaccess20',
         },
       ],
-      success_url: `${req.headers.get('origin')}/dashboard/settings?tab=billing`,
-      cancel_url: `${req.headers.get('origin')}/dashboard/settings?tab=billing`,
+      success_url: `${req.headers.get('origin')}/dashboard`,
+      cancel_url: `https://vibelaunch.io`,
     });
 
     console.info(`Checkout session created successfully: ${session.id}`)
