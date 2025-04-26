@@ -33,7 +33,7 @@ export const securityData: SecurityItemData[] = [
       {
         type: 'platform',
         title: 'Platform Handling',
-        description: '✅ Most modern hosting platforms (like Replit, Vercel, Netlify) enable HTTPS automatically. Verify your site URL starts with https://.',
+        description: '✅ Most modern hosting platforms enable HTTPS automatically. Verify your site URL starts with https://.',
         learnMoreUrl: 'https://web.dev/why-https/'
       }
     ]
@@ -49,15 +49,15 @@ export const securityData: SecurityItemData[] = [
       {
         type: 'lovable',
         title: 'Lovable Prompt: Implement Validation & Sanitization',
-        prompt: `Review all user input fields (forms, URL parameters) and API endpoints in my application. Ensure server-side validation (checking data types, lengths, formats) and output sanitization (escaping HTML characters before displaying user content) are implemented to prevent XSS attacks. Recommend specific code changes or libraries (like 'zod' for validation, 'dompurify' for client-side sanitization if needed).`,
+        prompt: `Review all user input fields (forms, URL parameters) and API endpoints in my application. Help me implement server-side validation (checking data types, lengths, formats) and output sanitization (escaping HTML characters before displaying user content) to prevent XSS attacks. Suggest appropriate validation and sanitization approaches for my tech stack.`,
         verification: `Test submitting '<script>alert("XSS")</script>' into input fields. The script should be displayed as harmless text, not executed as an alert.`,
         learnMoreUrl: 'https://owasp.org/www-community/attacks/Cross_Site_Scripting_(XSS)'
       },
       {
         type: 'cursor',
         title: 'Cursor Prompt: Implement Validation & Sanitization',
-        prompt: `Analyze my project (focus on API routes/server functions and frontend components handling user input). Identify all points where user input is received. Apply server-side validation using 'zod' library for expected data types and constraints. Ensure any user-generated content rendered in the frontend is properly sanitized/escaped (check framework defaults or use 'dompurify' if inserting raw HTML). Refactor the code to include these protections.`,
-        verification: `Test submitting '<script>alert("XSS")</script>' into input fields. The script should be displayed as harmless text, not executed as an alert.`,
+        prompt: `Analyze my project's input handling. Identify all points where user input is received and displayed. Help me implement appropriate server-side validation and output sanitization using best practices for my tech stack. Ensure all user-generated content is properly escaped before display.`,
+        verification: `Test submitting '<script>alert("XSS")</script>' into input fields. The script should be displayed as harmless text, not executed as an alert.`
       }
     ]
   },
@@ -78,7 +78,7 @@ export const securityData: SecurityItemData[] = [
       {
         type: 'lovable',
         title: 'Lovable Prompt: Scan for Browser Storage Issues',
-        prompt: `Scan my frontend JavaScript code. Identify any potential instances where sensitive information (like API keys, tokens longer than session IDs, passwords) might be stored in window.localStorage, window.sessionStorage, or directly in globally accessible variables. Flag these for removal.`,
+        prompt: `Scan my frontend code. Identify any potential instances where sensitive information (like API keys, tokens longer than session IDs, passwords) might be stored in browser storage or directly in globally accessible variables. Help me implement secure alternatives based on my tech stack.`,
         verification: 'Manually check browser storage and flagged code sections after running.'
       }
     ]
@@ -86,50 +86,56 @@ export const securityData: SecurityItemData[] = [
   {
     id: 'frontend_api_keys',
     category: 'Frontend',
-    title: 'Never expose API keys in frontend',
+    title: 'Protect API keys and sensitive data',
     status: 'To-Do',
-    briefDescription: 'API keys belong on the backend.',
-    why: 'Exposed API keys (e.g., for Stripe, OpenAI, Supabase service roles) in your frontend code can be easily stolen and used maliciously, potentially costing you money or compromising user data. They MUST only be used server-side.',
+    briefDescription: 'Protect API keys and sensitive data.',
+    why: 'Sensitive data in frontend code or browser storage can be easily accessed and stolen. API keys, secrets, and sensitive user data must be properly protected.',
     actions: [
       {
         type: 'vibelaunch',
         title: 'Use Environment Variables / Secrets',
-        description: `✅ Store sensitive keys in your hosting platform's environment variables or secrets management (like Replit Secrets, Vercel Environment Variables). Access them ONLY from your backend code (API routes, serverless functions).`,
-        learnMoreUrl: 'https://vercel.com/docs/projects/environment-variables'
+        description: `✅ Store sensitive keys in your hosting platform's environment variables or secrets management. Access them ONLY from your backend code. Never store sensitive data in browser storage (localStorage/sessionStorage).`,
+        learnMoreUrl: 'https://owasp.org/www-community/vulnerabilities/Exposed_Environment_Variables'
       },
       {
         type: 'lovable',
-        title: 'Lovable Prompt: Secure API Keys',
-        prompt: `Identify any API keys hardcoded in my frontend files. Help me move them to server-side environment variables (e.g., process.env accessed via Replit Secrets or Vercel Env Vars). If my frontend needs to trigger actions requiring these keys, create backend API endpoints (e.g., /api/proxy-service) that securely use the keys from environment variables. Modify the frontend code to call these new backend endpoints instead of accessing external services directly.`,
-        verification: 'Ensure keys are removed from frontend code and calls now go through your backend proxy endpoints.'
+        title: 'Lovable Prompt: Secure Sensitive Data',
+        prompt: `Help me review my frontend code for sensitive data exposure. This includes: 1. API keys that should be moved to backend environment variables, 2. Sensitive data stored in browser storage, 3. Secrets in JavaScript variables. Guide me in implementing secure alternatives based on my tech stack.`,
+        verification: 'Verify no sensitive data exists in frontend code, browser storage, or client-side variables.'
       },
       {
         type: 'cursor',
-        title: 'Cursor Prompt: Refactor to Secure API Keys',
-        prompt: `Scan my frontend codebase for hardcoded API key patterns (sk_..., pk_..., Bearer, etc.). Refactor the code to: 1. Remove these keys. 2. Create corresponding backend API routes (e.g., in Next.js '/pages/api/') that read the keys from environment variables (process.env.MY_API_KEY). 3. Update the frontend components to call these new internal API routes instead of the external services directly.`,
-        verification: 'Verify keys are gone from frontend bundles and functionality still works via the new API routes.'
+        title: 'Cursor Prompt: Refactor Data Security',
+        prompt: `Analyze my frontend for sensitive data exposure: 1. Scan for API keys and secrets that need backend relocation, 2. Check browser storage usage for sensitive data, 3. Review client-side data storage patterns. Help implement secure alternatives using appropriate backend endpoints and storage methods.`,
+        verification: 'Confirm all sensitive data is properly secured and no secrets are exposed client-side.'
       }
     ]
   },
   {
-    id: 'csrf',
+    id: 'cookie_security',
     category: 'Frontend',
-    title: 'CSRF Protection',
+    title: 'Cookie Security & CSRF Protection',
     status: 'To-Do',
-    briefDescription: 'Prevents tricked form submissions.',
-    why: 'Cross-Site Request Forgery (CSRF) allows attackers to trick logged-in users into unknowingly submitting requests to your application (e.g., changing their password, deleting data) via malicious links or sites.',
+    briefDescription: 'Secure cookies and prevent CSRF.',
+    why: 'Proper cookie security is essential for preventing various attacks including CSRF (Cross-Site Request Forgery). Cookies need proper attributes (HttpOnly, Secure, SameSite) and your app needs CSRF protection to prevent malicious sites from making unauthorized requests.',
     actions: [
       {
         type: 'platform',
         title: 'Framework/Platform Handling',
-        description: `Modern frameworks and authentication solutions (like Supabase Auth with HttpOnly, SameSite cookies) often provide significant CSRF protection. Verify your framework's documentation and ensure recommended security settings (especially for cookies) are enabled.`,
+        description: `Modern frameworks often provide security features for cookies and CSRF. Review your framework's documentation and ensure recommended security settings are enabled.`,
         learnMoreUrl: 'https://owasp.org/www-community/attacks/csrf'
       },
       {
         type: 'lovable',
-        title: 'Lovable Prompt: Explain CSRF & Check Setup',
-        prompt: `Explain CSRF attacks simply. Review my application setup (mention framework, e.g., Next.js with Supabase Auth) and check if common CSRF protections are likely in place (e.g., SameSite cookie attributes, anti-CSRF tokens if applicable). Suggest configuration checks or code snippets to ensure protection is active.`,
-        verification: 'Check cookie settings in browser devtools and framework configuration files.'
+        title: 'Lovable Prompt: Implement Cookie & CSRF Security',
+        prompt: `Help me review and secure my application's cookie handling and CSRF protection. Guide me in: 1. Setting proper cookie security attributes (HttpOnly, Secure, SameSite), 2. Implementing CSRF tokens or other protections, 3. Ensuring forms and state-changing requests are protected.`,
+        verification: 'Verify cookie security attributes and test CSRF protections against malicious requests.'
+      },
+      {
+        type: 'cursor',
+        title: 'Cursor Prompt: Secure Cookie Configuration',
+        prompt: `Analyze my application's cookie usage and CSRF vulnerabilities. Help me implement: 1. Secure cookie attributes for all cookies, 2. Appropriate CSRF protections for forms and state-changing requests, 3. Proper session handling.`,
+        verification: 'Test cookie security and attempt CSRF attacks to verify protections.'
       }
     ]
   },
@@ -146,49 +152,59 @@ export const securityData: SecurityItemData[] = [
       {
         type: 'platform',
         title: 'Platform Auth Handling',
-        description: `✅ If using a managed authentication service like Supabase Auth, Replit Auth, Firebase Auth, etc., core authentication security (like password hashing, session management) is typically handled for you. Ensure you are using it correctly to protect routes/data.`,
-        learnMoreUrl: 'https://supabase.com/docs/guides/auth'
+        description: `✅ If using a managed authentication service, core authentication security (like password hashing, session management) is typically handled for you. Ensure you are using it correctly to protect routes/data.`,
+        learnMoreUrl: 'https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html'
       },
       {
         type: 'lovable',
-        title: 'Lovable Prompt (if custom auth): Secure Password Storage',
-        prompt: `I am building custom user authentication. Review my backend code for user registration and login. Ensure that when storing passwords, a strong, slow hashing algorithm (like bcrypt or Argon2) is used. Also ensure each password uses a unique salt, stored alongside the hash. Provide code examples/corrections for Node.js/Express (or specify language/framework).`,
-        verification: 'Check the database schema for separate hash and salt columns. Verify the auth code uses bcrypt/Argon2 with generated salts.',
-        learnMoreUrl: 'https://owasp.org/www-project-password-storage-cheat-sheet/'
+        title: 'Lovable Prompt: Secure Authentication',
+        prompt: `Review my authentication implementation. Help me ensure it follows security best practices like secure password storage, proper session management, and protecting sensitive routes. Guide me in implementing these securely with my chosen tech stack.`,
+        verification: 'Verify secure password storage and protected routes work as expected.',
+        learnMoreUrl: 'https://owasp.org/www-project-top-ten/2017/A2_2017-Broken_Authentication'
       },
       {
         type: 'cursor',
         title: 'Cursor Prompt: Protect Routes',
-        prompt: `Analyze my application's routing (e.g., Next.js pages/app router, Express routes). Identify routes/API endpoints that handle sensitive data or actions but don't enforce user authentication. Implement middleware or checks using my authentication library (e.g., Supabase Auth \`getUser()\`, Passport.js) to protect these routes, returning a 401/403 error or redirecting if the user is not authenticated.`,
+        prompt: `Analyze my application's routing. Identify routes and API endpoints that handle sensitive data or actions but don't enforce user authentication. Help me implement appropriate authentication and authorization checks using my chosen auth solution.`,
         verification: 'Attempt to access protected routes while logged out; you should be blocked.'
       }
     ]
   },
   {
-    id: 'rls',
+    id: 'authorization',
     category: 'Backend',
-    title: 'Authorization / Row Level Security (RLS)',
+    title: 'Authorization & Data Access Control',
     status: 'To-Do',
-    briefDescription: 'Ensure users only access their own data.',
-    why: 'Authentication confirms *who* the user is, but authorization confirms *what* they are allowed to do. Without proper checks (like RLS in databases), users might access or modify data belonging to others.',
+    briefDescription: 'Control data access at all levels.',
+    why: 'Proper data access control requires both application-level authorization and database-level security. Authorization confirms what users can do, while Row Level Security (RLS) provides an additional critical layer at the database level, ensuring users can only access their authorized data regardless of application logic.',
     actions: [
       {
-        type: 'platform',
-        title: 'Database RLS (Supabase Example)',
-        description: `If using Supabase, enable Row Level Security (RLS) on tables containing user-specific data. Create policies to restrict SELECT, INSERT, UPDATE, DELETE operations based on the authenticated user's ID (auth.uid()).`,
-        learnMoreUrl: 'https://supabase.com/docs/guides/auth/row-level-security'
-      },
-      {
         type: 'lovable',
-        title: 'Lovable Prompt: Generate RLS Policies',
-        prompt: `Generate Supabase SQL commands to enable Row Level Security (RLS) and create policies for a table named 'documents' with a 'user_id' column. Policies should ensure: 1. Users are authenticated. 2. Users can only SELECT their own documents. 3. Users can only INSERT documents with their own user_id. 4. Users can only UPDATE/DELETE their own documents.`,
-        verification: 'Test data access in Supabase SQL editor or client library using different user sessions.'
+        title: 'Lovable Prompt: Implement Authorization',
+        prompt: `Help me implement comprehensive data access control. Guide me in: 
+1. Application-level authorization:
+   - Setting up role-based access control
+   - Implementing permission checks
+   - Protecting sensitive operations
+2. Database-level security (RLS):
+   - Identifying tables needing row-level protection
+   - Creating security policies for operations (SELECT, INSERT, UPDATE, DELETE)
+   - Ensuring users can only access their own data`,
+        verification: 'Test data access using different user roles and sessions to verify both application and database-level restrictions.'
       },
       {
         type: 'cursor',
-        title: 'Cursor Prompt: Apply RLS Policies',
-        prompt: `Connect to my Supabase project. Identify tables storing user-specific data (look for 'user_id', 'owner_id', etc.). For each such table, generate appropriate Row Level Security (RLS) policies ensuring authenticated users can only access/modify their own data (matching user_id == auth.uid()). Apply these policies using SQL commands.`,
-        verification: 'Test data access rules using Supabase client library with different authenticated users.'
+        title: 'Cursor Prompt: Configure Access Controls',
+        prompt: `Analyze my application's data access patterns and security needs. Help me implement:
+1. Application Authorization:
+   - Role and permission system
+   - Access control middleware
+   - Authorization checks in business logic
+2. Row Level Security:
+   - Enable RLS on appropriate tables
+   - Create policies for different operations
+   - Implement user context-based restrictions`,
+        verification: 'Verify access controls by testing with different user permissions and contexts at both application and database levels.'
       }
     ]
   },
@@ -203,13 +219,19 @@ export const securityData: SecurityItemData[] = [
       {
         type: 'manual',
         title: 'Manual Review',
-        description: `List all your backend API routes/serverless functions. For each one, verify that appropriate authentication (Is the user logged in?) and authorization (Does this user have permission?) checks are performed before executing the main logic.`
+        description: `List all your backend API routes. For each one, verify that appropriate authentication (Is the user logged in?) and authorization (Does this user have permission?) checks are performed before executing the main logic.`
+      },
+      {
+        type: 'lovable',
+        title: 'Lovable Prompt: Audit API Endpoints',
+        prompt: `Help me review all my API endpoints and implement proper authentication and authorization checks where needed. Guide me in implementing these securely with my chosen tech stack.`,
+        verification: 'Review the endpoints and add necessary security checks.'
       },
       {
         type: 'cursor',
         title: 'Cursor Prompt: Audit API Endpoints',
-        prompt: `Analyze all my API routes/serverless functions (e.g., in /pages/api/, /app/api/, /functions/). For each endpoint, verify that authentication checks (e.g., checking for a valid session/user) and, where necessary, authorization checks (e.g., checking ownership or roles) are performed before processing the request. Flag any endpoints missing these checks.`,
-        verification: 'Review the flagged endpoints and add necessary security checks.'
+        prompt: `Analyze all my API endpoints. For each endpoint, verify authentication and authorization checks are properly implemented. Help me add appropriate security checks where they're missing.`,
+        verification: 'Review the endpoints and verify security checks are working.'
       }
     ]
   },
@@ -222,16 +244,43 @@ export const securityData: SecurityItemData[] = [
     why: 'If user input is directly inserted into database queries, attackers can inject malicious SQL commands to steal, modify, or delete your entire database. Always use parameterized queries or an ORM.',
     actions: [
       {
-        type: 'platform',
-        title: 'ORM/Query Builder Handling',
-        description: `✅ Most modern ORMs (like Prisma, TypeORM, Kysely) and query builders (like Supabase client library, Knex.js) automatically handle SQL injection protection using parameterized queries. Ensure you are using these tools correctly and not constructing SQL strings manually with user input.`,
-        learnMoreUrl: 'https://owasp.org/www-community/attacks/SQL_Injection'
+        type: 'lovable',
+        title: 'Lovable Prompt: Prevent SQL Injection',
+        prompt: `Help me review my database queries for potential SQL injection vulnerabilities. Guide me in implementing proper query parameterization or using appropriate database access methods based on my tech stack.`,
+        verification: 'Ensure no code directly concatenates user input into SQL strings.'
+      },
+      {
+        type: 'cursor',
+        title: 'Cursor Prompt: Secure Database Access',
+        prompt: `Review my database access code. Help me identify and fix potential SQL injection vulnerabilities by implementing proper query parameterization and following secure database access patterns.`,
+        verification: 'Verify all database queries properly handle user input.'
+      }
+    ]
+  },
+  {
+    id: 'api_security',
+    category: 'Backend',
+    title: 'API Security & Authorization',
+    status: 'To-Do',
+    briefDescription: 'Secure API access and data.',
+    why: 'APIs need comprehensive security including authentication, authorization, and proper access controls. Each endpoint must verify the user is authenticated and authorized to access the requested data or perform the requested action.',
+    actions: [
+      {
+        type: 'manual',
+        title: 'Manual Review',
+        description: `Review all API endpoints for proper security: 1. Authentication checks (Is the user logged in?), 2. Authorization rules (Does the user have permission?), 3. Data access controls (Is the user accessing only their data?)`
       },
       {
         type: 'lovable',
-        title: 'Lovable Prompt: Check for Raw SQL Issues',
-        prompt: `Scan my backend code for any instances where raw SQL query strings are constructed by concatenating user-provided input. Flag these as potential SQL injection vulnerabilities. Recommend rewriting them using parameterized queries or the methods provided by my database client library/ORM (specify if known, e.g., Supabase JavaScript client, Prisma).`,
-        verification: 'Ensure no code directly concatenates user input into SQL strings.'
+        title: 'Lovable Prompt: Implement API Security',
+        prompt: `Help me implement comprehensive API security. Guide me in: 1. Adding authentication checks to all endpoints, 2. Implementing proper authorization rules and role-based access, 3. Ensuring users can only access their own data, 4. Setting up proper error handling for unauthorized access.`,
+        verification: 'Test API access with different user roles and verify proper access controls.'
+      },
+      {
+        type: 'cursor',
+        title: 'Cursor Prompt: Secure API Endpoints',
+        prompt: `Analyze all API endpoints and data access patterns. Help me implement: 1. Authentication middleware for protected routes, 2. Authorization rules based on user roles and permissions, 3. Data access controls to prevent unauthorized access, 4. Proper security response headers.`,
+        verification: 'Verify endpoint security by testing with different user permissions and access patterns.'
       }
     ]
   },
@@ -243,19 +292,13 @@ export const securityData: SecurityItemData[] = [
     title: 'Keep Dependencies Updated',
     status: 'To-Do',
     briefDescription: 'Patch known vulnerabilities.',
-    why: 'Software libraries (npm packages, etc.) often have security vulnerabilities discovered after release. Keeping them updated is crucial to patch these holes before attackers exploit them.',
+    why: 'Software libraries often have security vulnerabilities discovered after release. Keeping them updated is crucial to patch these holes before attackers exploit them.',
     actions: [
       {
-        type: 'manual',
-        title: 'Manual Check & Update',
-        description: `Regularly run 'npm audit' or 'yarn audit' in your project directory. Review the reported vulnerabilities. Update dependencies using 'npm update'/'yarn upgrade' or 'npm install package@latest'/'yarn add package@latest'. Test your application after updating.`,
-        learnMoreUrl: 'https://docs.npmjs.com/auditing-package-dependencies-for-security-vulnerabilities'
-      },
-      {
         type: 'lovable',
-        title: 'Lovable Prompt: Explain Audit & Update',
-        prompt: `Explain how to check for security vulnerabilities in npm/yarn dependencies using the 'audit' command. Show the commands to update dependencies to their latest safe versions.`,
-        verification: 'Run `npm audit` / `yarn audit` again after updating to see if vulnerabilities are resolved.'
+        title: 'Lovable Prompt: Update Dependencies',
+        prompt: `Help me check for security vulnerabilities in my project dependencies and guide me through safely updating them based on my tech stack.`,
+        verification: 'Run security audit tools again after updating to verify vulnerabilities are resolved.'
       }
     ]
   },
@@ -268,14 +311,9 @@ export const securityData: SecurityItemData[] = [
     why: "Detailed error messages exposed to users (e.g., stack traces, database errors) can reveal information about your application's structure, libraries used, or even data, helping attackers find vulnerabilities.",
     actions: [
       {
-        type: 'manual',
-        title: 'Manual Check',
-        description: `Test error conditions in your app (e.g., invalid input, failed API calls). Ensure that users see generic, friendly error messages. Check logs for detailed error information, but ensure stack traces or sensitive details aren't sent back in API responses in production environments.`
-      },
-      {
         type: 'lovable',
         title: 'Lovable Prompt: Implement Safe Error Handling',
-        prompt: `Review my backend error handling code (e.g., in API routes, server functions). Ensure that in production environments, detailed errors (like stack traces) are logged internally but NEVER sent back to the client. Clients should receive generic error messages (e.g., { message: "Internal Server Error" }) with appropriate HTTP status codes (like 500). Show code examples for catching errors and responding safely in Node.js/Express (or specify framework).`,
+        prompt: `Help me implement proper error handling that logs detailed errors internally but only shows appropriate user-friendly messages to clients. Guide me in setting this up with my tech stack.`,
         verification: 'Trigger an error in production mode; the browser should show a generic message, not a stack trace.'
       }
     ]
@@ -289,20 +327,15 @@ export const securityData: SecurityItemData[] = [
     why: 'Cookies used for sessions or storing sensitive info need security attributes: HttpOnly (prevents JavaScript access, mitigating XSS), Secure (sent only over HTTPS), SameSite=Lax/Strict (mitigates CSRF).',
     actions: [
       {
-        type: 'platform',
-        title: 'Auth Library Defaults',
-        description: `Check the documentation for your authentication library (e.g., Supabase Auth). It often handles setting secure cookie attributes by default or provides configuration options. Ensure these options are enabled.`
-      },
-      {
         type: 'lovable',
         title: 'Lovable Prompt: Configure Secure Cookies',
-        prompt: `Show code examples for setting secure cookie attributes (HttpOnly, Secure, SameSite=Lax) when creating session cookies in Node.js/Express using the 'cookie-parser' or 'express-session' library (or specify framework/library). Explain why each attribute is important.`,
-        verification: 'Inspect cookies in browser devtools (Application tab > Cookies) to verify attributes are set correctly.'
+        prompt: `Help me configure secure cookie settings for my application, ensuring proper HttpOnly, Secure, and SameSite attributes are set based on my tech stack.`,
+        verification: 'Inspect cookies in browser devtools to verify attributes are set correctly.'
       }
     ]
   },
   {
-    id: 'rate_limiting_practical',
+    id: 'rate_limiting',
     category: 'Practical',
     title: 'Rate Limiting',
     status: 'To-Do',
@@ -310,23 +343,45 @@ export const securityData: SecurityItemData[] = [
     why: 'Without rate limiting, attackers can flood your login endpoints with password guesses (brute-force) or hammer costly API endpoints, potentially locking out users, increasing your costs, or causing denial of service.',
     actions: [
       {
-        type: 'platform',
-        title: 'Platform/Gateway Rate Limiting',
-        description: `Your hosting provider (Vercel, Netlify) or API Gateway might offer built-in rate limiting features. Check their documentation. This is often the easiest way to implement basic rate limiting.`,
-        learnMoreUrl: 'https://vercel.com/docs/security/rate-limits'
-      },
-      {
         type: 'lovable',
-        title: 'Lovable Prompt: Implement API Rate Limiting',
-        prompt: `Show how to implement basic IP-based rate limiting for a specific API route (e.g., '/api/login') in my Node.js/Express backend using the '@upstash/ratelimit' library with Redis or Vercel KV. Limit requests to 10 per minute per IP address.`,
-        verification: 'Test the endpoint by sending rapid requests; you should receive a 429 Too Many Requests error after exceeding the limit.'
+        title: 'Lovable Prompt: Implement Rate Limiting',
+        prompt: `Help me implement appropriate rate limiting for sensitive endpoints (like login, signup, password reset) based on my tech stack and infrastructure.`,
+        verification: 'Test hitting the rate-limited endpoints rapidly to ensure limits are enforced.'
       },
       {
         type: 'cursor',
-        title: 'Cursor Prompt: Add Rate Limiting Middleware',
-        prompt: `Identify sensitive API routes in my project (e.g., login, signup, password reset, resource-intensive endpoints). Implement rate limiting middleware using '@upstash/ratelimit' and Vercel KV/Upstash Redis. Apply this middleware to the identified routes with appropriate limits (e.g., 5 requests per 10 seconds per IP).`,
-        verification: 'Test hitting the rate-limited endpoints rapidly to ensure 429 errors are returned correctly.'
+        title: 'Cursor Prompt: Add Rate Limiting',
+        prompt: `Identify sensitive endpoints in my application that need protection from abuse. Help me implement appropriate rate limiting based on my infrastructure to prevent brute force attacks and API abuse.`,
+        verification: 'Test rate-limited endpoints to ensure proper throttling.'
       }
     ]
   },
+  {
+    id: 'ddos_protection',
+    category: 'Backend',
+    title: 'DDoS Protection',
+    status: 'To-Do',
+    briefDescription: 'Prevent service disruption from attacks.',
+    why: 'Distributed Denial of Service (DDoS) attacks can overwhelm your servers with traffic, making your app unavailable to real users. Protection at the infrastructure level is essential.',
+    actions: [
+      {
+        type: 'vibelaunch',
+        title: 'Platform DDoS Protection',
+        description: `✅ Choose a hosting platform or CDN that provides built-in DDoS protection with features like traffic filtering, rate limiting, and "Under Attack" mode.`,
+        learnMoreUrl: 'https://owasp.org/www-community/attacks/Denial_of_Service'
+      },
+      {
+        type: 'lovable',
+        title: 'Lovable Prompt: Configure DDoS Protection',
+        prompt: `Help me review and configure DDoS protection for my application. Guide me in: 1. Setting up infrastructure-level protection, 2. Configuring rate limiting and traffic rules, 3. Implementing "Under Attack" mode if needed.`,
+        verification: 'Verify DDoS protection is active and properly configured in your hosting platform.'
+      },
+      {
+        type: 'cursor',
+        title: 'Cursor Prompt: Implement DDoS Safeguards',
+        prompt: `Analyze my application's DDoS vulnerabilities. Help me: 1. Configure platform-level DDoS protection, 2. Set up appropriate rate limiting rules, 3. Implement traffic filtering and "Under Attack" mode configuration.`,
+        verification: 'Check platform settings to confirm DDoS protection is properly enabled and configured.'
+      }
+    ]
+  }
 ]; 

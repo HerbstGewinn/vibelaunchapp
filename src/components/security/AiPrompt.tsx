@@ -17,9 +17,22 @@ export const AiPrompt: React.FC<AiPromptProps> = ({ toolName, prompt }) => {
     setTimeout(() => setCopied(false), 2000); // Reset icon after 2 seconds
   };
 
+  const logoUrl = toolName === 'Lovable' 
+    ? 'https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//lovable-3229397610.png'
+    : 'https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//cursor-ai-logo-3380589036.png';
+
   return (
     <div className="mt-3 p-4 bg-launch-dark-2 rounded-md border border-gray-700 relative">
-      <h4 className="text-sm font-semibold text-white mb-2">Prompt for {toolName}</h4>
+      <div className="flex items-center gap-2 mb-2">
+        <img 
+          src={logoUrl}
+          alt={`${toolName} logo`}
+          width={20}
+          height={20}
+          className="rounded-sm object-contain"
+        />
+        <h4 className="text-sm font-semibold text-white">Prompt for {toolName}</h4>
+      </div>
       <pre className="text-xs text-gray-300 whitespace-pre-wrap font-mono bg-transparent p-0 border-0">
         <code>{prompt}</code>
       </pre>
