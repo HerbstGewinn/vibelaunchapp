@@ -23,6 +23,7 @@ export interface PaymentStep {
   title: string;
   description: string;
   subTasks: PaymentSubTask[];
+  videoUrl?: string;
 }
 
 export const paymentContent: PaymentStep[] = [
@@ -30,6 +31,7 @@ export const paymentContent: PaymentStep[] = [
     id: "prepare",
     title: "Step 1: Preparation",
     description: "Get your Stripe account and products ready.",
+    videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Payments%20Made%20Easy-2.mp4",
     subTasks: [
       {
         id: "create_account",
@@ -91,6 +93,7 @@ export const paymentContent: PaymentStep[] = [
     id: "implement",
     title: "Step 2: Implementation (Edge Functions / Backend)",
     description: "Build the code to handle payments securely.",
+    videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Implementing%20Stripe%20Checkout-2.mp4",
     subTasks: [
       {
         id: "why_backend",
@@ -688,6 +691,7 @@ export const BillingSection = () => {
     id: "webhooks",
     title: "Step 3: Webhook Setup",
     description: "Set up and configure Stripe webhooks to keep your application in sync with Stripe events.",
+    videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Stripe%20Webhook%20Setup-2.mp4",
     subTasks: [
       {
         id: "create_webhook",
@@ -702,270 +706,170 @@ export const BillingSection = () => {
         ],
         prompt: {
           title: "AI Prompt: Create Edge Function/API Route (supabase/functions/stripe-webhook/index.ts)",
-          text: `// GOAL: Create a secure webhook handler to process Stripe events and keep our application's subscription data in sync
-// REQUIREMENTS:
-// 1. Handle all relevant Stripe events (checkout completion, subscription updates, payment status)
-// 2. Update our database with subscription status changes
-// 3. Ensure proper security with webhook signature verification
-// 4. Maintain audit trail through logging
-// 5. Handle errors gracefully with appropriate status codes
-
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+          text: `import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from 'https://esm.sh/stripe@14.21.0';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
-
-// Map Stripe Price IDs to our internal plan names
-const PLAN_MAPPING: Record<string, string> = {
-  'price_1RHCDICSrP7lXLyW6nCrvj0a': 'lifetime', // Replace with your actual price IDs
-};
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+}
 
-// Helper: Extract Customer ID from various Stripe events
-const getCustomerIdFromEvent = (event: Stripe.Event): string | null => {
-  const object = event.data.object as any;
-  
-  switch (event.type) {
-    case 'checkout.session.completed':
-      return object.customer;
-    case 'customer.subscription.created':
-    case 'customer.subscription.updated':
-    case 'customer.subscription.deleted':
-      return object.customer;
-    case 'invoice.paid':
-    case 'invoice.payment_failed':
-      return object.customer;
-    default:
-      return null;
-  }
-};
-
-// Helper: Get User ID from Stripe Customer
-const getUserIdFromCustomer = async (stripe: Stripe, customerId: string): Promise<string | null> => {
-  try {
-    const customer = await stripe.customers.retrieve(customerId);
-    return customer.metadata?.app_user_id || null;
-  } catch (error) {
-    console.error(\`Error retrieving customer \${customerId}:\`, error);
-    return null;
-  }
-};
-
-// Helper: Update subscription in database
-const upsertSubscription = async (
-  supabase: any,
-  userId: string,
-  subscriptionData: {
-    stripe_customer_id: string;
-    stripe_subscription_id?: string;
-    status: string;
-    plan_type: string;
-    current_period_end?: number;
-    cancel_at_period_end?: boolean;
-  }
-) => {
-  const { error } = await supabase
-    .from('subscriptions')
-    .upsert(
-      {
-        user_id: userId,
-        ...subscriptionData,
-        updated_at: new Date().toISOString()
-      },
-      {
-        onConflict: 'user_id',
-        returning: 'minimal'
-      }
-    );
-
-  if (error) {
-    console.error('Error upserting subscription:', error);
-    throw error;
-  }
-};
+const PLAN_MAPPING = {
+  'price_1123456789': 'starter',
+} as const;
 
 serve(async (req) => {
-  // Handle CORS preflight
+  console.debug(\`Received webhook request\`)
+
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    console.debug(\`Handling CORS preflight request\`)
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    // Verify required environment variables
-    const signature = req.headers.get('stripe-signature');
-    const STRIPE_SECRET_KEY = Deno.env.get('STRIPE_SECRET_KEY');
-    const STRIPE_WEBHOOK_SECRET = Deno.env.get('STRIPE_WEBHOOK_SECRET');
-    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
-    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-
-    if (!signature || !STRIPE_SECRET_KEY || !STRIPE_WEBHOOK_SECRET || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      throw new Error('Missing required configuration');
+    // Get the authorization header
+    const signature = req.headers.get('stripe-signature')
+    if (!signature) {
+      console.warn(\`Missing stripe-signature header in request\`)
+      return new Response(
+        JSON.stringify({ error: 'Missing stripe-signature header' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
-    // Initialize clients
+    const STRIPE_SECRET_KEY = Deno.env.get('STRIPE_SECRET_KEY_PROD')
+    const STRIPE_WEBHOOK_SECRET = Deno.env.get('STRIPE_WEBHOOK_SECRET_PROD')
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+
+    if (!STRIPE_SECRET_KEY || !STRIPE_WEBHOOK_SECRET || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      console.error(\`Missing required environment variables\`)
+      throw new Error('Missing environment variables')
+    }
+
+    console.debug(\`Initializing Stripe client\`)
+    // Initialize Stripe with the latest API version
     const stripe = new Stripe(STRIPE_SECRET_KEY, {
-      apiVersion: '2024-06-20',
-      httpClient: Stripe.createFetchHttpClient()
-    });
-    
+      apiVersion: '2025-03-31.basil',
+      httpClient: Stripe.createFetchHttpClient(),
+    })
+
+    // Get the raw body
+    const body = await req.text()
+    console.debug(\`Received webhook body\`)
+
+    // Verify the webhook signature
+    let event
+    try {
+      console.debug(\`Verifying webhook signature\`)
+      event = await stripe.webhooks.constructEventAsync(
+        body,
+        signature,
+        STRIPE_WEBHOOK_SECRET,
+        undefined,
+        Stripe.createSubtleCryptoProvider()
+      )
+      console.info(\`Webhook signature verified successfully. Event type: \${event.type}\`)
+    } catch (err: unknown) {
+      console.error(\`Webhook signature verification failed:\`, (err as Error).message)
+      return new Response(
+        JSON.stringify({ error: 'Webhook signature verification failed' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    console.debug(\`Initializing Supabase client\`)
+    // Initialize Supabase client with service role key
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-      auth: { autoRefreshToken: false, persistSession: false }
-    });
-
-    // Verify webhook signature
-    const body = await req.text();
-    const event = await stripe.webhooks.constructEventAsync(
-      body,
-      signature,
-      STRIPE_WEBHOOK_SECRET,
-      undefined,
-      Stripe.createSubtleCryptoProvider()
-    );
-
-    console.info(\`Processing webhook event: \${event.type}\`);
-
-    // Get customer and user information
-    const customerId = getCustomerIdFromEvent(event);
-    if (!customerId) {
-      console.warn(\`No customer ID found in event \${event.type}\`);
-      return new Response(
-        JSON.stringify({ error: 'No customer ID in event' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const userId = await getUserIdFromCustomer(stripe, customerId);
-    if (!userId) {
-      console.warn(\`No user ID found for customer \${customerId}\`);
-      return new Response(
-        JSON.stringify({ error: 'No user ID found for customer' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Handle different event types
-    const eventData = event.data.object as any;
-
-    switch (event.type) {
-      case 'checkout.session.completed': {
-        if (eventData.mode === 'payment') {
-          console.log('Processing completed checkout session for one-time payment');
-          
-          // For one-time payments (e.g., lifetime plan)
-          const paymentIntentId = eventData.payment_intent;
-          const priceId = eventData.line_items?.data[0]?.price?.id;
-          
-          if (!priceId) {
-            throw new Error('No price ID found in checkout session');
-          }
-
-          await upsertSubscription(supabase, userId, {
-            stripe_customer_id: customerId,
-            stripe_subscription_id: paymentIntentId, // Use payment intent ID as reference
-            status: 'active',
-            plan_type: PLAN_MAPPING[priceId] || 'unknown',
-          });
-        }
-        break;
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      },
+      db: {
+        schema: 'public'
       }
+    })
 
+    // Handle the event
+    switch (event.type) {
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
-      case 'customer.subscription.resumed': {
-        console.log(\`Processing subscription update: \${event.type}\`);
-        
-        const priceId = eventData.items.data[0]?.price?.id;
-        if (!priceId) {
-          throw new Error('No price ID found in subscription');
-        }
+      case 'customer.subscription.resumed':
+      case 'customer.subscription.paused': {
+        console.info(\`Processing \${event.type} event\`)
+        const subscription = event.data.object
+        console.debug(\`Retrieving customer data for subscription \${subscription.id}\`)
+        const customer = await stripe.customers.retrieve(subscription.customer as string)
 
-        await upsertSubscription(supabase, userId, {
-          stripe_customer_id: customerId,
-          stripe_subscription_id: eventData.id,
-          status: eventData.status,
-          plan_type: PLAN_MAPPING[priceId] || 'unknown',
-          current_period_end: eventData.current_period_end,
-          cancel_at_period_end: eventData.cancel_at_period_end,
-        });
-        break;
+        // Update or insert subscription in Supabase
+        const priceId = subscription.items.data[0].price.id
+        const planName = PLAN_MAPPING[priceId as keyof typeof PLAN_MAPPING] || 'explorer'
+        console.debug(\`Mapped price \${priceId} to plan \${planName}\`)
+
+        console.debug(\`Upserting subscription data for user \${customer.metadata.app_user_id}\`)
+        const { error } = await supabase
+          .from('subscriptions')
+          .upsert(
+            {
+              user_id: customer.metadata.app_user_id,
+              stripe_subscription_id: subscription.id,
+              stripe_customer_id: subscription.customer,
+              status: subscription.status,
+              price_id: priceId,
+              plan_name: planName,
+              quantity: subscription.items.data[0].quantity,
+              cancel_at_period_end: subscription.cancel_at_period_end,
+              current_period_start: new Date(subscription.current_period_start * 1000),
+              current_period_end: new Date(subscription.current_period_end * 1000),
+              updated_at: new Date(),
+            },
+            {
+              onConflict: 'stripe_subscription_id'
+            }
+          )
+
+        if (error) {
+          console.error(\`Error updating subscription:\`, error)
+          throw error
+        }
+        console.info(\`Successfully processed \${event.type} for subscription \${subscription.id}\`)
+        break
       }
 
       case 'customer.subscription.deleted': {
-        console.log('Processing subscription deletion');
-        
-        await upsertSubscription(supabase, userId, {
-          stripe_customer_id: customerId,
-          stripe_subscription_id: eventData.id,
-          status: 'canceled',
-          plan_type: 'none',
-          current_period_end: eventData.current_period_end,
-          cancel_at_period_end: false,
-        });
-        break;
-      }
+        console.info(\`Processing subscription deletion event\`)
+        const subscription = event.data.object
 
-      case 'invoice.payment_succeeded': {
-        console.log('Processing successful invoice payment');
-        
-        if (eventData.subscription) {
-          // Fetch the latest subscription data to ensure we have the most up-to-date status
-          const subscription = await stripe.subscriptions.retrieve(eventData.subscription);
-          const priceId = subscription.items.data[0]?.price?.id;
+        console.debug(\`Deleting subscription \${subscription.id} from database\`)
+        const { error } = await supabase
+          .from('subscriptions')
+          .delete()
+          .match({ stripe_subscription_id: subscription.id })
 
-          await upsertSubscription(supabase, userId, {
-            stripe_customer_id: customerId,
-            stripe_subscription_id: subscription.id,
-            status: subscription.status,
-            plan_type: PLAN_MAPPING[priceId] || 'unknown',
-            current_period_end: subscription.current_period_end,
-            cancel_at_period_end: subscription.cancel_at_period_end,
-          });
+        if (error) {
+          console.error(\`Error deleting subscription \${subscription.id}:\`, error)
+          throw error
         }
-        break;
+        console.info(\`Successfully deleted subscription \${subscription.id}\`)
+        break
       }
-
-      case 'invoice.payment_failed': {
-        console.warn(\`Payment failed for invoice \${eventData.id}\`);
-        
-        if (eventData.subscription) {
-          const subscription = await stripe.subscriptions.retrieve(eventData.subscription);
-          const priceId = subscription.items.data[0]?.price?.id;
-
-          await upsertSubscription(supabase, userId, {
-            stripe_customer_id: customerId,
-            stripe_subscription_id: subscription.id,
-            status: 'past_due',
-            plan_type: PLAN_MAPPING[priceId] || 'unknown',
-            current_period_end: subscription.current_period_end,
-            cancel_at_period_end: subscription.cancel_at_period_end,
-          });
-
-          // TODO: Implement user notification system for failed payments
-        }
-        break;
-      }
-
-      default:
-        console.log(\`Unhandled event type: \${event.type}\`);
     }
 
-    return new Response(
-      JSON.stringify({ received: true }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    console.info(\`Webhook processed successfully\`)
+    return new Response(JSON.stringify({ received: true }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
 
   } catch (error) {
-    console.error('Webhook handler error:', error);
+    console.error(\`Critical error processing webhook:\`, error)
     return new Response(
       JSON.stringify({ error: (error as Error).message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    )
   }
-});
-`,
+})`,
         },
         links: [
           {
@@ -987,12 +891,11 @@ serve(async (req) => {
           "1. Go to Stripe Dashboard > Developers > Webhooks > Add endpoint",
           "2. Enter your Edge Function URL: https://[PROJECT_REF].supabase.co/functions/v1/stripe-webhook",
           "3. Select events to listen for:",
-          "   - checkout.session.completed",
           "   - customer.subscription.created",
-          "   - customer.subscription.updated",
           "   - customer.subscription.deleted",
-          "   - invoice.paid",
-          "   - invoice.payment_failed",
+          "   - customer.subscription.paused",
+          "   - customer.subscription.resumed",
+          "   - customer.subscription.updated",
           "4. Get the Signing Secret from the destination overview after creating the webhook",
         ],
         prompt: {
@@ -1022,48 +925,11 @@ serve(async (req) => {
     id: "test_go_live",
     title: "Step 4: Testing & Go Live",
     description: "Make sure everything works before charging real money.",
+    videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Stripe%20Payments%20Setup%203.mp4",
     subTasks: [
       {
-        id: "configure_test_webhook",
-        title: "4.1 Configure Test Webhook Endpoint",
-        description: [
-          "First, add the required secrets to your Supabase Edge Function:",
-          "1. Go to Supabase Dashboard > Project Settings > Edge Functions",
-          "2. Add the following secrets:",
-          "   - STRIPE_SECRET_KEY",
-          "   - STRIPE_WEBHOOK_SECRET",
-          "",
-          "Then configure the webhook in Stripe:",
-          "1. In Stripe Dashboard (Test Mode) > Developers > Webhooks > Add endpoint",
-          "2. Enter the publicly accessible URL for your deployed `stripe-webhook` function. Should look something like this: https://your-supabase-project.supabase.co/functions/v1/stripe-webhook",
-          "3. Select these events to handle:",
-          "   - customer.subscription.created",
-          "   - customer.subscription.updated",
-          "   - customer.subscription.paused",
-          "   - customer.subscription.deleted",
-          "   - customer.subscription.resumed",
-          "4. Click 'Add endpoint'",
-          "5. Reveal the Webhook Signing Secret and add it to your Supabase Edge Function secrets as `STRIPE_WEBHOOK_SECRET`",
-        ],
-        links: [
-          {
-            text: "Stripe CLI for local testing",
-            url: "https://stripe.com/docs/stripe-cli",
-          },
-          {
-            text: "Supabase Edge Functions",
-            url: "https://supabase.com/docs/guides/functions",
-          },
-        ],
-        important: [
-          "Never expose your secrets in your code or version control",
-          "The service role key has admin privileges - keep it secure",
-        ],
-        isChecklistItem: true,
-      },
-      {
         id: "end_to_end_test",
-        title: "4.2 End-to-End Test (Test Mode)",
+        title: "4.1 End-to-End Test (Test Mode)",
         description: [
           "Use your app's frontend to initiate checkout with a TEST Price ID.",
           "Use Stripe's test card numbers to complete payment.",
@@ -1079,7 +945,7 @@ serve(async (req) => {
       },
       {
         id: "switch_live_keys",
-        title: "4.3 Switch to LIVE Keys",
+        title: "4.2 Switch to LIVE Keys",
         description: [
           "In Stripe Dashboard, toggle to LIVE mode.",
           "Go to Developers > API Keys.",
@@ -1095,7 +961,7 @@ serve(async (req) => {
       },
       {
         id: "configure_live_webhook",
-        title: "4.4 Configure LIVE Webhook Endpoint",
+        title: "4.3 Configure LIVE Webhook Endpoint",
         description: [
           "Repeat step 4.1 but in Stripe's LIVE mode.",
           "Use your PRODUCTION webhook URL.",
@@ -1108,7 +974,7 @@ serve(async (req) => {
       },
       {
         id: "final_live_test",
-        title: "4.5 (Recommended) Final Live Test",
+        title: "4.4 (Recommended) Final Live Test",
         description: [
           "Use a REAL credit card to make a small purchase (e.g., lowest plan).",
           "Verify the entire flow, including database updates and customer portal access.",

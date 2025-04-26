@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Circle, CheckCircle, ExternalLink, PlayCircle, Copy, AlertTriangle, ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -18,7 +18,27 @@ const Payment = () => {
   const { toast } = useToast();
   const { tasks, toggleTaskComplete } = useTaskProgress();
   const [expandedPrompts, setExpandedPrompts] = useState<Record<string, boolean>>({});
-  const [activeStep, setActiveStep] = useState(paymentContent[0].id);
+  const [activeStep, setActiveStep] = useState(() => {
+    return localStorage.getItem('activePaymentStep') || paymentContent[0].id;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('activePaymentStep', activeStep);
+  }, [activeStep]);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    console.error("Video loading error:", e);
+    toast({
+      title: "Video Error",
+      description: "Unable to load the video. Please try again later.",
+      variant: "destructive"
+    });
+  };
+
+  const currentStep = paymentContent.find(step => step.id === activeStep);
+  const currentVideoUrl = currentStep?.videoUrl;
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -302,13 +322,32 @@ const Payment = () => {
               <PlayCircle className="h-5 w-5 text-launch-cyan" />
               Tutorial Video
             </CardTitle>
-            <CardDescription>Watch how to integrate Stripe payments</CardDescription>
+            <CardDescription>Watch how to implement {currentStep?.title.split(':')[1]}</CardDescription>
           </CardHeader>
           <CardContent>
             <AspectRatio ratio={16 / 9}>
-              <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md flex items-center justify-center border border-gray-800 h-full group cursor-pointer">
-                <PlayCircle className="h-16 w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
-              </div>
+              {currentVideoUrl ? (
+                <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md border border-gray-800 h-full overflow-hidden">
+                  <video
+                    ref={videoRef}
+                    className="w-full h-full rounded-md"
+                    controls
+                    controlsList="nodownload"
+                    onError={handleVideoError}
+                    key={currentVideoUrl}
+                  >
+                    <source src={currentVideoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              ) : (
+                <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md flex items-center justify-center border border-gray-800 h-full">
+                  <div className="text-launch-cyan/70 text-center">
+                    <PlayCircle className="h-16 w-16 mx-auto mb-2" />
+                    <p className="text-sm">No video available for this section</p>
+                  </div>
+                </div>
+              )}
             </AspectRatio>
           </CardContent>
         </Card>
