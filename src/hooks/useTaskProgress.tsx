@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -81,25 +80,30 @@ export function useTaskProgress() {
 
   const toggleTaskComplete = async (taskId: string, completed: boolean, category: string, taskName: string) => {
     try {
-      const { data: existingTask } = await supabase
+      const { data: existingTask, error: selectError } = await supabase
         .from('user_tasks')
         .select('*')
         .eq('id', taskId)
         .single();
+
+      if (selectError && selectError.code !== 'PGRST116') { // PGRST116 is "not found"
+        throw selectError;
+      }
       
       if (existingTask) {
+        // Update existing task
         const { error } = await supabase
           .from('user_tasks')
           .update({ 
             completed,
             completed_at: completed ? new Date().toISOString() : null,
-            category: category || 'uncategorized',
-            task_name: taskName
+            updated_at: new Date().toISOString()
           })
           .eq('id', taskId);
-  
+
         if (error) throw error;
       } else {
+        // Create new task
         const { error } = await supabase
           .from('user_tasks')
           .insert({ 
@@ -108,10 +112,10 @@ export function useTaskProgress() {
             task_id: 'setup_task',
             completed,
             completed_at: completed ? new Date().toISOString() : null,
-            category: category || 'uncategorized',
+            category,
             task_name: taskName
           });
-  
+
         if (error) throw error;
       }
       

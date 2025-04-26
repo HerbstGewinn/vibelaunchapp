@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,9 +7,10 @@ import { useToast } from '@/hooks/use-toast';
 
 interface PageFeedbackProps {
   category: string;
+  question?: string;
 }
 
-export const PageFeedback = ({ category }: PageFeedbackProps) => {
+export const PageFeedback = ({ category, question = "Was this helpful?" }: PageFeedbackProps) => {
   const [hasVoted, setHasVoted] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -61,7 +61,7 @@ export const PageFeedback = ({ category }: PageFeedbackProps) => {
 
   return (
     <div className="flex items-center gap-4 justify-end p-4">
-      <span className="text-sm text-gray-400">Was this helpful?</span>
+      <span className="text-sm text-gray-400">{question}</span>
       <div className="flex gap-2">
         <Button
           variant="outline"
