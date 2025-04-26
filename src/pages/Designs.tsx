@@ -11,7 +11,7 @@ const designTemplates = [{
   id: 1,
   title: "Gradient Deploy",
   description: "Modern, gradient-rich SaaS design with smooth transitions",
-  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/bold.mp4",
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos//gradient.mp4",
   style: "glassmorphism",
   prompt: `LaunchPad – blue‑gradient SaaS deploy landing page
 
@@ -231,7 +231,7 @@ Make the landing page mobile responsive and make sure that all pictures or video
   id: 4,
   title: "Neo-Brutalism",
   description: "Bold typography, high contrast, raw edges, animated type",
-  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/creative.mp4",
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos//bold.mp4",
   style: "brutalism",
   prompt: `Create an impactful, bold homepage using the Neo-Brutalism aesthetic, showcasing stark contrasts, animated typography, and edgy, raw layouts.
 
@@ -247,7 +247,7 @@ Suggested Libraries:
   id: 5,
   title: "Interactive Collage & Scrapbook",
   description: "Tactile elements, layered textures, interactive collage-style content",
-  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/glassy.mp4",
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos//creative.mp4",
   style: "collage",
   prompt: `Design a portfolio site using a creative Interactive Collage & Scrapbook style. The design should evoke tactile interactions, textured backgrounds, and draggable scrapbook elements.
 
@@ -263,7 +263,7 @@ Suggested Libraries:
   id: 6,
   title: "Minimalistic Glassmorphism",
   description: "Translucent elements, soft gradients, blur effects, subtle shadows",
-  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos/gradient.mp4",
+  videoUrl: "https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/design-videos//glassy2.mp4",
   style: "glassmorphism",
   prompt: `Design a highly interactive landing page using Minimalistic Glassmorphism. The layout features translucent cards with vibrant pastel gradients, subtle background blur effects, and delicate shadows.
 

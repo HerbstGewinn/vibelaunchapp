@@ -16,7 +16,7 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { // NOTE: You mig
 });
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
-const stripeWebhookSecret = Deno.env.get('STRIPE_WEBHOOK_SIGNING_SECRET');
+const stripeWebhookSecret = Deno.env.get('STRIPE_WEBHOOK_SIGNING_SECRET_RESEND');
 
 console.log("Hello from Functions!")
 
@@ -72,18 +72,43 @@ serve(async (req) => {
     try {
       // Send confirmation email using Resend
       const { data, error } = await resend.emails.send({
-        from: 'Your App <noreply@yourdomain.com>', // **Replace with your verified Resend domain/email**
+        from: 'Vibelaunch <info@vibelaunch.io>', // Default Resend sender - update this with your verified domain
         to: [customerEmail],
-        subject: 'Your Order Confirmation',
+        subject: 'Thank You for Your Vibelaunch Purchase!',
         html: `
-          <h1>Thank you for your order, ${customerName}!</h1>
-          <p>Your checkout was successful.</p>
-          <p><strong>Amount:</strong> ${amountTotal} ${currency}</p>
-          <p>We'll notify you when your order ships.</p>
-          <p>Best regards,<br>Your App Team</p>
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background-color: #f8f9fa; padding: 20px; text-align: center; }
+                .content { padding: 20px; }
+                .footer { text-align: center; padding: 20px; font-size: 0.9em; color: #666; }
+                .amount { font-size: 1.2em; color: #28a745; font-weight: bold; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>Thank You for Your Purchase!</h1>
+                </div>
+                <div class="content">
+                  <p>Dear ${customerName},</p>
+                  <p>Thank you for choosing Vibelaunch! Your payment has been successfully processed.</p>
+                  <p>Order Details:</p>
+                  <p class="amount">Amount: ${amountTotal} ${currency}</p>
+                  <p>We're excited to have you on board! Your purchase helps us continue developing and improving our services.</p>
+                  <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
+                </div>
+                <div class="footer">
+                  <p>Best regards,<br>The Vibelaunch Team</p>
+                  <p>© ${new Date().getFullYear()} Vibelaunch. All rights reserved.</p>
+                </div>
+              </div>
+            </body>
+          </html>
         `,
-        // You can add more details like order ID, items purchased, etc.
-        // text: `...` // Optional plain text version
       });
 
       if (error) {
