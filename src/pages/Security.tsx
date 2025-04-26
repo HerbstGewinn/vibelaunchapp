@@ -75,15 +75,13 @@ const Security = () => {
     setSelectedItemId(id);
   };
 
-  const handleMarkAsDone = async (item: ProcessedSecurityItem) => { // Use the new type for the parameter
-    if (item.effectiveStatus === 'To-Do') {
-      try {
-        // Map the category to a valid database category
-        await toggleTaskComplete(item.dbId, true, 'security', item.title);
-      } catch (error) {
-        console.error("Failed to mark task as done:", error);
-        // Consider adding user feedback here (e.g., toast notification)
-      }
+  const handleToggleTask = async (item: ProcessedSecurityItem) => {
+    try {
+      const isCompleting = item.effectiveStatus === 'To-Do';
+      await toggleTaskComplete(item.dbId, isCompleting, 'security', item.title);
+    } catch (error) {
+      console.error("Failed to toggle task:", error);
+      // Consider adding user feedback here (e.g., toast notification)
     }
   };
 
@@ -156,19 +154,38 @@ const Security = () => {
                       <ul className="space-y-1 pt-2">
                         {categoryItems.map((item: ProcessedSecurityItem) => (
                           <li key={item.id}>
-                            <button
+                            <div
                               onClick={() => handleSelectItem(item.id)}
                               className={cn(
-                                "w-full flex items-center gap-3 p-2 rounded-md text-left text-sm transition-colors",
+                                "w-full flex items-center gap-3 p-2 rounded-md text-left text-sm transition-all duration-200 cursor-pointer",
                                 selectedItemId === item.id
                                   ? "bg-launch-dark text-white"
-                                  : "text-gray-300 hover:bg-launch-dark hover:text-white"
+                                  : "text-gray-300 hover:bg-launch-dark hover:text-white",
+                                "group"
                               )}
                             >
-                              {getStatusIcon(item.effectiveStatus)}
+                              <div className="relative">
+                                {item.effectiveStatus === 'Done' ? (
+                                  <CheckCircle className="h-4 w-4 text-green-500 transition-all" />
+                                ) : item.effectiveStatus === 'To-Do' ? (
+                                  <>
+                                    <Circle className="h-4 w-4 text-gray-400 group-hover:text-gray-300 transition-all" />
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <CheckCircle className="h-4 w-4 text-gray-300/50" />
+                                    </div>
+                                  </>
+                                ) : item.effectiveStatus === 'Handled by Platform' ? (
+                                  <ShieldCheck className="h-4 w-4 text-blue-500" />
+                                ) : (
+                                  <Circle className="h-4 w-4 text-gray-500" />
+                                )}
+                              </div>
                               <span className="flex-grow truncate">{item.title}</span>
-                              <ChevronRight className={cn("h-4 w-4 text-gray-500 transition-opacity duration-200", selectedItemId === item.id ? "opacity-100" : "opacity-0")}/>
-                            </button>
+                              <ChevronRight className={cn(
+                                "h-4 w-4 text-gray-500 transition-opacity duration-200",
+                                selectedItemId === item.id ? "opacity-100" : "opacity-0"
+                              )}/>
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -215,20 +232,56 @@ const Security = () => {
         <Card className="bg-launch-card-bg border-gray-800">
           <CardHeader>
             <div className="flex justify-between items-center">
-               <CardTitle className="text-white flex items-center gap-2">
-                  {getStatusIcon(selectedItem.effectiveStatus)} {selectedItem.title}
-               </CardTitle>
-                {selectedItem.effectiveStatus === 'To-Do' && (
-                  <Button size="sm" variant="outline" className="border-green-600 text-green-500 hover:bg-green-900 hover:text-green-400" onClick={() => handleMarkAsDone(selectedItem)}>
-                     <CheckCircle className="h-4 w-4 mr-2"/> Mark as Done
-                  </Button>
-                )}
-                 {selectedItem.effectiveStatus === 'Done' && (
-                   <Badge variant="default" className="bg-green-800 text-green-200">Completed</Badge>
-                 )}
-                  {selectedItem.effectiveStatus === 'Handled by Platform' && (
-                   <Badge variant="default" className="bg-blue-800 text-blue-200">Handled by Platform</Badge>
-                 )}
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  {selectedItem.effectiveStatus === 'Done' ? (
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all" />
+                  ) : selectedItem.effectiveStatus === 'To-Do' ? (
+                    <>
+                      <Circle className="h-5 w-5 text-gray-400 group-hover:text-gray-300 transition-all" />
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <CheckCircle className="h-5 w-5 text-gray-300/50" />
+                      </div>
+                    </>
+                  ) : selectedItem.effectiveStatus === 'Handled by Platform' ? (
+                    <ShieldCheck className="h-5 w-5 text-blue-500" />
+                  ) : (
+                    <Circle className="h-5 w-5 text-gray-500" />
+                  )}
+                </div>
+                <CardTitle className="text-white">{selectedItem.title}</CardTitle>
+              </div>
+              {(selectedItem.effectiveStatus === 'To-Do' || selectedItem.effectiveStatus === 'Done') && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className={cn(
+                    "transition-all duration-200",
+                    selectedItem.effectiveStatus === 'Done'
+                      ? "border-green-600/50 text-green-500 hover:bg-green-900/10 hover:border-green-500"
+                      : "border-gray-600/50 text-gray-400 hover:bg-gray-700/10 hover:border-gray-400"
+                  )}
+                  onClick={() => handleToggleTask(selectedItem)}
+                >
+                  {selectedItem.effectiveStatus === 'Done' ? (
+                    <>
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Completed
+                    </>
+                  ) : (
+                    <>
+                      <Circle className="h-4 w-4 mr-2" />
+                      Mark Complete
+                    </>
+                  )}
+                </Button>
+              )}
+              {selectedItem.effectiveStatus === 'Handled by Platform' && (
+                <Badge variant="default" className="bg-blue-800 text-blue-200">Handled by Platform</Badge>
+              )}
+              {selectedItem.effectiveStatus === 'N/A' && (
+                <Badge variant="default" className="bg-gray-800 text-gray-200">Not Applicable</Badge>
+              )}
             </div>
             <CardDescription>{selectedItem.briefDescription}</CardDescription>
           </CardHeader>

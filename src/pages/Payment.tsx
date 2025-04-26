@@ -37,8 +37,9 @@ const Payment = () => {
 
   const handleTaskCompletion = async (taskId: string, title: string, isCompleted: boolean) => {
     try {
-      // Generate a stable UUID for the task
-      const taskUuid = uuidv4();
+      // Find existing task ID if it exists
+      const existingTask = tasks.find(t => t.category === 'payment' && t.task_name === title);
+      const taskUuid = existingTask ? existingTask.id : uuidv4();
       
       await toggleTaskComplete(taskUuid, isCompleted, 'payment', title);
       toast({
