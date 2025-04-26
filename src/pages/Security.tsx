@@ -200,6 +200,12 @@ const Security = () => {
                <Github className="h-4 w-4 mr-2" />
                Connect GitHub
              </Button>
+             <div className="mt-6 w-full">
+               <PageFeedback 
+                 category="github-security-integration" 
+                 question="Would you find this helpful?"
+               />
+             </div>
           </CardContent>
         </Card>
       </div>
