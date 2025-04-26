@@ -140,7 +140,7 @@ const Security = () => {
              <CardDescription>Select an item to see details and actions.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Accordion type="multiple" defaultValue={['Frontend', 'Backend', 'Practical']} className="w-full">
+            <Accordion type="single" defaultValue="Frontend" className="w-full">
               {(Object.keys(groupedItems) as SecurityItemData['category'][]).map(category => {
                 const categoryItems = groupedItems[category] || [];
                 const completedInCategory = categoryItems.filter((i: ProcessedSecurityItem) => i.effectiveStatus === 'Done' || i.effectiveStatus === 'Handled by Platform').length;
