@@ -18,27 +18,73 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils"; // Assuming you have this utility
 import { securityData, SecurityItemData, SecurityAction } from '@/data/securityContent';
+import { v4 as uuidv4 } from 'uuid';
+import { useTaskProgress } from '@/hooks/useTaskProgress';
+
+// Extend the base type to include processed fields
+interface ProcessedSecurityItem extends SecurityItemData {
+  dbId: string;
+  effectiveStatus: SecurityItemData['status'];
+}
 
 const Security = () => {
-  const [items, setItems] = useState<SecurityItemData[]>(securityData);
+  const { tasks, toggleTaskComplete } = useTaskProgress();
   const [selectedItemId, setSelectedItemId] = useState<string | null>(securityData[0]?.id || null); // Select first item initially
 
+  // Process security data with task progress
+  const processedSecurityItems: ProcessedSecurityItem[] = useMemo(() => {
+    return securityData.map(staticItem => {
+      // First try to find an existing task
+      const existingTask = tasks.find(t =>
+        t.category === 'security' &&
+        t.task_name === staticItem.title
+      );
+
+      if (existingTask) {
+        // If we found an existing task, use its ID
+        return {
+          ...staticItem,
+          dbId: existingTask.id,
+          effectiveStatus: existingTask.completed ? 'Done' : 'To-Do'
+        };
+      }
+
+      // For new tasks, generate a stable UUID based on the title
+      // This ensures the same ID is generated across renders
+      const titleHash = staticItem.title.split('').reduce((acc, char) => {
+        return char.charCodeAt(0) + ((acc << 5) - acc);
+      }, 0);
+      const stableUuid = uuidv4({ random: new Uint8Array(16).map(() => titleHash % 256) });
+
+      return {
+        ...staticItem,
+        dbId: stableUuid,
+        effectiveStatus: staticItem.status === 'Handled by Platform' || staticItem.status === 'N/A' 
+          ? staticItem.status 
+          : 'To-Do'
+      };
+    });
+  }, [securityData, tasks]);
+
   const selectedItem = useMemo(() => {
-    return items.find(item => item.id === selectedItemId) || null;
-  }, [selectedItemId, items]);
+    // Find the selected item from the processed list for detailed view
+    return processedSecurityItems.find(item => item.id === selectedItemId) as ProcessedSecurityItem | null; // Ensure correct type
+  }, [selectedItemId, processedSecurityItems]);
 
   const handleSelectItem = (id: string) => {
     setSelectedItemId(id);
   };
 
-  const handleMarkAsDone = (id: string) => {
-    setItems(prevItems =>
-      prevItems.map(item =>
-        item.id === id ? { ...item, status: 'Done' } : item
-      )
-    );
-    // If the currently selected item is marked done, maybe select the next 'To-Do' item?
-    // Or just keep it selected.
+  const handleMarkAsDone = async (item: ProcessedSecurityItem) => { // Use the new type for the parameter
+    if (item.effectiveStatus === 'To-Do') {
+      try {
+        // Map the category to a valid database category
+        await toggleTaskComplete(item.dbId, true, 'security', item.title);
+      } catch (error) {
+        console.error("Failed to mark task as done:", error);
+        // Consider adding user feedback here (e.g., toast notification)
+      }
+    }
   };
 
   const getStatusIcon = (status: SecurityItemData['status']) => {
@@ -56,20 +102,20 @@ const Security = () => {
   };
 
   const progress = useMemo(() => {
-    const totalApplicable = items.filter(item => item.status !== 'N/A').length;
-    const completed = items.filter(item => item.status === 'Done' || item.status === 'Handled by Platform').length;
+    const totalApplicable = processedSecurityItems.filter(item => item.effectiveStatus !== 'N/A').length;
+    const completed = processedSecurityItems.filter(item => item.effectiveStatus === 'Done' || item.effectiveStatus === 'Handled by Platform').length;
     return totalApplicable > 0 ? Math.round((completed / totalApplicable) * 100) : 0;
-  }, [items]);
+  }, [processedSecurityItems]);
 
   const groupedItems = useMemo(() => {
-    return items.reduce((acc, item) => {
+    return processedSecurityItems.reduce((acc, item) => {
       if (!acc[item.category]) {
         acc[item.category] = [];
       }
       acc[item.category].push(item);
       return acc;
-    }, {} as Record<SecurityItemData['category'], SecurityItemData[]>);
-  }, [items]);
+    }, {} as Record<SecurityItemData['category'], ProcessedSecurityItem[]>);
+  }, [processedSecurityItems]);
 
   return (
     <div className="p-6 space-y-6">
@@ -97,34 +143,39 @@ const Security = () => {
           </CardHeader>
           <CardContent>
             <Accordion type="multiple" defaultValue={['Frontend', 'Backend', 'Practical']} className="w-full">
-              {(Object.keys(groupedItems) as SecurityItemData['category'][]).map(category => (
-                <AccordionItem value={category} key={category} className="border-gray-700">
-                  <AccordionTrigger className="text-white hover:no-underline">
-                    {category} Security ({groupedItems[category].filter(i => i.status === 'Done' || i.status === 'Handled by Platform').length}/{groupedItems[category].filter(i => i.status !== 'N/A').length})
+              {(Object.keys(groupedItems) as SecurityItemData['category'][]).map(category => {
+                const categoryItems = groupedItems[category] || [];
+                const completedInCategory = categoryItems.filter((i: ProcessedSecurityItem) => i.effectiveStatus === 'Done' || i.effectiveStatus === 'Handled by Platform').length;
+                const totalInCategory = categoryItems.filter((i: ProcessedSecurityItem) => i.effectiveStatus !== 'N/A').length;
+                return (
+                  <AccordionItem value={category} key={category} className="border-gray-700">
+                    <AccordionTrigger className="text-white hover:no-underline">
+                      {category} Security ({completedInCategory}/{totalInCategory})
                     </AccordionTrigger>
-                  <AccordionContent>
-                    <ul className="space-y-1 pt-2">
-                      {groupedItems[category].map(item => (
-                        <li key={item.id}>
-                          <button
-                            onClick={() => handleSelectItem(item.id)}
-                            className={cn(
-                              "w-full flex items-center gap-3 p-2 rounded-md text-left text-sm transition-colors",
-                              selectedItemId === item.id
-                                ? "bg-launch-dark text-white"
-                                : "text-gray-300 hover:bg-launch-dark hover:text-white"
-                            )}
-                          >
-                            {getStatusIcon(item.status)}
-                            <span className="flex-grow truncate">{item.title}</span>
-                            <ChevronRight className={cn("h-4 w-4 text-gray-500 transition-opacity", selectedItemId === item.id ? "opacity-100" : "opacity-0")}/>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
+                    <AccordionContent>
+                      <ul className="space-y-1 pt-2">
+                        {categoryItems.map((item: ProcessedSecurityItem) => (
+                          <li key={item.id}>
+                            <button
+                              onClick={() => handleSelectItem(item.id)}
+                              className={cn(
+                                "w-full flex items-center gap-3 p-2 rounded-md text-left text-sm transition-colors",
+                                selectedItemId === item.id
+                                  ? "bg-launch-dark text-white"
+                                  : "text-gray-300 hover:bg-launch-dark hover:text-white"
+                              )}
+                            >
+                              {getStatusIcon(item.effectiveStatus)}
+                              <span className="flex-grow truncate">{item.title}</span>
+                              <ChevronRight className={cn("h-4 w-4 text-gray-500 transition-opacity duration-200", selectedItemId === item.id ? "opacity-100" : "opacity-0")}/>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
             </Accordion>
           </CardContent>
         </Card>
@@ -159,17 +210,17 @@ const Security = () => {
           <CardHeader>
             <div className="flex justify-between items-center">
                <CardTitle className="text-white flex items-center gap-2">
-                  {getStatusIcon(selectedItem.status)} {selectedItem.title}
+                  {getStatusIcon(selectedItem.effectiveStatus)} {selectedItem.title}
                </CardTitle>
-                {selectedItem.status === 'To-Do' && (
-                  <Button size="sm" variant="outline" className="border-green-600 text-green-500 hover:bg-green-900 hover:text-green-400" onClick={() => handleMarkAsDone(selectedItem.id)}>
+                {selectedItem.effectiveStatus === 'To-Do' && (
+                  <Button size="sm" variant="outline" className="border-green-600 text-green-500 hover:bg-green-900 hover:text-green-400" onClick={() => handleMarkAsDone(selectedItem)}>
                      <CheckCircle className="h-4 w-4 mr-2"/> Mark as Done
                   </Button>
                 )}
-                 {selectedItem.status === 'Done' && (
+                 {selectedItem.effectiveStatus === 'Done' && (
                    <Badge variant="default" className="bg-green-800 text-green-200">Completed</Badge>
                  )}
-                  {selectedItem.status === 'Handled by Platform' && (
+                  {selectedItem.effectiveStatus === 'Handled by Platform' && (
                    <Badge variant="default" className="bg-blue-800 text-blue-200">Handled by Platform</Badge>
                  )}
             </div>
