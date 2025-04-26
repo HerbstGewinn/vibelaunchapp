@@ -83,7 +83,15 @@ export const paymentContent: PaymentStep[] = [
         description: ["Purpose: Redirects users to Stripe's secure checkout page."],
         prompt: {
            title: "AI Prompt: Create Edge Function/API Route (supabase/functions/create-checkout/index.ts)",
-           text: `import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+           text: `// GOAL: Create a secure checkout session handler that redirects users to Stripe's hosted checkout page
+// REQUIREMENTS:
+// 1. Handle user authentication and validation
+// 2. Create or retrieve Stripe customer with proper metadata
+// 3. Generate secure checkout session with proper success/cancel URLs
+// 4. Support different plan types and currencies
+// 5. Ensure proper error handling and logging
+
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from 'https://esm.sh/stripe@14.21.0';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -254,7 +262,15 @@ serve(async (req: Request) => {
         description: ["Purpose: Allows logged-in users to manage their subscription (update payment methods, cancel, view invoices)."],
         prompt: {
           title: "AI Prompt: Create Edge Function/API Route (supabase/functions/create-portal-session/index.ts)",
-          text: `import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+          text: `// GOAL: Create a secure customer portal session handler that allows users to manage their subscriptions
+// REQUIREMENTS:
+// 1. Handle user authentication and validation
+// 2. Retrieve Stripe customer ID from our database
+// 3. Generate secure portal session with proper return URL
+// 4. Support subscription management and payment method updates
+// 5. Ensure proper error handling and logging
+
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from 'https://esm.sh/stripe@14.21.0';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -369,23 +385,100 @@ serve(async (req: Request) => {
         ],
         important: ["Webhook verification is essential for security.", "Ensure the STRIPE_WEBHOOK_SECRET environment variable is set correctly."],
         prompt: {
-          title: "AI Prompt: Create Edge Function/API Route (supabase/functions/stripe-webhook/index.ts - Simplified Structure)",
-          text: `import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+          title: "AI Prompt: Create Edge Function/API Route (supabase/functions/stripe-webhook/index.ts)",
+          text: `// GOAL: Create a secure webhook handler to process Stripe events and keep our application's subscription data in sync
+// REQUIREMENTS:
+// 1. Handle all relevant Stripe events (checkout completion, subscription updates, payment status)
+// 2. Update our database with subscription status changes
+// 3. Ensure proper security with webhook signature verification
+// 4. Maintain audit trail through logging
+// 5. Handle errors gracefully with appropriate status codes
+
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from 'https://esm.sh/stripe@14.21.0';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
-// Simplified structure - Add PLAN_MAPPING, helper functions (getCustomerId, getUserId, upsertSubscription) as shown in the full example
+// Map Stripe Price IDs to our internal plan names
+const PLAN_MAPPING: Record<string, string> = {
+  'price_1RHCDICSrP7lXLyW6nCrvj0a': 'lifetime', // Replace with your actual price IDs
+};
 
-const corsHeaders = { /* ... CORS headers ... */ };
-const PLAN_MAPPING = { /* ... Your Price IDs to Plan Names ... */ }; 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
-// --- Helper functions getCustomerIdFromEvent, getUserIdFromCustomer, upsertSubscription go here --- 
-// --- See full example for implementation details --- 
+// Helper: Extract Customer ID from various Stripe events
+const getCustomerIdFromEvent = (event: Stripe.Event): string | null => {
+  const object = event.data.object as any;
+  
+  switch (event.type) {
+    case 'checkout.session.completed':
+      return object.customer;
+    case 'customer.subscription.created':
+    case 'customer.subscription.updated':
+    case 'customer.subscription.deleted':
+      return object.customer;
+    case 'invoice.paid':
+    case 'invoice.payment_failed':
+      return object.customer;
+    default:
+      return null;
+  }
+};
+
+// Helper: Get User ID from Stripe Customer
+const getUserIdFromCustomer = async (stripe: Stripe, customerId: string): Promise<string | null> => {
+  try {
+    const customer = await stripe.customers.retrieve(customerId);
+    return customer.metadata?.app_user_id || null;
+  } catch (error) {
+    console.error(\`Error retrieving customer \${customerId}:\`, error);
+    return null;
+  }
+};
+
+// Helper: Update subscription in database
+const upsertSubscription = async (
+  supabase: any,
+  userId: string,
+  subscriptionData: {
+    stripe_customer_id: string;
+    stripe_subscription_id?: string;
+    status: string;
+    plan_type: string;
+    current_period_end?: number;
+    cancel_at_period_end?: boolean;
+  }
+) => {
+  const { error } = await supabase
+    .from('subscriptions')
+    .upsert(
+      {
+        user_id: userId,
+        ...subscriptionData,
+        updated_at: new Date().toISOString()
+      },
+      {
+        onConflict: 'user_id',
+        returning: 'minimal'
+      }
+    );
+
+  if (error) {
+    console.error('Error upserting subscription:', error);
+    throw error;
+  }
+};
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') { return new Response('ok', { headers: corsHeaders }); }
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
 
   try {
+    // Verify required environment variables
     const signature = req.headers.get('stripe-signature');
     const STRIPE_SECRET_KEY = Deno.env.get('STRIPE_SECRET_KEY');
     const STRIPE_WEBHOOK_SECRET = Deno.env.get('STRIPE_WEBHOOK_SECRET');
@@ -393,65 +486,167 @@ serve(async (req) => {
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     if (!signature || !STRIPE_SECRET_KEY || !STRIPE_WEBHOOK_SECRET || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      throw new Error('Missing config');
+      throw new Error('Missing required configuration');
     }
 
-    const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2024-06-20', httpClient: Stripe.createFetchHttpClient() });
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
+    // Initialize clients
+    const stripe = new Stripe(STRIPE_SECRET_KEY, {
+      apiVersion: '2024-06-20',
+      httpClient: Stripe.createFetchHttpClient()
+    });
+    
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { autoRefreshToken: false, persistSession: false }
+    });
 
+    // Verify webhook signature
     const body = await req.text();
-    const event = await stripe.webhooks.constructEventAsync(body, signature, STRIPE_WEBHOOK_SECRET, undefined, Stripe.createSubtleCryptoProvider());
-    console.info(\`Webhook received: \${event.type}\`);
+    const event = await stripe.webhooks.constructEventAsync(
+      body,
+      signature,
+      STRIPE_WEBHOOK_SECRET,
+      undefined,
+      Stripe.createSubtleCryptoProvider()
+    );
 
+    console.info(\`Processing webhook event: \${event.type}\`);
+
+    // Get customer and user information
+    const customerId = getCustomerIdFromEvent(event);
+    if (!customerId) {
+      console.warn(\`No customer ID found in event \${event.type}\`);
+      return new Response(
+        JSON.stringify({ error: 'No customer ID in event' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const userId = await getUserIdFromCustomer(stripe, customerId);
+    if (!userId) {
+      console.warn(\`No user ID found for customer \${customerId}\`);
+      return new Response(
+        JSON.stringify({ error: 'No user ID found for customer' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Handle different event types
     const eventData = event.data.object as any;
-    let customerId: string | null = null;
-    let userId: string | null = null;
 
-    // --- Simplified Event Handling --- 
     switch (event.type) {
-      case 'checkout.session.completed':
+      case 'checkout.session.completed': {
         if (eventData.mode === 'payment') {
-          console.log('Handling one-time payment checkout...');
-          // 1. Get customerId and userId (use helpers)
-          // 2. Ensure profile has stripe_customer_id
-          // 3. Call upsertSubscription with status 'succeeded' and paymentIntentId as stripe_subscription_id
+          console.log('Processing completed checkout session for one-time payment');
+          
+          // For one-time payments (e.g., lifetime plan)
+          const paymentIntentId = eventData.payment_intent;
+          const priceId = eventData.line_items?.data[0]?.price?.id;
+          
+          if (!priceId) {
+            throw new Error('No price ID found in checkout session');
+          }
+
+          await upsertSubscription(supabase, userId, {
+            stripe_customer_id: customerId,
+            stripe_subscription_id: paymentIntentId, // Use payment intent ID as reference
+            status: 'active',
+            plan_type: PLAN_MAPPING[priceId] || 'unknown',
+          });
         }
         break;
+      }
 
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
-      case 'customer.subscription.resumed':
-        console.log(\`Handling subscription update: \${event.type}\`);
-        // 1. Get customerId and userId (use helpers)
-        // 2. Get subscription details from eventData
-        // 3. Call upsertSubscription with subscription details
-        break;
-
-      case 'customer.subscription.deleted':
-        console.log('Handling subscription deletion...');
-        // 1. Get subscription ID from eventData
-        // 2. Update subscription status to 'canceled' in Supabase
-        break;
+      case 'customer.subscription.resumed': {
+        console.log(\`Processing subscription update: \${event.type}\`);
         
-      case 'invoice.payment_succeeded':
-        console.log('Handling successful invoice payment...');
-         // Optional: More robust handling - fetch latest subscription data and upsert
-        break;
+        const priceId = eventData.items.data[0]?.price?.id;
+        if (!priceId) {
+          throw new Error('No price ID found in subscription');
+        }
 
-      case 'invoice.payment_failed':
-        console.warn('Handling failed invoice payment...');
-        // Optional: Update subscription status to 'past_due', notify user
+        await upsertSubscription(supabase, userId, {
+          stripe_customer_id: customerId,
+          stripe_subscription_id: eventData.id,
+          status: eventData.status,
+          plan_type: PLAN_MAPPING[priceId] || 'unknown',
+          current_period_end: eventData.current_period_end,
+          cancel_at_period_end: eventData.cancel_at_period_end,
+        });
         break;
+      }
+
+      case 'customer.subscription.deleted': {
+        console.log('Processing subscription deletion');
+        
+        await upsertSubscription(supabase, userId, {
+          stripe_customer_id: customerId,
+          stripe_subscription_id: eventData.id,
+          status: 'canceled',
+          plan_type: 'none',
+          current_period_end: eventData.current_period_end,
+          cancel_at_period_end: false,
+        });
+        break;
+      }
+
+      case 'invoice.payment_succeeded': {
+        console.log('Processing successful invoice payment');
+        
+        if (eventData.subscription) {
+          // Fetch the latest subscription data to ensure we have the most up-to-date status
+          const subscription = await stripe.subscriptions.retrieve(eventData.subscription);
+          const priceId = subscription.items.data[0]?.price?.id;
+
+          await upsertSubscription(supabase, userId, {
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscription.id,
+            status: subscription.status,
+            plan_type: PLAN_MAPPING[priceId] || 'unknown',
+            current_period_end: subscription.current_period_end,
+            cancel_at_period_end: subscription.cancel_at_period_end,
+          });
+        }
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        console.warn(\`Payment failed for invoice \${eventData.id}\`);
+        
+        if (eventData.subscription) {
+          const subscription = await stripe.subscriptions.retrieve(eventData.subscription);
+          const priceId = subscription.items.data[0]?.price?.id;
+
+          await upsertSubscription(supabase, userId, {
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscription.id,
+            status: 'past_due',
+            plan_type: PLAN_MAPPING[priceId] || 'unknown',
+            current_period_end: subscription.current_period_end,
+            cancel_at_period_end: subscription.cancel_at_period_end,
+          });
+
+          // TODO: Implement user notification system for failed payments
+        }
+        break;
+      }
 
       default:
         console.log(\`Unhandled event type: \${event.type}\`);
     }
 
-    return new Response(JSON.stringify({ received: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    return new Response(
+      JSON.stringify({ received: true }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
 
   } catch (error) {
-    console.error(\`Webhook handler error:\`, error);
-    return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    console.error('Webhook handler error:', error);
+    return new Response(
+      JSON.stringify({ error: (error as Error).message }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   }
 });
 `
@@ -473,13 +668,32 @@ serve(async (req) => {
         id: "configure_test_webhook",
         title: "3.1 Configure Test Webhook Endpoint",
         description: [
-          "In Stripe Dashboard (Test Mode) > Developers > Webhooks > Add endpoint.",
-          "Enter the publicly accessible URL for your deployed `stripe-webhook` function (use Stripe CLI for local testing or deploy).",
-          "Select the events you handle (e.g., `checkout.session.completed`, `invoice.paid`, etc.).",
-          "Click 'Add endpoint'.",
-          "Reveal the Webhook Signing Secret and add it to your TEST environment variables as `STRIPE_WEBHOOK_SECRET`.",
+          "First, add the required secrets to your Supabase Edge Function:",
+          "1. Go to Supabase Dashboard > Project Settings > Edge Functions",
+          "2. Add the following secrets:",
+          "   - STRIPE_SECRET_KEY",
+          "   - STRIPE_WEBHOOK_SECRET",
+          "",
+          "Then configure the webhook in Stripe:",
+          "1. In Stripe Dashboard (Test Mode) > Developers > Webhooks > Add endpoint",
+          "2. Enter the publicly accessible URL for your deployed `stripe-webhook` function. Should look something like this: https://your-supabase-project.supabase.co/functions/v1/stripe-webhook",
+          "3. Select these events to handle:",
+          "   - customer.subscription.created",
+          "   - customer.subscription.updated",
+          "   - customer.subscription.paused",
+          "   - customer.subscription.deleted",
+          "   - customer.subscription.resumed",
+          "4. Click 'Add endpoint'",
+          "5. Reveal the Webhook Signing Secret and add it to your Supabase Edge Function secrets as `STRIPE_WEBHOOK_SECRET`",
         ],
-        links: [{ text: "Stripe CLI for local testing", url: "https://stripe.com/docs/stripe-cli" }],
+        links: [
+          { text: "Stripe CLI for local testing", url: "https://stripe.com/docs/stripe-cli" },
+          { text: "Supabase Edge Functions", url: "https://supabase.com/docs/guides/functions" }
+        ],
+        important: [
+          "Never expose your secrets in your code or version control",
+          "The service role key has admin privileges - keep it secure"
+        ],
         isChecklistItem: true,
       },
       {
