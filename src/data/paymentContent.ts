@@ -1,4 +1,10 @@
-import { CheckCircle, ExternalLink, PlayCircle, Copy, AlertTriangle } from "lucide-react";
+import {
+  CheckCircle,
+  ExternalLink,
+  PlayCircle,
+  Copy,
+  AlertTriangle,
+} from "lucide-react";
 
 export interface PaymentSubTask {
   id: string;
@@ -28,23 +34,35 @@ export const paymentContent: PaymentStep[] = [
       {
         id: "create_account",
         title: "1.1 Create Stripe Account",
-        description: ["Go to stripe.com and sign up."],
+        description: [
+          "Go to stripe.com and sign up. Stripe is a payment processor that allows you to accept payments from your customers.",
+        ],
         links: [{ text: "stripe.com", url: "https://stripe.com" }],
         isChecklistItem: true,
       },
       {
         id: "get_keys",
-        title: "1.2 Get API Keys (Test Mode First!)",
+        title: "1.2 Get and Store API Keys (Sandbox Mode First!)",
         description: [
-          "Find your keys in Stripe Dashboard > Developers > API Keys.",
-          "Copy your Publishable Key (ok for frontend) & Secret Key (for backend) from TEST MODE.",
+          "Through the menu in the top left corner you can switch between sandbox and live mode. Go to your sandbox. Use the link down to open your sandbox dashboard.",
+          "Find your api secret key in Stripe Dashboard > Developers > API Keys. The Publishable Key is ok for frontend, use the Secret Key only for backend from SANDBOX MODE.",
         ],
         important: [
           "Keep your Secret Key SAFE and only on your backend/server-side code (e.g., Edge Functions, environment variables).",
         ],
+        links: [
+          {
+            text: "Stripe Sandbox Doc",
+            url: "https://docs.stripe.com/sandboxes",
+          },
+          {
+            text: "Stripe Sandbox Dashboard",
+            url: "https://dashboard.stripe.com/test/dashboard",
+          },
+        ],
         prompt: {
-           title: "Action: Add keys to Environment Variables",
-           text: "Add STRIPE_SECRET_KEY='sk_test_...' and STRIPE_PUBLISHABLE_KEY='pk_test_...' to your secure environment variables (e.g., .env.local, Vercel/Netlify settings)."
+          title: "Action: Add keys to Environment Variables",
+          text: "Add STRIPE_SECRET_KEY='sk_test_...' to your supabase edge functions secrets. You can store it in the supabase dashboard > edge functions > secrets.",
         },
         isChecklistItem: true,
       },
@@ -54,10 +72,17 @@ export const paymentContent: PaymentStep[] = [
         description: [
           "Define what you're selling (e.g., Pro Plan Subscription).",
           "Go to Stripe Dashboard > Products > Add Product.",
-          "Create at least one Product with a recurring Price.",
+          "Create at least one Product with a recurring Price. There must be one product for each plan.",
         ],
-        details: ["Note down the Price ID (looks like `price_...`). You'll need this later."],
-        links: [{ text: "Stripe Products Doc", url: "https://stripe.com/docs/products-prices" }],
+        details: [
+          "Note down the Price IDs (looks like `price_...`). You'll need them later.",
+        ],
+        links: [
+          {
+            text: "Stripe Products Doc",
+            url: "https://docs.stripe.com/products-prices/",
+          },
+        ],
         isChecklistItem: true,
       },
     ],
@@ -67,23 +92,70 @@ export const paymentContent: PaymentStep[] = [
     title: "Step 2: Implementation (Edge Functions / Backend)",
     description: "Build the code to handle payments securely.",
     subTasks: [
-       {
+      {
         id: "why_backend",
         title: "Why Backend?",
         description: [
-           "Never put your Stripe Secret Key in frontend code!",
-           "These functions run securely on the server, protecting your keys."
+          "Never put your Stripe Secret Key in frontend code!",
+          "These functions run securely on the server, protecting your keys.",
         ],
-        important: ["Handling payments and sensitive keys requires server-side logic."],
+        important: [
+          "Handling payments and sensitive keys requires server-side logic.",
+        ],
         isChecklistItem: false, // Not a direct action item
       },
       {
-        id: "create_checkout",
-        title: "2.1 Create Checkout Session Function (`create-checkout`)",
-        description: ["Purpose: Redirects users to Stripe's secure checkout page."],
+        id: "create_subscriptions_table",
+        title: "2.1 Create Subscriptions Table",
+        description: [
+          "Create a table to store subscription data in your Supabase database.",
+          "This table will keep track of user subscriptions and their status.",
+        ],
         prompt: {
-           title: "AI Prompt: Create Edge Function/API Route (supabase/functions/create-checkout/index.ts)",
-           text: `// GOAL: Create a secure checkout session handler that redirects users to Stripe's hosted checkout page
+          title: "SQL Migration: Create Subscriptions Table",
+          text: `-- Create subscriptions table
+create table public.subscriptions (
+    id uuid not null default gen_random_uuid(),
+    user_id uuid references public.profiles(id),
+    stripe_subscription_id text unique,
+    stripe_customer_id text,
+    status text not null,
+    price_id text not null,
+    quantity integer default 0,
+    cancel_at_period_end boolean default false,
+    current_period_start timestamptz,
+    current_period_end timestamptz,
+    created_at timestamptz not null default timezone('utc'::text, now()),
+    updated_at timestamptz not null default timezone('utc'::text, now()),
+    plan_name text default ''
+);
+
+-- Enable RLS
+alter table subscriptions enable row level security;
+
+-- Policy to enable users to view their own data only
+create policy "Enable users to view their own data only"
+    on subscriptions
+    for select
+    to authenticated
+    using ((SELECT auth.uid() AS uid) = user_id);`,
+        },
+        important: [
+          "This schema matches the data we'll receive from Stripe webhooks",
+          "The RLS policies ensure users can only view their own subscriptions",
+        ],
+        isChecklistItem: true,
+      },
+      {
+        id: "create_checkout",
+        title: "2.2 Create Checkout Session Function (`create-checkout`)",
+        description: [
+          "Purpose: Redirects users to Stripe's secure checkout page.",
+        ],
+        prompt: {
+          title:
+            "AI Prompt: Create Edge Function/API Route (supabase/functions/create-checkout/index.ts)",
+          text: `// GOAL: Create a secure checkout session handler that redirects users to Stripe's hosted checkout page
 // REQUIREMENTS:
 // 1. Handle user authentication and validation
 // 2. Create or retrieve Stripe customer with proper metadata
@@ -95,14 +167,20 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from 'https://esm.sh/stripe@14.21.0';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
-type PlanType = 'lifetime';
+type PlanType = 'starter' | 'basic' | 'pro';
 type CurrencyType = 'usd';
 
 // Stripe price IDs for each plan and currency
 const STRIPE_PRICE_IDS: Record<PlanType, Record<CurrencyType, string>> = {
-  lifetime: {
-    usd: 'price_1RHCDICSrP7lXLyW6nCrvj0a', // REPLACE WITH YOUR ACTUAL LIFETIME PRICE ID
-  }
+  starter: {
+    usd: 'price_123456789', // REPLACE WITH YOUR ACTUAL STARTER PRICE ID
+  },
+  basic: {
+    usd: 'price_123456789', // REPLACE WITH YOUR ACTUAL BASIC PRICE ID
+  },
+  pro: {
+    usd: 'price_123456789', // REPLACE WITH YOUR ACTUAL PRO PRICE ID
+  },
 };
 
 const corsHeaders = {
@@ -224,8 +302,8 @@ serve(async (req: Request) => {
       //     coupon: 'earlyaccess20', // Example coupon - remove/update if needed
       //   },
       // ],
-      success_url: \`\${req.headers.get('origin')}/payment?success=true&session_id={CHECKOUT_SESSION_ID}\`,
-      cancel_url: \`\${req.headers.get('origin')}/payment?canceled=true\`,
+      success_url: \`\${req.headers.get('origin')}/account\`,
+      cancel_url: \`\${req.headers.get('origin')}/account\`,
       // Add metadata to link session to user ID
       metadata: {
         app_user_id: user.id,
@@ -251,15 +329,22 @@ serve(async (req: Request) => {
     );
   }
 });
-`
+`,
         },
-        links: [{ text: "Stripe Checkout Doc", url: "https://stripe.com/docs/checkout" }],
+        links: [
+          {
+            text: "Stripe Checkout Doc",
+            url: "https://stripe.com/docs/checkout",
+          },
+        ],
         isChecklistItem: true,
       },
       {
         id: "create_portal",
-        title: "2.2 Create Customer Portal Session Function (`create-portal-session`)",
-        description: ["Purpose: Allows logged-in users to manage their subscription (update payment methods, cancel, view invoices)."],
+        title: "2.3 Create Customer Portal Session Function (`create-portal-session`)",
+        description: [
+          "Purpose: Allows logged-in users to manage their subscription (update payment methods, cancel, view invoices).",
+        ],
         prompt: {
           title: "AI Prompt: Create Edge Function/API Route (supabase/functions/create-portal-session/index.ts)",
           text: `// GOAL: Create a secure customer portal session handler that allows users to manage their subscriptions
@@ -371,19 +456,34 @@ serve(async (req: Request) => {
     );
   }
 });
-`
+`,
         },
-        links: [{ text: "Stripe Customer Portal Doc", url: "https://stripe.com/docs/billing/subscriptions/customer-portal" }],
+        links: [
+          {
+            text: "Stripe Customer Portal Doc",
+            url: "https://stripe.com/docs/billing/subscriptions/customer-portal",
+          },
+        ],
         isChecklistItem: true,
       },
+    ],
+  },
+  {
+    id: "webhooks",
+    title: "Step 3: Webhook Setup",
+    description: "Set up and configure Stripe webhooks to keep your application in sync with Stripe events.",
+    subTasks: [
       {
         id: "create_webhook",
-        title: "2.3 Create Stripe Webhook Handler (`stripe-webhook`)",
+        title: "3.1 Create Stripe Webhook Handler (`stripe-webhook`)",
         description: [
           "Purpose: Listens for events from Stripe (like payments) to update your app's data.",
-          "This is CRITICAL for keeping your application state in sync with Stripe."
+          "This is CRITICAL for keeping your application state in sync with Stripe.",
         ],
-        important: ["Webhook verification is essential for security.", "Ensure the STRIPE_WEBHOOK_SECRET environment variable is set correctly."],
+        important: [
+          "Webhook verification is essential for security.",
+          "Ensure the STRIPE_WEBHOOK_SECRET environment variable is set correctly.",
+        ],
         prompt: {
           title: "AI Prompt: Create Edge Function/API Route (supabase/functions/stripe-webhook/index.ts)",
           text: `// GOAL: Create a secure webhook handler to process Stripe events and keep our application's subscription data in sync
@@ -649,11 +749,54 @@ serve(async (req) => {
     );
   }
 });
-`
+`,
         },
         links: [
-            { text: "Stripe Webhooks Doc", url: "https://stripe.com/docs/webhooks" },
-            { text: "Webhook Signature Doc", url: "https://stripe.com/docs/webhooks/signatures" }
+          {
+            text: "Stripe Webhooks Doc",
+            url: "https://stripe.com/docs/webhooks",
+          },
+          {
+            text: "Webhook Signature Doc",
+            url: "https://stripe.com/docs/webhooks/signatures",
+          },
+        ],
+        isChecklistItem: true,
+      },
+      {
+        id: "prepare_webhook",
+        title: "3.2 Configure Stripe Webhook",
+        description: [
+          "Set up the webhook endpoint in Stripe Dashboard and configure the Edge Function to handle it.",
+          "1. Go to Stripe Dashboard > Developers > Webhooks > Add endpoint",
+          "2. Enter your Edge Function URL: https://[PROJECT_REF].supabase.co/functions/v1/stripe-webhook",
+          "3. Select events to listen for:",
+          "   - checkout.session.completed",
+          "   - customer.subscription.created",
+          "   - customer.subscription.updated",
+          "   - customer.subscription.deleted",
+          "   - invoice.paid",
+          "   - invoice.payment_failed",
+          "4. Get the Signing Secret from the destination overview after creating the webhook",
+        ],
+        prompt: {
+          title: "Action: Configure Edge Function for Webhook",
+          text: "1. Add STRIPE_WEBHOOK_SECRET='whsec_...' to your Edge Function secrets\n2. Disable JWT verification for the webhook endpoint via the supabase dashboard > edge functions > stripe-webhook > details > Function Configuration > Enforce JWT Verification (disable it)",
+        },
+        important: [
+          "The webhook endpoint must be publicly accessible",
+          "Store the webhook signing secret securely",
+          "Disable JWT verification as Stripe won't send a JWT",
+        ],
+        links: [
+          {
+            text: "Stripe Webhooks Guide",
+            url: "https://stripe.com/docs/webhooks",
+          },
+          {
+            text: "Supabase Edge Functions",
+            url: "https://supabase.com/docs/guides/functions",
+          },
         ],
         isChecklistItem: true,
       },
@@ -661,12 +804,12 @@ serve(async (req) => {
   },
   {
     id: "test_go_live",
-    title: "Step 3: Testing & Go Live",
+    title: "Step 4: Testing & Go Live",
     description: "Make sure everything works before charging real money.",
     subTasks: [
       {
         id: "configure_test_webhook",
-        title: "3.1 Configure Test Webhook Endpoint",
+        title: "4.1 Configure Test Webhook Endpoint",
         description: [
           "First, add the required secrets to your Supabase Edge Function:",
           "1. Go to Supabase Dashboard > Project Settings > Edge Functions",
@@ -687,34 +830,40 @@ serve(async (req) => {
           "5. Reveal the Webhook Signing Secret and add it to your Supabase Edge Function secrets as `STRIPE_WEBHOOK_SECRET`",
         ],
         links: [
-          { text: "Stripe CLI for local testing", url: "https://stripe.com/docs/stripe-cli" },
-          { text: "Supabase Edge Functions", url: "https://supabase.com/docs/guides/functions" }
+          {
+            text: "Stripe CLI for local testing",
+            url: "https://stripe.com/docs/stripe-cli",
+          },
+          {
+            text: "Supabase Edge Functions",
+            url: "https://supabase.com/docs/guides/functions",
+          },
         ],
         important: [
           "Never expose your secrets in your code or version control",
-          "The service role key has admin privileges - keep it secure"
+          "The service role key has admin privileges - keep it secure",
         ],
         isChecklistItem: true,
       },
       {
         id: "end_to_end_test",
-        title: "3.2 End-to-End Test (Test Mode)",
+        title: "4.2 End-to-End Test (Test Mode)",
         description: [
           "Use your app's frontend to initiate checkout with a TEST Price ID.",
           "Use Stripe's test card numbers to complete payment.",
           "Verify you are redirected to your `success_url`.",
         ],
         checks: [
-            "Did your webhook function receive the `checkout.session.completed` event (check function logs)?",
-            "Did your database get updated correctly (e.g., user marked as subscribed, Stripe Customer ID saved)?",
-            "Can the user access the Customer Portal using the link generated by `create-portal-session`?",
+          "Did your webhook function receive the `checkout.session.completed` event (check function logs)?",
+          "Did your database get updated correctly (e.g., user marked as subscribed, Stripe Customer ID saved)?",
+          "Can the user access the Customer Portal using the link generated by `create-portal-session`?",
         ],
         links: [{ text: "Test Cards", url: "https://stripe.com/docs/testing" }],
         isChecklistItem: true,
       },
       {
         id: "switch_live_keys",
-        title: "3.3 Switch to LIVE Keys",
+        title: "4.3 Switch to LIVE Keys",
         description: [
           "In Stripe Dashboard, toggle to LIVE mode.",
           "Go to Developers > API Keys.",
@@ -722,62 +871,70 @@ serve(async (req) => {
           "Securely update your PRODUCTION environment variables with LIVE keys.",
           "Redeploy your application with the new keys.",
         ],
-         important: ["Ensure you update the keys in your production environment ONLY.", "Keep LIVE secret keys secure."],
+        important: [
+          "Ensure you update the keys in your production environment ONLY.",
+          "Keep LIVE secret keys secure.",
+        ],
         isChecklistItem: true,
       },
       {
         id: "configure_live_webhook",
-        title: "3.4 Configure LIVE Webhook Endpoint",
+        title: "4.4 Configure LIVE Webhook Endpoint",
         description: [
-          "Repeat step 3.1 but in Stripe's LIVE mode.",
+          "Repeat step 4.1 but in Stripe's LIVE mode.",
           "Use your PRODUCTION webhook URL.",
           "Get the LIVE Signing Secret.",
           "Update your PRODUCTION `STRIPE_WEBHOOK_SECRET` env var with the LIVE secret.",
           "Redeploy again.",
         ],
-         important: ["Use the correct LIVE URL and LIVE signing secret."],
+        important: ["Use the correct LIVE URL and LIVE signing secret."],
         isChecklistItem: true,
       },
       {
         id: "final_live_test",
-        title: "3.5 (Recommended) Final Live Test",
+        title: "4.5 (Recommended) Final Live Test",
         description: [
           "Use a REAL credit card to make a small purchase (e.g., lowest plan).",
           "Verify the entire flow, including database updates and customer portal access.",
           "Go to your Stripe Dashboard (Live Mode) > Payments and immediately refund the payment to avoid actual charges.",
         ],
-         important: ["Remember to refund the test payment immediately."],
+        important: ["Remember to refund the test payment immediately."],
         isChecklistItem: true,
       },
     ],
   },
 ];
 
-
 export const paymentResources = [
- {
+  {
     title: "Stripe Documentation Home",
-    url: "https://stripe.com/docs"
-  }, {
+    url: "https://stripe.com/docs",
+  },
+  {
     title: "Stripe Checkout",
-    url: "https://stripe.com/docs/checkout"
-  }, {
+    url: "https://stripe.com/docs/checkout",
+  },
+  {
     title: "Stripe Subscriptions",
-    url: "https://stripe.com/docs/billing/subscriptions/overview"
-  }, {
+    url: "https://stripe.com/docs/billing/subscriptions/overview",
+  },
+  {
     title: "Stripe Customer Portal",
-    url: "https://stripe.com/docs/billing/subscriptions/customer-portal"
-  }, {
+    url: "https://stripe.com/docs/billing/subscriptions/customer-portal",
+  },
+  {
     title: "Stripe Webhooks",
-    url: "https://stripe.com/docs/webhooks"
-  }, {
-     title: "Stripe API Keys",
-     url: "https://stripe.com/docs/keys"
-  }, {
+    url: "https://stripe.com/docs/webhooks",
+  },
+  {
+    title: "Stripe API Keys",
+    url: "https://stripe.com/docs/keys",
+  },
+  {
     title: "Stripe Test Cards",
-    url: "https://stripe.com/docs/testing"
-  }
+    url: "https://stripe.com/docs/testing",
+  },
 ];
 
 // Optional: Define types for clarity if needed elsewhere
-export type PaymentResourceType = typeof paymentResources[0]; 
+export type PaymentResourceType = (typeof paymentResources)[0];
