@@ -7,7 +7,6 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import Stripe from 'https://esm.sh/stripe@11.1.0?target=deno'; // Use Stripe SDK compatible with Deno
-import { Resend } from 'https://esm.sh/resend@1.0.0'; // Use Resend SDK
 
 // Initialize Stripe and Resend clients with secrets
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { // NOTE: You might need STRIPE_SECRET_KEY as well for other operations, add it via `supabase secrets set STRIPE_SECRET_KEY=sk_...` if needed. For webhook verification, the signing secret is primary.
@@ -15,7 +14,6 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { // NOTE: You mig
   httpClient: Stripe.createFetchHttpClient(), // Use Deno's fetch
 });
 
-const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 const stripeWebhookSecret = Deno.env.get('STRIPE_WEBHOOK_SIGNING_SECRET_RESEND');
 
 console.log("Hello from Functions!")
@@ -70,54 +68,60 @@ serve(async (req) => {
     }
 
     try {
-      // Send confirmation email using Resend
-      const { data, error } = await resend.emails.send({
-        from: 'Vibelaunch <info@vibelaunch.io>', // Default Resend sender - update this with your verified domain
-        to: [customerEmail],
-        subject: 'Thank You for Your Vibelaunch Purchase!',
-        html: `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background-color: #f8f9fa; padding: 20px; text-align: center; }
-                .content { padding: 20px; }
-                .footer { text-align: center; padding: 20px; font-size: 0.9em; color: #666; }
-                .amount { font-size: 1.2em; color: #28a745; font-weight: bold; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1>Thank You for Your Purchase!</h1>
+      // Send confirmation email using Resend HTTP API directly
+      const resendApiKey = Deno.env.get('RESEND_API_KEY');
+      const emailResponse = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Vibelaunch <info@vibelaunch.io>',
+          to: [customerEmail],
+          subject: 'Thank You for Your Vibelaunch Purchase!',
+          html: `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <style>
+                  body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                  .header { background-color: #f8f9fa; padding: 20px; text-align: center; }
+                  .content { padding: 20px; }
+                  .footer { text-align: center; padding: 20px; font-size: 0.9em; color: #666; }
+                  .amount { font-size: 1.2em; color: #28a745; font-weight: bold; }
+                </style>
+              </head>
+              <body>
+                <div class="container">
+                  <div class="header">
+                    <h1>Thank You for Your Purchase!</h1>
+                  </div>
+                  <div class="content">
+                    <p>Dear ${customerName},</p>
+                    <p>Thank you for choosing Vibelaunch! Your payment has been successfully processed.</p>
+                    <p>Order Details:</p>
+                    <p class="amount">Amount: ${amountTotal} ${currency}</p>
+                    <p>We're excited to have you on board! Your purchase helps us continue developing and improving our services.</p>
+                    <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
+                  </div>
+                  <div class="footer">
+                    <p>Best regards,<br>The Vibelaunch Team</p>
+                    <p>© ${new Date().getFullYear()} Vibelaunch. All rights reserved.</p>
+                  </div>
                 </div>
-                <div class="content">
-                  <p>Dear ${customerName},</p>
-                  <p>Thank you for choosing Vibelaunch! Your payment has been successfully processed.</p>
-                  <p>Order Details:</p>
-                  <p class="amount">Amount: ${amountTotal} ${currency}</p>
-                  <p>We're excited to have you on board! Your purchase helps us continue developing and improving our services.</p>
-                  <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
-                </div>
-                <div class="footer">
-                  <p>Best regards,<br>The Vibelaunch Team</p>
-                  <p>© ${new Date().getFullYear()} Vibelaunch. All rights reserved.</p>
-                </div>
-              </div>
-            </body>
-          </html>
-        `,
+              </body>
+            </html>
+          `,
+        }),
       });
-
-      if (error) {
-        console.error(`Resend error sending email to ${customerEmail}:`, error);
-        // Return 500 so Stripe retries, or 200 if you don't want retries for email failures
+      const emailData = await emailResponse.json();
+      if (!emailResponse.ok) {
+        console.error(`Resend error sending email to ${customerEmail}:`, emailData);
         return new Response('Error sending confirmation email.', { status: 500 });
       }
-
-      console.log(`Confirmation email sent successfully to ${customerEmail}. Resend ID: ${data?.id}`);
+      console.log(`Confirmation email sent successfully to ${customerEmail}. Resend response:`, emailData);
       return new Response(JSON.stringify({ received: true, emailSent: true }), { status: 200 });
 
     } catch (emailError) {

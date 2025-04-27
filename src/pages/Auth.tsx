@@ -55,9 +55,14 @@ const Auth = () => {
           </CardHeader>
           <CardContent>
             <AspectRatio ratio={16 / 9}>
-              <div className="bg-gradient-to-br from-black/80 to-gray-800/80 rounded-md flex items-center justify-center border border-gray-800 h-full group cursor-pointer">
-                <PlayCircle className="h-12 w-12 md:h-16 md:w-16 text-launch-cyan/70 group-hover:text-launch-cyan group-hover:scale-110 transition-all" />
-              </div>
+              <video
+                className="w-full h-full rounded-md cursor-pointer"
+                controls
+                src="https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Authentication%20Essentials%20(1)%20(1).mp4"
+                poster="https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Auth_preview.png"
+              >
+                Your browser does not support the video tag.
+              </video>
             </AspectRatio>
           </CardContent>
         </Card>
