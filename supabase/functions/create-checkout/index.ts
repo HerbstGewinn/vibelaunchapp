@@ -129,6 +129,18 @@ serve(async (req: Request) => {
           coupon: 'earlyaccess20',
         },
       ],
+
+      /* ---------- OPTIONAL COMPANY / VAT-FIELD (only change) ---------- */
+      tax_id_collection: { enabled: true },                 // ← NEW
+      custom_fields: [{                                     // ← NEW
+        key: 'company_name',
+        label: { type: 'custom', custom: 'Firmenname' },
+        type: 'text',
+        optional: true
+      }],
+
+      /* ---------------------------------------------------------------- */
+
       success_url: `${req.headers.get('origin')}/dashboard`,
       cancel_url: `https://vibelaunch.io`,
     });
