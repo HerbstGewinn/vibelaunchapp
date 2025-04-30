@@ -129,6 +129,14 @@ serve(async (req: Request) => {
           coupon: 'earlyaccess20',
         },
       ],
+      billing_address_collection: 'auto',
+      tax_id_collection: {
+        enabled: true,
+      },
+      customer_update: {
+        address: 'auto',
+        name: 'auto',
+      },
       success_url: `${req.headers.get('origin')}/dashboard`,
       cancel_url: `https://vibelaunch.io`,
     });
