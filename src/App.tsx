@@ -21,6 +21,8 @@ import CustomerService from "./pages/CustomerService";
 import Growth from "./pages/Growth";
 import Settings from "./pages/Settings";
 import Designs from "./pages/Designs";
+import Ideation from "./pages/Ideation";
+import Functionality from "./pages/Functionality";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,8 @@ const App = () => (
               <Route index element={<Dashboard />} />
               {/* Dashboard routes */}
               <Route path="designs" element={<Designs />} />
+              <Route path="ideation" element={<Ideation />} />
+              <Route path="functionality" element={<Functionality />} />
               <Route path="auth" element={<Auth />} />
               <Route path="payment" element={<Payment />} />
               <Route path="deployment" element={<Deployment />} />

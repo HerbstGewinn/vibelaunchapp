@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTaskProgress } from '@/hooks/useTaskProgress';
-import { Globe, Search, Users, MessageSquare, BarChart3, ShieldCheck, CreditCard, Rocket, Lock, GanttChart, Mail, Settings, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Globe, Search, Users, MessageSquare, BarChart3, ShieldCheck, CreditCard, Rocket, Lock, GanttChart, Mail, Settings, LogOut, ChevronLeft, ChevronRight, Lightbulb, Cog } from 'lucide-react';
 import { Button } from './ui/button';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton, useSidebar } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -11,9 +11,17 @@ import { Sheet, SheetContent } from '@/components/ui/sheet';
 const navItems = [{
   title: 'Launch Steps',
   items: [{
+    name: 'Ideation',
+    icon: Lightbulb,
+    href: '/dashboard/ideation'
+  }, {
     name: 'Designs',
     icon: GanttChart,
     href: '/dashboard/designs'
+  }, {
+    name: 'Functionality',
+    icon: Cog,
+    href: '/dashboard/functionality'
   }, {
     name: 'Auth',
     icon: ShieldCheck,
