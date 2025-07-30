@@ -19,13 +19,13 @@ const navItems = [{
     icon: GanttChart,
     href: '/dashboard/designs'
   }, {
-    name: 'Functionality',
-    icon: Cog,
-    href: '/dashboard/functionality'
-  }, {
     name: 'Auth',
     icon: ShieldCheck,
     href: '/dashboard/auth'
+  }, {
+    name: 'Functionality',
+    icon: Cog,
+    href: '/dashboard/functionality'
   }, {
     name: 'Payment',
     icon: CreditCard,
