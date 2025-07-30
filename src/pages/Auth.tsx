@@ -58,7 +58,7 @@ const Auth = () => {
               <video
                 className="w-full h-full rounded-md cursor-pointer"
                 controls
-                src="https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Authentication%20Essentials%20(1)%20(1).mp4"
+                src="https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//compressed_tutorial_1.mp4"
                 poster="https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Auth_preview.png"
               >
                 Your browser does not support the video tag.
