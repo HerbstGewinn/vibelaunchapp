@@ -56,7 +56,7 @@ const Deployment = () => {
               <video
                 className="w-full h-full rounded-md cursor-pointer"
                 controls
-                src="https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Deploying%20Your%20App%20with%20Custom%20Domains.mp4"
+                src="https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Launching%20Your%20SAS%20to%20the%20World%20(1).mp4"
                 poster="https://xnqbmtsphlduhxrkaopt.supabase.co/storage/v1/object/public/public-files//Deployment_preview.png"
               >
                 Your browser does not support the video tag.
